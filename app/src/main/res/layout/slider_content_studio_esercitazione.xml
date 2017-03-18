@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="15"
+        android:background="@drawable/bg_round_rect"
+        android:gravity="center"
+        android:text="UFFICIALI ESERCITO 2017"
+        android:textColor="#9b92b3"
+        android:textStyle="bold"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_round_rect"
+        android:id="@+id/listViewCategorie"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="85" />
+
+</LinearLayout>

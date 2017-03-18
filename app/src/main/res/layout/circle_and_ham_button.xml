@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/circle_button"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/prof"
+    android:weightSum="100">
+
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="84" >
+
+    </Space>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="16"
+        android:weightSum="100">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="78"
+            tools:ignore="NestedWeights" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="22">
+
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmbCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </com.nightonke.boommenu.BoomMenuButton>
+
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmbHamm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+            </com.nightonke.boommenu.BoomMenuButton>
+            <com.nightonke.boommenu.BoomMenuButton
+                android:id="@+id/bmbHammDue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+            </com.nightonke.boommenu.BoomMenuButton>
+
+        </FrameLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
