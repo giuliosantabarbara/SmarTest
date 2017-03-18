@@ -6,9 +6,7 @@
     android:id="@+id/circle_button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/prof"
     android:weightSum="100">
-
 
 
     <Space
@@ -37,7 +35,7 @@
             android:layout_weight="22">
 
             <com.nightonke.boommenu.BoomMenuButton
-                android:id="@+id/bmbCircle"
+                android:id="@+id/bmbHamm0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </com.nightonke.boommenu.BoomMenuButton>

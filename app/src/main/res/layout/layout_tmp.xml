@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download Contest MetaData"
+            android:id="@+id/button"
+            android:onClick="downloadContestMetaData"
+            android:layout_below="@+id/button4"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download primo Contest"
+            android:onClick="dowloadPrimoContest"
+            android:id="@+id/button2"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/button"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancella Tutto"
+            android:id="@+id/button3"
+            android:onClick="cancellaTutto"
+            android:layout_marginTop="54dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancella Tutto Tranne MetaData Contest"
+            android:id="@+id/button4"
+            android:onClick="cancellaTuttoTranneMetaData"
+            android:layout_below="@+id/button3"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stampa contest nel LOG"
+            android:id="@+id/button5"
+            android:onClick="stampaContestNelLog"
+            android:layout_below="@+id/button2"
+            android:layout_alignStart="@+id/button2" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:id="@+id/start_icon_pencil"
+            android:src="@drawable/start_icon_pencil"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toEndOf="@+id/button" />
+
+    </RelativeLayout>
+</LinearLayout>
