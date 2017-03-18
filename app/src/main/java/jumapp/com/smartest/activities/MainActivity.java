@@ -2,20 +2,42 @@ package jumapp.com.smartest.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.RemoteConnection.Connector;
+import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
+import jumapp.com.smartest.Storage.DAOImpl.AlternativeDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
 import jumapp.com.smartest.fragments.SimulationEndFragment;
@@ -26,53 +48,24 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     /*@Bind(R.id.agenda_calendar_view)
     AgendaCalendarView mAgendaCalendarView;*/
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+    private ArrayList<Contest> myContests= new ArrayList<Contest>();
+    private ChildEventListener childEventListener;
+    private DatabaseReference mDatabase;
+    private Context context;
+    private ContestMetaDataReceiver cmd;
+    ImageView pencil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        /*ButterKnife.bind(this);
-        // minimum and maximum date of our calendar
-        // 2 month behind, one year ahead, example: March 2015 <-> May 2015 <-> May 2016
-        Calendar minDate = Calendar.getInstance();
-        Calendar maxDate = Calendar.getInstance();
-
-        minDate.add(Calendar.MONTH, -2);
-        minDate.set(Calendar.DAY_OF_MONTH, 1);
-        maxDate.add(Calendar.YEAR, 1);
-
-        List<CalendarEvent> eventList = new ArrayList<>();
-
-        Calendar startTime1 = Calendar.getInstance();
-        Calendar endTime1 = Calendar.getInstance();
-        endTime1.add(Calendar.MONTH, 1);
-        BaseCalendarEvent event1 = new BaseCalendarEvent("Thibault travels in Iceland", "A wonderful journey!", "Iceland",
-                ContextCompat.getColor(this, R.color.sp_primary_text_light), startTime1, endTime1, true);
-        eventList.add(event1);
-
-        Calendar startTime2 = Calendar.getInstance();
-        startTime2.add(Calendar.DAY_OF_YEAR, 1);
-        Calendar endTime2 = Calendar.getInstance();
-        endTime2.add(Calendar.DAY_OF_YEAR, 3);
-        BaseCalendarEvent event2 = new BaseCalendarEvent("Visit to Dalvík", "A beautiful small town", "Dalvík",
-                ContextCompat.getColor(this, R.color.red), startTime2, endTime2, true);
-        eventList.add(event2);
-
-        Calendar startTime3 = Calendar.getInstance();
-        Calendar endTime3 = Calendar.getInstance();
-        startTime3.set(Calendar.HOUR_OF_DAY, 14);
-        startTime3.set(Calendar.MINUTE, 0);
-        endTime3.set(Calendar.HOUR_OF_DAY, 15);
-        endTime3.set(Calendar.MINUTE, 0);
-        DrawableCalendarEvent event3 = new DrawableCalendarEvent("Visit of Harpa", "", "Dalvík",
-                ContextCompat.getColor(this, R.color.blue_selected), startTime3, endTime3, false, android.R.drawable.ic_dialog_info);
-        eventList.add(event3);
 
 
 
-        mAgendaCalendarView.init(eventList, minDate, maxDate, Locale.getDefault(), this);
-        mAgendaCalendarView.addEventRenderer(new DrawableEventRenderer());*/
+        context=this;
+        pencil=(ImageView) this.findViewById(R.id.start_icon_pencil);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,13 +79,42 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         //Fragment Handler
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.activity_main, new CircleHamButtonFragment());
-        //fragmentTransaction.addToBackStack("back");
-        fragmentTransaction.commit();
+        Connector firebase= new FirebaseConnector(this,"java/contests");
+        firebase.downloadContestMetaData();
+
+        final ContestDAO conDAO= new ContestDAOImpl(this);
+        int numberOfRow= conDAO.numberOfRows();
+        if(numberOfRow>0){
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            CircleHamButtonFragment ch=new CircleHamButtonFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("from", "main_activity");
+            ch.setArguments(bundle);
+            fragmentTransaction.add(R.id.activity_main, ch,"first_first");
+            fragmentTransaction.commit();
+            pencil.setVisibility(View.INVISIBLE);
+
+        }else{
+            pencil.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (conDAO.numberOfRows() == 0) {
+                        final SweetAlertDialog pDialog = new SweetAlertDialog(context,
+                                SweetAlertDialog.PROGRESS_TYPE)
+                                .setTitleText("Connecting to the Server");
+                        pDialog.show();
+                        pDialog.setCancelable(false);
+                        new MyCountDownTimer(3000, 500, pDialog, conDAO).Start();
+
+                    }
+                }
+            });
+        }
+
+
     }
 
     //Drawer listener
@@ -121,107 +143,24 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     @Override
     public void onSelectedButton(String s) {
-            // get body fragment (native method is getFragmentManager)
-            CircleHamButtonFragment fragment = (CircleHamButtonFragment) getFragmentManager().findFragmentById(R.id.circle_button);
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            if(s.equalsIgnoreCase("uno")){
-
-                fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
-                fragmentTransaction.addToBackStack("back");
-                fragmentTransaction.commit();
-            }
-            if (s.equalsIgnoreCase("studia")) {
-                fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
-                fragmentTransaction.addToBackStack("back");
-                fragmentTransaction.commit();
-            }
-
-
-        /*if(s.equalsIgnoreCase("uno")){
-            Log.i("valore fuori",s);
-           CircleHamButtonFragment fragment = (CircleHamButtonFragment) getFragmentManager().findFragmentById(R.id.activity_main);
-
-            // if fragment is not null and in layout, set text, else launch BodyActivity
-            //
-            if ((fragment!=null)) {
-                Log.i("Valore dentro",s);
-
-                fragment.onDestroy();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.activity_main, new HamButtonFragment());
-                fragmentTransaction.commit();
-
-            } else {
-                /*Intent intent = new Intent(this,HamButtonFragment.class);
-                intent.putExtra("value",s);
-                startActivity(intent);*/
-
-
-    }
-
-    public void clickedButton(View v){
-        //BottomNavigationFragment fragment = ( BottomNavigationFragment) getFragmentManager().findFragmentById(R.id.activity_main);
-        //fragment.onDestroy();
+        // get body fragment (native method is getFragmentManager)
+        CircleHamButtonFragment fragment = (CircleHamButtonFragment) getFragmentManager().findFragmentById(R.id.circle_button);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.activity_main, new SimulationEndFragment());
-        fragmentTransaction.addToBackStack("back");
-        fragmentTransaction.commit();
+        if(s.equalsIgnoreCase("uno")){
+
+            fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
+            fragmentTransaction.addToBackStack("back");
+            fragmentTransaction.commit();
+        }
+        if (s.equalsIgnoreCase("studia")) {
+            fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
+            fragmentTransaction.addToBackStack("back");
+            fragmentTransaction.commit();
+        }
+
 
     }
-
-    public void pickerButton(View v){
-
-        Toast.makeText(MainActivity.this,"You Clicked : inside the boombaby",Toast.LENGTH_SHORT).show();
-        /*MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(MainActivity.this)
-                .minValue(1)
-                .maxValue(10)
-                .defaultValue(1)
-                .backgroundColor(Color.WHITE)
-                .separatorColor(Color.TRANSPARENT)
-                .textColor(Color.BLACK)
-                .textSize(20)
-                .enableFocusability(false)
-                .wrapSelectorWheel(true)
-                .build();*/
-       /* new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Picker try")
-                .setView(numberPicker)
-                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Snackbar.make(findViewById(R.id.your_container), "You picked : " + numberPicker.getValue(), Snackbar.LENGTH_LONG).show();
-                    }
-                })
-                .show();*/
-    }
-    public void popupMenu(View v){
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(MainActivity.this,(ImageView) findViewById(R.id.imageMenu));
-        //Inflating the Popup using xml file
-        popup.getMenuInflater().inflate(R.menu.popup_menu_exercise, popup.getMenu());
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-
-                switch(item.getItemId()){
-                    case R.id.two:
-
-                        break;
-
-
-                }
-                Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(),Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
-        popup.show();//showing popup menu
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -233,5 +172,144 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
 
+    public void cleanDB(){
+        ContestDAOImpl cont= new ContestDAOImpl(this);
+        cont.deleteAll();
+        AlternativeDAOImpl alt= new AlternativeDAOImpl(this);
+        alt.deleteAll();
+        AttachmentDAOImpl att= new AttachmentDAOImpl(this);
+        att.deleteAll();
+        QuestionDAOImpl quest= new QuestionDAOImpl(this);
+        quest.deleteAll();
+
+    }
+
+
+    public void cancellaTutto(View v){
+        ContestDAOImpl cont= new ContestDAOImpl(this);
+        cont.deleteAll();
+        AlternativeDAOImpl alt= new AlternativeDAOImpl(this);
+        alt.deleteAll();
+        AttachmentDAOImpl att= new AttachmentDAOImpl(this);
+        att.deleteAll();
+        QuestionDAOImpl quest= new QuestionDAOImpl(this);
+        quest.deleteAll();
+    }
+
+    public void cancellaTuttoTranneMetaData(View v){
+        AlternativeDAOImpl alt= new AlternativeDAOImpl(this);
+        alt.deleteAll();
+        AttachmentDAOImpl att= new AttachmentDAOImpl(this);
+        att.deleteAll();
+        QuestionDAOImpl quest= new QuestionDAOImpl(this);
+        quest.deleteAll();
+    }
+
+    public void downloadContestMetaData(View v){
+        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        fireConnector.downloadContestMetaData();
+    }
+
+    public void dowloadPrimoContest(View v){
+        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        fireConnector.downloadContest(1);
+    }
+
+    public void stampaContestNelLog(View v){
+
+        ContestDAO conDAO= new ContestDAOImpl(this);
+        long st=System.currentTimeMillis();
+        Log.i("###", "Partito");
+        ArrayList<Contest> contests= conDAO.getAllContests();
+        long end=System.currentTimeMillis();
+        Log.i("###", "Tempo di fine: " + (end - st));
+
+        for(Contest c: contests){
+            ArrayList<Question> questions=c.getQuestions();
+            Log.i("###",""+questions.size());
+            c.printLog("$$$");
+        }
+
+       /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
+        ArrayList<Attachment> attachments= atDAO.getAllAttachments();
+        for(Attachment a: attachments ) a.printLog("!!!!!!!!");*/
+    }
+
+
+
+
+    class MyCountDownTimer {
+        private long millisInFuture;
+        private long countDownInterval;
+        private SweetAlertDialog pDialog;
+        private ContestDAO conDAO;
+
+        public MyCountDownTimer(long pMillisInFuture, long pCountDownInterval, SweetAlertDialog pDialog, ContestDAO conDAO) {
+            this.millisInFuture = pMillisInFuture;
+            this.countDownInterval = pCountDownInterval;
+            this.pDialog=pDialog;
+            this.conDAO=conDAO;
+        }
+        public void Start()
+        {
+            final Handler handler = new Handler();
+            Log.v("status", "starting");
+            final Runnable counter = new Runnable(){
+
+                public void run(){
+                    pDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.blue_btn_bg_color));
+                    long sec = millisInFuture/1000;
+                    Log.v("status", Long.toString(sec) + " seconds remain");
+                    millisInFuture -= countDownInterval;
+                    if (conDAO.numberOfRows()>0){
+                        pDialog.setTitleText("Download completato!")
+                                .setConfirmText("OK")
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        handler.removeCallbacks(this);
+
+                    }else{
+                        handler.postDelayed(this, countDownInterval);
+                    }
+
+
+                }
+            };
+
+            handler.postDelayed(counter, countDownInterval);
+        }
+    }
+
+
+    public class ContestMetaDataReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //TODO: React to the Intent Broadcast received.
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            CircleHamButtonFragment ch=new CircleHamButtonFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("from", "main_activity");
+            ch.setArguments(bundle);
+            fragmentTransaction.add(R.id.activity_main, ch,"first_first");
+            //fragmentTransaction.addToBackStack("pencil_fragment");
+            fragmentTransaction.commit();
+            pencil.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        cmd= new ContestMetaDataReceiver();
+        registerReceiver(cmd, new IntentFilter(FirebaseConnector.INTENT_ACTION));
+
+    }
+
+    @Override
+    public void onPause() {
+        unregisterReceiver(cmd);
+        super.onPause();
+    }
 
 }
