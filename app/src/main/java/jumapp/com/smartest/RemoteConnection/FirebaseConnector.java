@@ -103,7 +103,7 @@ public class FirebaseConnector implements  Connector {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     Question q = messageSnapshot.getValue(Question.class);
-                    Log.i("$$$",q.getText());
+                    //Log.i("$$$",q.getText());
                     questDao.insert(q);
                 }
                 ref.removeEventListener(this);

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragment Handler
-        Connector firebase= new FirebaseConnector(this,"java/contests");
+        Connector firebase= new FirebaseConnector(this,"contests");
         firebase.downloadContestMetaData();
 
         final ContestDAO conDAO= new ContestDAOImpl(this);
@@ -206,12 +206,12 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
     public void downloadContestMetaData(View v){
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
         fireConnector.downloadContestMetaData();
     }
 
     public void dowloadPrimoContest(View v){
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
         fireConnector.downloadContest(1);
     }
 
@@ -224,11 +224,11 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         long end=System.currentTimeMillis();
         Log.i("###", "Tempo di fine: " + (end - st));
 
-        for(Contest c: contests){
+        /*for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
             Log.i("###",""+questions.size());
             c.printLog("$$$");
-        }
+        }*/
 
        /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
         ArrayList<Attachment> attachments= atDAO.getAllAttachments();
