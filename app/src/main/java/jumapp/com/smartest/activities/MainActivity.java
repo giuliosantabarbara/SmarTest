@@ -36,6 +36,7 @@ import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragment Handler
-        Connector firebase= new FirebaseConnector(this,"java/contests");
+        Connector firebase= new FirebaseConnector(this,"contests");
         firebase.downloadContestMetaData();
 
         final ContestDAO conDAO= new ContestDAOImpl(this);
@@ -206,29 +207,33 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
     public void downloadContestMetaData(View v){
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
         fireConnector.downloadContestMetaData();
     }
 
     public void dowloadPrimoContest(View v){
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
         fireConnector.downloadContest(1);
     }
 
     public void stampaContestNelLog(View v){
 
         ContestDAO conDAO= new ContestDAOImpl(this);
+        QuestionDAO questDAO= new QuestionDAOImpl(this);
+
         long st=System.currentTimeMillis();
         Log.i("###", "Partito");
-        ArrayList<Contest> contests= conDAO.getAllContests();
+        //ArrayList<Contest> contests= conDAO.getAllContests();
+        ArrayList<Question> questions=questDAO.getAllQuestionByCategoryAndContestId(1, "actuality");
         long end=System.currentTimeMillis();
         Log.i("###", "Tempo di fine: " + (end - st));
+        Log.i("###", "Numero di domande per categoria: " + questions.size());
 
-        for(Contest c: contests){
+       /* for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
             Log.i("###",""+questions.size());
             c.printLog("$$$");
-        }
+        }*/
 
        /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
         ArrayList<Attachment> attachments= atDAO.getAllAttachments();
