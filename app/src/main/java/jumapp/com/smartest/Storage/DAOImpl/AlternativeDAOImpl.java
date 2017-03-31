@@ -44,7 +44,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
                         "question_id integer, hasAttachment integer)"
         );
 
-        db.execSQL("CREATE INDEX alternative_question_id_index on " + CONTACTS_TABLE_NAME + " (question_id);");
+     //   db.execSQL("CREATE INDEX alternative_question_id_index on " + CONTACTS_TABLE_NAME + " (question_id);");
 
 
     }
@@ -57,6 +57,11 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         db.close();
     }
 
+
+    @Override
+    public SQLiteDatabase openWritableConnection(){
+        return this.getWritableDatabase();
+    }
 
 
     public void deleteAll() {
@@ -75,8 +80,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
     }
 
     @Override
-    public void insert(Alternative a) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void insert(Alternative a,SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
 
         int isRight=0;
@@ -85,10 +89,9 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         contentValues.put("Text", a.getText());
         contentValues.put("isRight", isRight);
         contentValues.put("question_id", a.getQuestion_id());
-        contentValues.put("hasAttachment",a.getHasAttach());
+        contentValues.put("hasAttachment", a.getHasAttach());
 
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
-        db.close();
     }
 
     @Override

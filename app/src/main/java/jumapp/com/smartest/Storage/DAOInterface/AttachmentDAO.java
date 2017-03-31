@@ -13,7 +13,8 @@ public interface AttachmentDAO  {
 
     public ArrayList<Attachment> getAllAttachmentsByLinkId(long LinkId,String Type, SQLiteDatabase db);
     public Attachment getAttachmentById(long attachmentId);
-    public void insert(Attachment a);
+    public SQLiteDatabase openWritableConnection();
+    public void insert(Attachment a,SQLiteDatabase db);
     public Attachment deleteAttachment(long attachmentId);
     public ArrayList<Attachment> getAllAttachments();
 

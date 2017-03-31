@@ -46,7 +46,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
                         "contest_id integer, hasAttachment integer)"
         );
 
-        db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
+       // db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
     }
 
     @Override
@@ -75,8 +75,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
     }
 
     @Override
-    public void insert(Question q) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void insert(Question q,SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
 
         int isFavorited=0;
@@ -94,33 +93,21 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         contentValues.put("contest_id", q.getContest_id());
         contentValues.put("Text",q.getText());
         contentValues.put("hasAttachment",hasAttach);
-
-
-
-        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-        ArrayList<Alternative> alternatives=q.getAlternatives();
-        if(alternatives!=null) {
-            for (Alternative altern : alternatives) {
-                alt.insert(altern);
-            }
-        }
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        ArrayList<Attachment> attachments=q.getAttachments();
-        if(attachments!=null) {
-            for (Attachment attach : attachments) {
-                att.insert(attach);
-            }
-        }
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
-        db.close();
     }
 
     public SQLiteDatabase openConnection(){
         return this.getReadableDatabase();
+
     }
 
     public void closeConnection(SQLiteDatabase db){
         db.close();
+    }
+
+    @Override
+    public SQLiteDatabase openWritableConnection(){
+        return this.getWritableDatabase();
     }
 
 

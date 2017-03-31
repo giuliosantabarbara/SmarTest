@@ -13,7 +13,7 @@
         android:background="@drawable/bg_round_rect"
         android:gravity="center"
         android:text="UFFICIALI ESERCITO 2017"
-        android:textColor="#9b92b3"
+        android:textColor="#ffffff"
         android:textStyle="bold"/>
 
 
@@ -29,7 +29,7 @@
         android:paddingTop="30dp"
         android:gravity="top|center"
         android:text="@string/descrizione_concorso"
-        android:textColor="#9b92b3"
+        android:textColor="#ffffff"
         android:textStyle="bold"/>
 
 
