@@ -6,7 +6,14 @@
     <color name="white">#ffffff</color>
     <color name="red">#ff0900</color>
     <color name="black">#000000</color>
-    <color name="external">#f551aff2</color>
+
+    <color name="external">#31a9b8</color>
+    <color name="pallino">#0000ff</color>
+
+
+
+
+
     <color name="primary">#607D8B</color>
     <color name="first_slide_background">#E91E63</color>
     <color name="first_slide_buttons">#880E4F</color>

@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,11 +25,31 @@
             <intent-filter>
                 <action android:name="www.jumapp.com.send.metadata.download" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="www.jumapp.com.send.contest.download" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.StudyPlanIntro"
             android:theme="@style/Theme.Intro">
         </activity>
+
+        <service
+            android:name=".RemoteConnection.IntentService.QuestionDownloadService$DownloadServiceQuestion"
+            android:exported="false" />
+
+        <service
+        android:name=".RemoteConnection.IntentService.AlternativeDownloadService$DownloadServiceAlternative"
+        android:exported="false" />
+
+        <service
+        android:name=".RemoteConnection.IntentService.AttachmentDownloadService$DownloadServiceAttachment"
+        android:exported="false" />
+
+        <service
+            android:name=".RemoteConnection.IntentService.MetaDataDownloadService$DownloadServiceMetaData"
+            android:exported="false" />
+
     </application>
 
 </manifest>
