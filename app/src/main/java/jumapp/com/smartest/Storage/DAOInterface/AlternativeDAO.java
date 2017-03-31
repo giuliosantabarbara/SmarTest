@@ -13,8 +13,9 @@ public interface AlternativeDAO {
 
     public ArrayList<Alternative> getAllAlternativesByQuestionId(long questionId, SQLiteDatabase db,SQLiteDatabase dbAtt);
     public ArrayList<Alternative> getAllAlternatives();
+    public SQLiteDatabase openWritableConnection();
     public Alternative getAlternativeById(long alternativeId,SQLiteDatabase dbAtt);
-    public void insert(Alternative a);
+    public void insert(Alternative a,SQLiteDatabase db);
     public Alternative deleteAlterantive(long alternativeId,SQLiteDatabase dbAtt);
 
 }

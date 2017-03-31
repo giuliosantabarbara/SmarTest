@@ -71,10 +71,13 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         return numRows;
     }
 
+    @Override
+    public SQLiteDatabase openWritableConnection(){
+        return this.getWritableDatabase();
+    }
 
     @Override
-    public void insert(Contest c){
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void insert(Contest c,SQLiteDatabase db ){
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("contest_id", c.getId_contest());
@@ -87,9 +90,53 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         contentValues.put("AlternativesURL", c.getAlternativesURL());
         contentValues.put("AnnouncementsURL", c.getAnnouncementURL());
         contentValues.put("ShortDescription", c.getShortDescription());
-
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
-        db.close();
+
+    }
+
+    @Override
+    public ArrayList<Contest> getAllContests(SQLiteDatabase db) {
+        ArrayList<Contest> array_list = new ArrayList<Contest>();
+        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\"", null);
+        res.moveToFirst();
+
+        long st=System.currentTimeMillis();
+        QuestionDAOImpl quest= new QuestionDAOImpl(context);
+        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
+        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        SQLiteDatabase dbQuest=quest.openConnection();
+        SQLiteDatabase dbAlt=alt.openConnection();
+        SQLiteDatabase dbAtt=att.openConnection();
+
+        while(res.isAfterLast() == false){
+            long contest_id=Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
+            String type=res.getString(res.getColumnIndex("Type"));
+            String scope=res.getString(res.getColumnIndex("Scope"));
+            String position=res.getString(res.getColumnIndex("Position"));
+            int year= Integer.parseInt(res.getString(res.getColumnIndex("Year")));
+            String questionsURL=res.getString(res.getColumnIndex("QuestionsURL"));
+            String attachmentsURL=res.getString(res.getColumnIndex("AttachmentsURL"));
+            String alternativesURL=res.getString(res.getColumnIndex("AlternativesURL"));
+            String announcmentsURL=res.getString(res.getColumnIndex("AnnouncementsURL"));
+            String shortDescription= res.getString(res.getColumnIndex("ShortDescription"));
+
+            ArrayList<Question> questions=quest.getAllQuestionsByContestId(contest_id,dbAlt, dbQuest,dbAtt);
+            // ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
+
+            Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,
+                    attachmentsURL,alternativesURL,announcmentsURL,year,shortDescription,questions,null);
+            array_list.add(tmp);
+            res.moveToNext();
+        }
+
+        quest.closeConnection(dbQuest);
+        alt.closeConnection(dbAlt);
+        att.closeConnection(dbAtt);
+        long end=System.currentTimeMillis();
+        Log.i("###", "time to get all Questions + extra operation della classe contestDAO " + (end - st));
+
+        res.close();
+        return array_list;
     }
 
 

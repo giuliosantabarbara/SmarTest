@@ -32,7 +32,6 @@ public class StudyPlanIntro extends MaterialIntroActivity {
         addSlide(new SlideFragmentBuilder()
                         .backgroundColor(R.color.third_slide_background)
                         .buttonsColor(R.color.first_slide_buttons)
-                        .image(R.drawable.student)
                         .title("Organizza il tuo studio con noi")
                         .description("Vuoi provare?")
                         .build());

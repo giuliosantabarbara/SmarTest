@@ -41,8 +41,13 @@ public class AttachmentDAOImpl extends SQLiteOpenHelper implements AttachmentDAO
                         "link_id integer, Type text)"
         );
 
-        db.execSQL("CREATE INDEX attachment_linkId__type_index on "+ CONTACTS_TABLE_NAME+ " (link_id,Type);");
+       // db.execSQL("CREATE INDEX attachment_linkId__type_index on "+ CONTACTS_TABLE_NAME+ " (link_id,Type);");
 
+    }
+
+    @Override
+    public SQLiteDatabase openWritableConnection(){
+        return this.getWritableDatabase();
     }
 
     @Override
@@ -70,9 +75,8 @@ public class AttachmentDAOImpl extends SQLiteOpenHelper implements AttachmentDAO
     }
 
     @Override
-    public void insert(Attachment a) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+    public void insert(Attachment a,SQLiteDatabase db) {
+       ContentValues contentValues = new ContentValues();
 
         contentValues.put("attachment_id", a.getAttachment_id());
         contentValues.put("firebaseURL", a.getFireurl());
@@ -81,7 +85,6 @@ public class AttachmentDAOImpl extends SQLiteOpenHelper implements AttachmentDAO
         contentValues.put("Type", a.getType());
 
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
-        db.close();
     }
 
 
