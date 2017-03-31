@@ -18,12 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -31,11 +34,14 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
+import jumapp.com.smartest.RemoteConnection.IntentService.AlternativeDownloadService;
+import jumapp.com.smartest.RemoteConnection.IntentService.MetaDataDownloadService;
 import jumapp.com.smartest.Storage.DAOImpl.AlternativeDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
@@ -54,15 +60,21 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     private ChildEventListener childEventListener;
     private DatabaseReference mDatabase;
     private Context context;
-    private ContestMetaDataReceiver cmd;
+    private ContestMetaDataReceiver contestMetaDataReceiver;
+    private ContestDataReceiver contestDataReceiver;
+    private SweetAlertDialog contestDialog;
     ImageView pencil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+       //DatabaseReference ref = database.getReference();
+        //ref.removeValue();
 
         context=this;
         pencil=(ImageView) this.findViewById(R.id.start_icon_pencil);
@@ -211,18 +223,29 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
     public void dowloadPrimoContest(View v){
-        Connector fireConnector= new FirebaseConnector(this,"contests");
+
+        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        contestDialog = new SweetAlertDialog(context,
+                SweetAlertDialog.PROGRESS_TYPE)
+                .setTitleText("Connecting to the Server");
+        contestDialog.show();
+
+
+        contestDialog.setCancelable(false);
+
         fireConnector.downloadContest(1);
     }
 
     public void stampaContestNelLog(View v){
 
         ContestDAO conDAO= new ContestDAOImpl(this);
+        QuestionDAOImpl questDAO= new QuestionDAOImpl(this);
         long st=System.currentTimeMillis();
         Log.i("###", "Partito");
         ArrayList<Contest> contests= conDAO.getAllContests();
         long end=System.currentTimeMillis();
         Log.i("###", "Tempo di fine: " + (end - st));
+        Log.i("###", "Numero di questions: " + questDAO.numberOfRows());
 
         /*for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
@@ -284,6 +307,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            Log.i("####","entro nel recevier");
+
             //TODO: React to the Intent Broadcast received.
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -298,17 +324,31 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         }
     }
 
+    public class ContestDataReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //TODO: React to the Intent Broadcast received.
+            contestDialog.setTitleText("Download completato!")
+                    .setConfirmText("OK")
+                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+        }
+    }
+
+
     @Override
     public void onResume(){
         super.onResume();
-        cmd= new ContestMetaDataReceiver();
-        registerReceiver(cmd, new IntentFilter(FirebaseConnector.INTENT_ACTION));
-
+        contestMetaDataReceiver= new ContestMetaDataReceiver();
+        contestDataReceiver= new ContestDataReceiver();
+        registerReceiver(contestMetaDataReceiver, new IntentFilter(MetaDataDownloadService.INTENT_ACTION));
+        registerReceiver(contestDataReceiver, new IntentFilter(AlternativeDownloadService.INTENT_ACTION_CONTEST));
     }
 
     @Override
     public void onPause() {
-        unregisterReceiver(cmd);
+        unregisterReceiver(contestMetaDataReceiver);
+        unregisterReceiver(contestDataReceiver);
         super.onPause();
     }
 

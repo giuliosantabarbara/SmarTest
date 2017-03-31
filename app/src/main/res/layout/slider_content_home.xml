@@ -6,6 +6,16 @@
               android:weightSum="100">
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="15"
+        android:background="@drawable/bg_round_rect"
+        android:gravity="center"
+        android:text="UFFICIALI ESERCITO 2017"
+        android:textColor="#ffffff"
+        android:textStyle="bold"/>
 
 
     <TextView
@@ -20,7 +30,7 @@
         android:paddingTop="30dp"
         android:gravity="top|center"
         android:text="@string/descrizione_concorso"
-        android:textColor="#9b92b3"
+        android:textColor="#ffffff"
         android:textStyle="bold"/>
 
 

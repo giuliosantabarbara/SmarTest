@@ -13,7 +13,8 @@ public interface QuestionDAO {
 
     public ArrayList<Question> getAllQuestionsByContestId(long contestId, SQLiteDatabase dbAlt,SQLiteDatabase dbQuest,SQLiteDatabase dbAtt);
     public Question getQuestionById(long questionId,SQLiteDatabase dbAtt);
-    public void insert(Question q);
+    public void insert(Question q,SQLiteDatabase db);
+    public SQLiteDatabase openWritableConnection();
     public Question deleteQuestion(long questionId);
     public ArrayList<Question> getAllQuestions();
     public ArrayList<String> getAllCategoriesByContestId(long contest_id);

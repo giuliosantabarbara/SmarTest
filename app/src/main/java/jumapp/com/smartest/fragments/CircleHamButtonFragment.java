@@ -116,6 +116,7 @@ public class CircleHamButtonFragment extends Fragment {
 
         //Initialization FIRST ham
         final BoomMenuButton bmbHam1 = (BoomMenuButton) view.findViewById(R.id.bmbHamm0);
+        bmbHam1.setNormalColor(R.color.pallino);
         ArrayList<String> scopes=conDAO.getAllContestsScopes();
         setEnum(bmbHam1, scopes.size());
 
