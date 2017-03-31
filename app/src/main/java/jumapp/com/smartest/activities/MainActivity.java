@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragment Handler
-        Connector firebase= new FirebaseConnector(this,"java/contests");
+        Connector firebase= new FirebaseConnector(this,"contests");
         firebase.downloadContestMetaData();
 
         final ContestDAO conDAO= new ContestDAOImpl(this);
@@ -218,11 +218,12 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
     public void downloadContestMetaData(View v){
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
         fireConnector.downloadContestMetaData();
     }
 
     public void dowloadPrimoContest(View v){
+
         Connector fireConnector= new FirebaseConnector(this,"java/contests");
         contestDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
@@ -231,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
 
         contestDialog.setCancelable(false);
+
         fireConnector.downloadContest(1);
     }
 

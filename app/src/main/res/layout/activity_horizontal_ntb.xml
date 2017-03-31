@@ -6,7 +6,22 @@
     android:layout_height="match_parent"
     android:background="#0f1f38"
     android:id="@+id/activity_horizontal_ntb"
-    android:orientation="vertical">
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#423752"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="15"
+        android:background="@drawable/bg_round_rect"
+        android:gravity="center"
+        android:text="UFFICIALI ESERCITO 2017"
+        android:textColor="#9b92b3"
+        android:textStyle="bold"/>
 
     <!--verde chiaro android:background="#bbcf4a"-->
 
@@ -17,12 +32,13 @@
         android:id="@+id/vp_horizontal_ntb"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="75"/>
 
     <devlight.io.library.ntb.NavigationTabBar
         android:id="@+id/ntb_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         app:ntb_badge_gravity="top"
         app:ntb_badge_position="right"
         app:ntb_badged="true"

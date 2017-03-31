@@ -99,12 +99,16 @@ public class FirebaseConnector implements Connector {
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     long st= System.currentTimeMillis();
                     Question q = messageSnapshot.getValue(Question.class);
+
+                    //Log.i("$$$",q.getText());
+                    questDao.insert(q);
                     long end=System.currentTimeMillis();
                     fire=fire+(end-st);
                     st= System.currentTimeMillis();
                     questDao.insert(q, db);
                     end=System.currentTimeMillis();
                     dbT=dbT+(end-st);
+
                 }
                 Log.i("###","DOWNLOAD COMPLETATO");
                 Log.i("###","TEMPO LEGATO A FIREBASE: "+fire);
