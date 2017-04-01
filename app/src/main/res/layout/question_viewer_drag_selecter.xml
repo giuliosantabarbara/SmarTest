@@ -7,9 +7,20 @@
     android:background="#0f1f38"
     android:orientation="vertical">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar_question_viewer"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            android:elevation="@dimen/mcab_toolbar_elevation"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:ignore="UnusedAttribute" />
 
         <ViewStub
             android:id="@+id/cab_stub"
@@ -17,6 +28,7 @@
             android:layout_height="?actionBarSize" />
 
     </FrameLayout>
+
 
     <com.afollestad.dragselectrecyclerview.DragSelectRecyclerView
         android:id="@+id/list_question_viewer"

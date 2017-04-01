@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class FragmentDragSelecter  extends Fragment implements
     private static int numberOfButtonSelected;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
+    private  Toolbar toolbar;
 
     @Nullable
     @Override
@@ -61,6 +63,9 @@ public class FragmentDragSelecter  extends Fragment implements
 
         mCab = MaterialCab.restoreState(savedInstanceState, (AppCompatActivity) getActivity(), this);
 
+        toolbar = (Toolbar) view.findViewById(R.id.main_toolbar_question_viewer);
+        toolbar.setTitle("Tenere premuto per selezionare");
+
 
         //to override on back pressed from a fragment
         view.setFocusableInTouchMode(true);
@@ -69,10 +74,10 @@ public class FragmentDragSelecter  extends Fragment implements
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                if (event.getAction() != KeyEvent.ACTION_DOWN)
                     return true;
 
-                Log.i("####","sono nel on key");
+                Log.i("####", "sono nel on key");
 
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (mAdapter.getSelectedCount() > 0)
@@ -87,7 +92,6 @@ public class FragmentDragSelecter  extends Fragment implements
                 return false;
             }
         });
-
 
         return view;
     }
@@ -110,6 +114,8 @@ public class FragmentDragSelecter  extends Fragment implements
     public void onLongClick(int index) {
         Log.i("LISTENER", "onLongClick");
         mList.setDragSelectActive(true, index);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        toolbar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -162,7 +168,9 @@ public class FragmentDragSelecter  extends Fragment implements
     @Override
     public boolean onCabFinished(MaterialCab cab) {
         Log.i("LISTENER", "onCabFinished");
+        toolbar.setVisibility(View.VISIBLE);
         mAdapter.clearSelected();
+       // ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Select Questions");
         return true;
     }
 }

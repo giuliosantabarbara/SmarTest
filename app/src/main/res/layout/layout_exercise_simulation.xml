@@ -8,46 +8,6 @@
     android:weightSum="100">
 
 
-    <!--<LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:weightSum="100"
-        android:layout_marginTop="10dp"
-        >
-
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:id="@+id/textView2"
-            />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView3"
-            android:layout_weight="30" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="15" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_arrow_drop_down_circle"
-            android:id="@+id/imageMenu"
-            android:layout_weight="27.08"
-            android:layout_gravity="right"
-            android:onClick="popupMenu"/>
-    </LinearLayout>-->
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -69,10 +29,11 @@
 
 
                 <TextView
-                    android:text="@string/lorem_ipsum"
+                    android:text="@string/question"
                     android:layout_width="match_parent"
+                    android:layout_margin="10dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_round_rect"
+                    android:background="@color/main_color_dark"
                     android:id="@+id/textViewQuestion"
                     android:textColor="@android:color/white"
                     android:layout_weight="85" />
@@ -109,6 +70,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="@string/c"
+
                             android:theme="@style/Theme.Intro"
                             android:textColor="@android:color/white"
                             android:background="@drawable/selector_question"
@@ -129,28 +91,4 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.79" />
-
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button3"
-            android:onClick="clickedButton"
-            android:layout_weight="0.79" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.79" />
-    </LinearLayout>
 </LinearLayout>

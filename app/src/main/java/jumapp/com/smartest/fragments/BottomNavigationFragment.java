@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -99,6 +101,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                 switch (position) {
                     case 0:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_home, null, false);
+                        ((TextView)view.findViewById(R.id.slider_content_text)).setMovementMethod(new ScrollingMovementMethod());
                         container.addView(view);
 
                         break;
@@ -171,11 +174,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         buttonPicker.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //Toast.makeText(context ,"You Clicked : inside the boombaby",Toast.LENGTH_SHORT).show();
-
-                               /* LinearLayout linearLayoutVertical = new LinearLayout(context);
-                                linearLayoutVertical.setOrientation(LinearLayout.VERTICAL);*/
-
                                 LinearLayout LL = new LinearLayout(context);
                                 LL.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -188,24 +186,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                                 LinearLayout.LayoutParams qPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 qPicerParams.weight = 1;
-
-                                /*TextView textView1 = new TextView(context);
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                                layoutParams.gravity = Gravity.CENTER;
-                                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                                textView1.setLayoutParams(layoutParams);
-                                textView1.setText("Da");
-                                textView1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                                //textView1.setBackgroundColor(0xffffdbdb); // hex color 0xAARRGGBB
-
-                                TextView textView2 = new TextView(context);
-                                layoutParams.gravity = Gravity.RIGHT;
-                                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                                textView2.setLayoutParams(layoutParams);
-                                textView2.setText("A");
-                                textView2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);*/
-
 
                                 MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(context)
                                         .minValue(1)
@@ -232,11 +212,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                         .build();
 
                                 LL.setLayoutParams(params);
-
-                                /*linearLayoutVertical.addView(textView1);
-                                linearLayoutVertical.addView(textView2);*/
-
-                                LL.addView(numberPicker, numPicerParams);
+               LL.addView(numberPicker, numPicerParams);
                                 LL.addView(numberPickerB, qPicerParams);
                                 //linearLayoutVertical.addView(LL.getRootView());
 
@@ -315,7 +291,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                 if(event.getAction() == KeyEvent.ACTION_DOWN)
                                                 {
                                                      ListView listView = (ListView) v;
-
                                                     switch(keyCode)
                                                     {
                                                         case KeyEvent.KEYCODE_BACK:
@@ -324,7 +299,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                             break;
                                                     }
                                                 }
-
                                                 return false;
                                             }
                                         });*/

@@ -34,11 +34,11 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
             insieme[i]= Color.parseColor("#009688");
         }
 
-        for(int i=20; i<40; i++){
+        for(int i=20; i<250; i++){
             insieme[i]=Color.parseColor("#A9A9A9");
         }
 
-        for(int i=40; i<250; i=i+10){
+       /* for(int i=40; i<250; i=i+10){
             insieme[i]=Color.parseColor("#F44336");
             insieme[i+1]=Color.parseColor("#F44336");
             insieme[i+2] = Color.parseColor("#E91E63");
@@ -50,7 +50,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
             insieme[i+8]=Color.parseColor("#00BCD4");
             insieme[i+9]=Color.parseColor("#009688");
 
-        }
+        }*/
         return insieme;
     }
 

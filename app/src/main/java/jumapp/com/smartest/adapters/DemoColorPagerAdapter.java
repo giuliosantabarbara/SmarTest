@@ -1,4 +1,4 @@
-package jumapp.com.smartest.utility;
+package jumapp.com.smartest.adapters;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.utility.ColorItem;
 
 
 public class DemoColorPagerAdapter extends PagerAdapter {
