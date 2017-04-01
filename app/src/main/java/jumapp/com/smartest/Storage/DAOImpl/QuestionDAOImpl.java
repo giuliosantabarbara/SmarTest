@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Attachment;
+import jumapp.com.smartest.Storage.DAOObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.Question;
 
 /**
@@ -94,6 +95,58 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         contentValues.put("Text",q.getText());
         contentValues.put("hasAttachment",hasAttach);
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+    }
+
+    @Override
+    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam) {
+        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
+        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        ArrayList<Question> questions = new ArrayList<Question>();
+
+        SQLiteDatabase dbQuest = this.getReadableDatabase();
+        SQLiteDatabase dbAlt=alt.openConnection();
+        SQLiteDatabase dbAtt=att.openConnection();
+
+        Cursor res =  dbQuest.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "' AND " +
+                "Category='"+categoryParam+"'", null);
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false) {
+
+            long question_id = Long.parseLong(res.getString(res.getColumnIndex("question_id")));
+            String category = res.getString(res.getColumnIndex("Category"));
+            String text = res.getString(res.getColumnIndex("Text"));
+
+            int isFavoritedint = Integer.parseInt(res.getString(res.getColumnIndex("isFavorited")));
+            boolean isFavorited = false;
+            if (isFavoritedint == 1) isFavorited = true;
+
+            int isStudiedint = Integer.parseInt(res.getString(res.getColumnIndex("isStudied")));
+            boolean isStudied = false;
+            if (isStudiedint == 1) isStudied = true;
+
+            boolean hasAttachment=false;
+            int intHasAttachment=Integer.parseInt(res.getString(res.getColumnIndex("hasAttachment")));
+            if(intHasAttachment==1) hasAttachment=true;
+
+            long contest_id = Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
+            ArrayList<Attachment> attachments=new ArrayList<Attachment>();
+
+            ArrayList<Alternative> alternatives = alt.getAllAlternativesByQuestionId(question_id, dbAlt, dbAtt);
+
+            if(hasAttachment) {
+                attachments = att.getAllAttachmentsByLinkId(question_id, "question", dbAtt);
+
+            }
+
+            Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
+                    alternatives,attachments,hasAttachment);
+            questions.add(tmp);
+            res.moveToNext();
+        }
+        res.close();
+
+        return questions;
     }
 
     public SQLiteDatabase openConnection(){
