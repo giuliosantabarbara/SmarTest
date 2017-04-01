@@ -18,5 +18,6 @@ public interface QuestionDAO {
     public Question deleteQuestion(long questionId);
     public ArrayList<Question> getAllQuestions();
     public ArrayList<String> getAllCategoriesByContestId(long contest_id);
+    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
 
 }

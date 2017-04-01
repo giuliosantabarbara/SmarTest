@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import jumapp.com.smartest.QuestionViewer.FragmentDragSelecter;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     /*@Bind(R.id.agenda_calendar_view)
     AgendaCalendarView mAgendaCalendarView;*/
 
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
     SharedPreferences.Editor editor;
     private ArrayList<Contest> myContests= new ArrayList<Contest>();
     private ChildEventListener childEventListener;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        prefs = this.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
        //DatabaseReference ref = database.getReference();
@@ -176,11 +179,14 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+            Log.i("####","MAIN BACK PRESSED RAMO ELSE");
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+
+
     }
 
 
@@ -349,5 +355,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         unregisterReceiver(contestDataReceiver);
         super.onPause();
     }
+
+
+
+
 
 }

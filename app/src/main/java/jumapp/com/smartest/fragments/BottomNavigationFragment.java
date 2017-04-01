@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.ViewPagerItemAdapter;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import devlight.io.library.ntb.NavigationTabBar;
+import jumapp.com.smartest.QuestionViewer.FragmentDragSelecter;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
@@ -44,25 +48,26 @@ import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
  * Created by giuli on 09/02/2017.
  */
 
-public class BottomNavigationFragment extends Fragment implements View.OnClickListener{
+public class BottomNavigationFragment extends Fragment implements View.OnClickListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Context context;
+    private View main_view;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.activity_horizontal_ntb, container,false);
-        context = view.getContext();
+        main_view = inflater.inflate(R.layout.activity_horizontal_ntb, container, false);
+        context = main_view.getContext();
 
         //mAgendaCalendarView = ButterKnife.findById(LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.calendar_view, null, false), R.id.agenda_calendar_view);
         //Log.i("Valore inizioAgenda: ",""+mAgendaCalendarView);
-       // Log.i("Valore mAgenda fuori: ",""+mAgendaCalendarView);
+        // Log.i("Valore mAgenda fuori: ",""+mAgendaCalendarView);
 
-        initUI(view);
-        return view;
+        initUI(main_view);
+        return main_view;
     }
 
     //Setter bottom navigation
@@ -88,10 +93,10 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
-                View view=null;
-                String[] nameproducts = new String[] { "Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica" , "Logica" };
-                int[] num = new int[] { 10, 20, 5, 33, 75, 12,35 };
-                switch(position){
+                View view = null;
+                String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
+                int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
+                switch (position) {
                     case 0:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_home, null, false);
                         container.addView(view);
@@ -102,44 +107,43 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_studio_esercitazione, null, false);
                         container.addView(view);
 
-
-                        /*final ArrayList<String> listp = new ArrayList<String>();
-                        for (int i = 0; i < nameproducts.length; ++i) {
-                            listp.add(nameproducts[i]);
-                        }*/
-                        final ListView myList = (ListView)getActivity().findViewById(R.id.listViewCategorie);
-
-                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nameproducts,num);
+                        final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
+                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nameproducts, num);
                         myList.setAdapter(ad);
 
 
-                       /* final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.list_view_style,R.id.text1, listp);
-                        myList.setAdapter(adapter);*/
+
+                        myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Log.i("####", "Cliccato numero: " + position);
+
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.add(R.id.activity_main, new FragmentDragSelecter());
+                                fragmentTransaction.addToBackStack("back");
+                                fragmentTransaction.commit();
+
+                            }
+                        });
 
 
 
-                        /*final ArrayList<Float> listprogress = new ArrayList<Float>();
-                        for (int i = 0; i < nameproducts.length; ++i) {
-                            listprogress.add(20.5f);
-                        }
-
-                        final ListView myListProgress = (ListView)getActivity().findViewById(R.id.listViewCategorie);
-                        final ArrayAdapter<Float> adapterProgress = new ArrayAdapter<Float>(getActivity(),R.layout.list_view_style,R.id.progress, listprogress);
-                        myListProgress.setAdapter(adapter);*/
 
                         break;
+
                     case 2:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_simulazione_esercitazione, null, false);
                         container.addView(view);
                         RadioGroup rgp = (RadioGroup) view.findViewById(R.id.radio_group);
                         int buttons = 30;
-                        for (int i = 1; i <= buttons ; i++) {
+                        for (int i = 1; i <= buttons; i++) {
                             RadioButton rbn = new RadioButton(context);
                             rbn.setId(i + 1000);
                             rbn.setText("RadioButton" + i);
                             rgp.addView(rbn);
                         }
-                        final ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollview_choices);
+                        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollview_choices);
                         scrollView.post(new Runnable() {
                             @Override
                             public void run() {
@@ -149,7 +153,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             }
                         });
 
-                        Button button = (Button)getActivity().findViewById(R.id.button_esercitazione);
+                        Button button = (Button) getActivity().findViewById(R.id.button_esercitazione);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -163,8 +167,8 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             }
                         });
 
-                        Button buttonPicker = (Button)getActivity().findViewById(R.id.buttonPickerNumber);
-                        buttonPicker.setOnClickListener(new View.OnClickListener(){
+                        Button buttonPicker = (Button) getActivity().findViewById(R.id.buttonPickerNumber);
+                        buttonPicker.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 //Toast.makeText(context ,"You Clicked : inside the boombaby",Toast.LENGTH_SHORT).show();
@@ -204,16 +208,16 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
 
                                 MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(context)
-                                    .minValue(1)
-                                    .maxValue(10)
-                                    .defaultValue(1)
-                                    .backgroundColor(Color.WHITE)
-                                    .separatorColor(Color.TRANSPARENT)
-                                    .textColor(Color.BLACK)
-                                    .textSize(20)
-                                    .enableFocusability(false)
-                                    .wrapSelectorWheel(true)
-                                     .build();
+                                        .minValue(1)
+                                        .maxValue(10)
+                                        .defaultValue(1)
+                                        .backgroundColor(Color.WHITE)
+                                        .separatorColor(Color.TRANSPARENT)
+                                        .textColor(Color.BLACK)
+                                        .textSize(20)
+                                        .enableFocusability(false)
+                                        .wrapSelectorWheel(true)
+                                        .build();
 
                                 MaterialNumberPicker numberPickerB = new MaterialNumberPicker.Builder(context)
                                         .minValue(1)
@@ -232,20 +236,20 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 /*linearLayoutVertical.addView(textView1);
                                 linearLayoutVertical.addView(textView2);*/
 
-                                LL.addView(numberPicker,numPicerParams);
-                                LL.addView(numberPickerB,qPicerParams);
+                                LL.addView(numberPicker, numPicerParams);
+                                LL.addView(numberPickerB, qPicerParams);
                                 //linearLayoutVertical.addView(LL.getRootView());
 
                                 new AlertDialog.Builder(context)
-                                    .setTitle("Picker try")
-                                    .setView(LL)
-                                    .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                                         @Override
-                                         public void onClick(DialogInterface dialog, int which) {
-                                            //Snackbar.make(findViewById(R.id.your_container), "You picked : " + numberPicker.getValue(), Snackbar.LENGTH_LONG).show();
-                                     }
-                                 })
-                                .show();
+                                        .setTitle("Picker try")
+                                        .setView(LL)
+                                        .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //Snackbar.make(findViewById(R.id.your_container), "You picked : " + numberPicker.getValue(), Snackbar.LENGTH_LONG).show();
+                                            }
+                                        })
+                                        .show();
 
                             }
                         });
@@ -255,7 +259,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_statistics, null, false);
                         container.addView(view);
-
 
 
                         ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(context)
@@ -271,16 +274,17 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                         viewPagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                             boolean first = true;
+
                             @Override
                             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                                if(position==0 && first){
+                                if (position == 0 && first) {
 
                                     String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
                                     int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
                                     final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
                                     ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
                                     myListStatistics.setAdapter(st);
-                                    first=false;
+                                    first = false;
 
                                 }
                             }
@@ -288,20 +292,20 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             @Override
                             public void onPageSelected(int position) {
 
-                                switch(position){
+                                switch (position) {
                                     case 0:
 
-                                        String[] nameproducts = new String[] { "Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica" , "Logica" };
-                                        int[] num = new int[] { 10, 20, 5, 33, 75, 12,35 };
+                                        String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
+                                        int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
                                         final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
-                                        ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts,num);
+                                        ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
                                         myListStatistics.setAdapter(st);
                                         break;
                                     case 1:
-                                        String[] name = new String[] { "Simulazione 1", "Simulazione 2", "Simulazione 3", "Simulazione 4" };
-                                        int[] nume = new int[] { 75, 25, 55, 33, 75, 12,35 };
+                                        String[] name = new String[]{"Simulazione 1", "Simulazione 2", "Simulazione 3", "Simulazione 4"};
+                                        int[] nume = new int[]{75, 25, 55, 33, 75, 12, 35};
                                         final ListView myListStatisticsSim = (ListView) getView().findViewById(R.id.listViewExameStatistics);
-                                        SimulationStatisticAdapter stSim = new   SimulationStatisticAdapter(context, name,nume);
+                                        SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, name, nume);
                                         myListStatisticsSim.setAdapter(stSim);
                                         /*myListStatisticsSim.setOnKeyListener(new View.OnKeyListener() {
                                             @Override
@@ -327,10 +331,10 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                         myListStatisticsSim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String[] nameproducts = new String[] { "Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica" , "Logica" };
-                                                int[] num = new int[] { 10, 20, 5, 33, 75, 12,35 };
+                                                String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
+                                                int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
                                                 final ListView myListStatistics = (ListView) view.findViewById(R.id.listViewExameStatistics);
-                                                SimulationStatisticAdapter stSim = new   SimulationStatisticAdapter(context, nameproducts,num);
+                                                SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, nameproducts, num);
                                                 myListStatisticsSim.setAdapter(stSim);
                                             }
                                         });
@@ -349,13 +353,13 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                     case 4:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.bottone, null, false);
                         container.addView(view);
-                        Button b = (Button)getActivity().findViewById(R.id.button);
+                        Button b = (Button) getActivity().findViewById(R.id.button);
                         b.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                                 Intent myIntent = new Intent(getActivity(), StudyPlanIntro.class);
-                                ((MainActivity)getActivity()).startActivity(myIntent);
+                                ((MainActivity) getActivity()).startActivity(myIntent);
                             }
                         });
                         break;
@@ -368,11 +372,10 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         break;
                 }
 
-              //  final TextView txtPage = (TextView) view.findViewById(R.id.txt_vp_item_page);
-             //   txtPage.setText(String.format("Page #%d", position));
-          //      JustifiedTextView myMsg = (JustifiedTextView) view.findViewById(R.id.t1);
-            //    myMsg.setText(getActivity().getResources().getString(R.string.descrizione_concorso));
-
+                //  final TextView txtPage = (TextView) view.findViewById(R.id.txt_vp_item_page);
+                //   txtPage.setText(String.format("Page #%d", position));
+                //      JustifiedTextView myMsg = (JustifiedTextView) view.findViewById(R.id.t1);
+                //    myMsg.setText(getActivity().getResources().getString(R.string.descrizione_concorso));
 
 
                 return view;
