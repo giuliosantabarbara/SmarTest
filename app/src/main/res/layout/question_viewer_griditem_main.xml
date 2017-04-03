@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
-    <jumapp.com.smartest.QuestionViewer.RectangleView
+    <jumapp.com.smartest.QuestionViewer.DragSelecter.RectangleView
         android:id="@+id/colorSquare"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,6 +22,6 @@
             tools:ignore="UnusedAttribute"
             tools:text="A" />
 
-    </jumapp.com.smartest.QuestionViewer.RectangleView>
+    </jumapp.com.smartest.QuestionViewer.DragSelecter.RectangleView>
 
 </FrameLayout>

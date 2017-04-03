@@ -335,5 +335,23 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         return array_list;
     }
 
+    //SELECT NAME, count(*) as NUM FROM tbl GROUP BY NAME
+
+    @Override
+    public ArrayList<Integer> getPercentageStudiedByCategory(long contest_id) {
+
+        ArrayList<Integer> array_list = new ArrayList<Integer>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select *, count(*) from \""+CONTACTS_TABLE_NAME+"\" where isStudied=1 AND contest_id='"+contest_id+"' group by Category", null );
+        res.moveToFirst();
+        while(res.isAfterLast() == false){
+            array_list.add(res.getCount());
+        }
+        res.close();
+        db.close();
+
+        return array_list;
+    }
+
 
 }

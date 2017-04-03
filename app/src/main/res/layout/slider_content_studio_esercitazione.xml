@@ -6,14 +6,13 @@
     android:weightSum="100">
 
 
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        android:background="@drawable/bg_round_rect"
+        android:background="#0f1f38"
         android:id="@+id/listViewCategorie"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="85" />
+        android:layout_weight="95" />
 
 </LinearLayout>

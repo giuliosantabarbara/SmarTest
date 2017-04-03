@@ -1,5 +1,6 @@
 package jumapp.com.smartest.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,14 +8,15 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.ViewPagerItemAdapter;
@@ -35,8 +37,12 @@ import java.util.ArrayList;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import devlight.io.library.ntb.NavigationTabBar;
-import jumapp.com.smartest.QuestionViewer.FragmentDragSelecter;
+import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
+import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
@@ -54,7 +60,11 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
     Context context;
     private View main_view;
-
+    private int contest_id=1;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+    private QuestionDAO quest;
+    public static ArrayList<Question> questionsByCategory=null;
 
     @Nullable
     @Override
@@ -72,6 +82,10 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
     //Setter bottom navigation
     private void initUI(View view) {
+        prefs = getActivity().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+        quest= new QuestionDAOImpl(context);
+
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.vp_horizontal_ntb);
         /*mAgendaCalendarView= (AgendaCalendarView) view.findViewById(R.id.agenda_calendar_view);
         Log.i("Valore inizioAgenda: ",""+mAgendaCalendarView);*/
@@ -94,11 +108,10 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
                 View view = null;
-                String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
-                int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
                 switch (position) {
                     case 0:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_home, null, false);
+                        ((TextView)view.findViewById(R.id.slider_content_text)).setMovementMethod(new ScrollingMovementMethod());
                         container.addView(view);
 
                         break;
@@ -107,8 +120,32 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_studio_esercitazione, null, false);
                         container.addView(view);
 
+                        //get the names and studying percentage of each category to fill the statistic view
+
+
+                        ArrayList<Integer> array_list=quest.getPercentageStudiedByCategory(1);
+                        int[] result= new int[array_list.size()];
+                        int m=0;
+                        for(Integer in: array_list){
+                            Log.i("###","integer: "+in);
+                            result[m]= in;
+                            m++;
+                        }
+
+                        final ArrayList<String> names= quest.getAllCategoriesByContestId(contest_id);
+                        int[] n= new int[names.size()];
+                        String[] nam= new String[names.size()];
+                        int k=0;
+                        for(String s: names){
+                            nam[k]=s;
+                            n[k]=3;
+                            k++;
+
+                        }
+
+
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
-                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nameproducts, num);
+                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n,contest_id);
                         myList.setAdapter(ad);
 
 
@@ -118,9 +155,16 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Log.i("####", "Cliccato numero: " + position);
 
+                                Log.i("####", "Partito " +names.get(position));
+                                questionsByCategory=quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));
+                                Log.i("####", "Finito" +questionsByCategory.get(0).getText());
+                                QuestionsByCategorySingleton.getInstance().setQuestions(questionsByCategory);
+
+
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.add(R.id.activity_main, new FragmentDragSelecter());
+                                FragmentDragSelecter fr= new FragmentDragSelecter();
+                                fragmentTransaction.add(R.id.activity_main, fr);
                                 fragmentTransaction.addToBackStack("back");
                                 fragmentTransaction.commit();
 
@@ -171,11 +215,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         buttonPicker.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //Toast.makeText(context ,"You Clicked : inside the boombaby",Toast.LENGTH_SHORT).show();
-
-                               /* LinearLayout linearLayoutVertical = new LinearLayout(context);
-                                linearLayoutVertical.setOrientation(LinearLayout.VERTICAL);*/
-
                                 LinearLayout LL = new LinearLayout(context);
                                 LL.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -188,24 +227,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                                 LinearLayout.LayoutParams qPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 qPicerParams.weight = 1;
-
-                                /*TextView textView1 = new TextView(context);
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                                layoutParams.gravity = Gravity.CENTER;
-                                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                                textView1.setLayoutParams(layoutParams);
-                                textView1.setText("Da");
-                                textView1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                                //textView1.setBackgroundColor(0xffffdbdb); // hex color 0xAARRGGBB
-
-                                TextView textView2 = new TextView(context);
-                                layoutParams.gravity = Gravity.RIGHT;
-                                layoutParams.setMargins(10, 10, 10, 10); // (left, top, right, bottom)
-                                textView2.setLayoutParams(layoutParams);
-                                textView2.setText("A");
-                                textView2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);*/
-
 
                                 MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(context)
                                         .minValue(1)
@@ -232,10 +253,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                         .build();
 
                                 LL.setLayoutParams(params);
-
-                                /*linearLayoutVertical.addView(textView1);
-                                linearLayoutVertical.addView(textView2);*/
-
                                 LL.addView(numberPicker, numPicerParams);
                                 LL.addView(numberPickerB, qPicerParams);
                                 //linearLayoutVertical.addView(LL.getRootView());
@@ -315,7 +332,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                 if(event.getAction() == KeyEvent.ACTION_DOWN)
                                                 {
                                                      ListView listView = (ListView) v;
-
                                                     switch(keyCode)
                                                     {
                                                         case KeyEvent.KEYCODE_BACK:
@@ -324,7 +340,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                             break;
                                                     }
                                                 }
-
                                                 return false;
                                             }
                                         });*/

@@ -15,8 +15,6 @@ import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.utility.ColorItem;
-import jumapp.com.smartest.utility.DemoColorPagerAdapter;
-import jumapp.com.smartest.utility.NumberList;
 
 
 public class ExcerciseAdapter extends RecyclerTabLayout.Adapter<ExcerciseAdapter.ViewHolder> {
@@ -65,21 +63,12 @@ public class ExcerciseAdapter extends RecyclerTabLayout.Adapter<ExcerciseAdapter
             color =  itemView.findViewById(R.id.colorQuestion);
             Resources res = itemView.getResources();
 
-            /*color.setBackground(res.getDrawable(R.drawable.custom_shape));
-            color.setBackgroundResource(R.drawable.custom_shape);*/
-            //color.setBackground(res.getDrawable(R.drawable.custom_shape));
-
-            //Drawable drawable = res.getDrawable(R.drawable.custom_shape);
-            //itemView.setBackground(drawable);
-            itemView.setOnClickListener(new View.OnClickListener() {
+             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getViewPager().setCurrentItem(getAdapterPosition());
-                    /*View vi = (View)itemView.findViewById(R.id.color);
-                    vi.setBackgroundColor(Color.GREEN);*/
                     View c = v.findViewById(R.id.colorQuestion);
-                    ColorItem colorItem = NumberList.getList().get(getAdapterPosition());
-                    c.setBackgroundResource(R.drawable.custom_shape_yellow);
+                     c.setBackgroundResource(R.drawable.custom_shape_yellow);
                 }
             });
         }

@@ -1,5 +1,8 @@
-package jumapp.com.smartest.QuestionViewer;
+package jumapp.com.smartest.QuestionViewer.DragSelecter;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -7,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +21,13 @@ import android.widget.TextView;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 
+import java.util.ArrayList;
+
+import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
+import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.fragments.ExerciseFragment;
 
 /**
  * Created by marco on 31/03/2017.
@@ -26,38 +36,31 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
 
     private final static int[] COLORS = color();
     private final static String[] TEXT=textInitialization();
+    private static Context context;
+    private SharedPreferences prefs;
+    private static SharedPreferences.Editor editor;
 
+    //
 
     public static int[] color(){
-        int [] insieme= new int[250];
-        for(int i=0; i<20; i++){
-            insieme[i]= Color.parseColor("#009688");
+       ArrayList<Question> questions = QuestionsByCategorySingleton.getInstance().getQuestions();
+        int [] insieme= new int[questions.size()];
+        for(int i=0; i<questions.size(); i++){
+            if(questions.get(i).getStudied()) insieme[i]= Color.parseColor("#009688");
+            else insieme[i]=Color.parseColor("#A9A9A9");
         }
 
-        for(int i=20; i<40; i++){
-            insieme[i]=Color.parseColor("#A9A9A9");
-        }
 
-        for(int i=40; i<250; i=i+10){
-            insieme[i]=Color.parseColor("#F44336");
-            insieme[i+1]=Color.parseColor("#F44336");
-            insieme[i+2] = Color.parseColor("#E91E63");
-            insieme[i+3]=Color.parseColor("#9C27B0");
-            insieme[i+4]=Color.parseColor("#673AB7");
-            insieme[i+5]=Color.parseColor("#3F51B5");
-            insieme[i+6]=Color.parseColor("#2196F3");
-            insieme[i+7]=Color.parseColor("#03A9F4");
-            insieme[i+8]=Color.parseColor("#00BCD4");
-            insieme[i+9]=Color.parseColor("#009688");
-
-        }
         return insieme;
     }
 
     public static String[] textInitialization(){
-        String [] insieme= new String[250];
-        for(int i=0; i<250; i++){
-            insieme[i]=""+i;
+
+        //ArrayList<Question> questions = ((QuestionsByCategory) parent.getContext()getApplication()).getSomeVariable();
+        ArrayList<Question> questions = QuestionsByCategorySingleton.getInstance().getQuestions();
+        String [] insieme= new String[questions.size()];
+        for(int i=0; i<questions.size(); i++){
+            insieme[i]=""+(i+1);
         }
         return insieme;
     }
@@ -73,6 +76,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
     protected MainAdapter(ClickListener callback) {
         super();
         mCallback = callback;
+
     }
 
     public String getItem(int index) {
@@ -82,13 +86,17 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
     @Override
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_viewer_griditem_main, parent, false);
+
+        context=parent.getContext();
+        prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
         return new MainViewHolder(v, mCallback);
     }
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-
         holder.label.setText(getItem(position));
 
         final Drawable d;
@@ -145,8 +153,12 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
             if (mCallback != null) {
                 mCallback.onClick(getAdapterPosition());
 
+                Log.i("###", "POSITION " + getAdapterPosition());
+
                 prefs = itemView.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
                 int numberOfButtonSelected=prefs.getInt("numberOfButtonSelected",0);
+                editor.putInt("question_selected", getAdapterPosition());
+                editor.commit();
 
                 if(  numberOfButtonSelected==0 ) {
                     final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
@@ -154,6 +166,16 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
                     MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
                     myAnim.setInterpolator(interpolator);
                     v.startAnimation(myAnim);
+
+                    editor.putInt("question_selected", getAdapterPosition());
+                    editor.commit();
+
+                    FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.add(R.id.activity_main, new StudyFragment());
+                    fragmentTransaction.addToBackStack("back");
+                    fragmentTransaction.commit();
+
                 }
             }
 

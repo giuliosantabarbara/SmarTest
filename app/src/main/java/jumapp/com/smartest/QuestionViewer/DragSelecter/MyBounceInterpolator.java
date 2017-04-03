@@ -1,4 +1,4 @@
-package jumapp.com.smartest.QuestionViewer;
+package jumapp.com.smartest.QuestionViewer.DragSelecter;
 
 /**
  * Created by marco on 31/03/2017.

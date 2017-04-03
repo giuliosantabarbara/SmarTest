@@ -21,8 +21,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import jumapp.com.smartest.QuestionViewer.FragmentDragSelecter;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
@@ -42,12 +39,10 @@ import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
-import jumapp.com.smartest.fragments.SimulationEndFragment;
 
 
 public class MainActivity extends AppCompatActivity implements CircleHamButtonFragment.OnSelectedButtonListener, NavigationView.OnNavigationItemSelectedListener {
@@ -230,7 +225,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     public void dowloadPrimoContest(View v){
 
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
+
         contestDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Connecting to the Server");
@@ -253,6 +249,12 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         Log.i("###", "Tempo di fine: " + (end - st));
         Log.i("###", "Numero di questions: " + questDAO.numberOfRows());
 
+        AlternativeDAOImpl impl = new AlternativeDAOImpl(this);
+        ArrayList<Alternative> array = impl.getAllAlternatives();
+
+        for(Alternative a: array){
+           a.printLog("!!!!");
+        }
         /*for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
             Log.i("###",""+questions.size());

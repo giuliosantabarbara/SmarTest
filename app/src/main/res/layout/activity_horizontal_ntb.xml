@@ -8,9 +8,11 @@
     android:id="@+id/activity_horizontal_ntb"
 
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#423752"
     android:orientation="vertical"
     android:weightSum="100">
+
+
+
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +22,7 @@
         android:background="@drawable/bg_round_rect"
         android:gravity="center"
         android:text="UFFICIALI ESERCITO 2017"
-        android:textColor="#9b92b3"
+        android:textColor="#ffffff"
         android:textStyle="bold"/>
 
     <!--verde chiaro android:background="#bbcf4a"-->
