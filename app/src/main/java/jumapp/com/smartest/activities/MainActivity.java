@@ -223,7 +223,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
     public void dowloadPrimoContest(View v){
+
         Connector fireConnector= new FirebaseConnector(this,"contests");
+
         contestDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Connecting to the Server");
@@ -231,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
 
         contestDialog.setCancelable(false);
+
         fireConnector.downloadContest(1);
     }
 

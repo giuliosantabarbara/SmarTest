@@ -8,8 +8,10 @@
     android:id="@+id/activity_horizontal_ntb"
 
     xmlns:tools="http://schemas.android.com/tools"
+
     android:orientation="vertical"
     android:weightSum="100">
+
 
 
 
