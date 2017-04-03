@@ -73,20 +73,26 @@ public class StudyFragmentAdapter extends PagerAdapter {
         });
 
 
-         ArrayList<Alternative> alternatives = quest.getAlternatives();
-        for (final Alternative a : alternatives) {
+        ArrayList<Alternative> alternatives = quest.getAlternatives();
+        Log.i("!!!!: ","");
+
+
+        for (Alternative a : alternatives) {
 
             View viewQuest = LayoutInflater.from(container.getContext())
-                    .inflate(R.layout.answer_layout, container, false);
-            final TextView txt = (TextView) viewQuest.findViewById(R.id.text_view_answer);
+                    .inflate(R.layout.answer_layout_tmp, container, false);
+            TextView txt = (TextView) viewQuest.findViewById(R.id.text_view_answer_alternative);
             txt.setText(a.getText());
             frame.addView(viewQuest);
 
-    }
-    container.addView(view);
+            Log.i("prova: ","::::"+txt.getText());
+            Log.i("!!!!: ",""+a.getText());
 
-    return view;
-}
+        }
+        container.addView(view);
+
+        return view;
+    }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {

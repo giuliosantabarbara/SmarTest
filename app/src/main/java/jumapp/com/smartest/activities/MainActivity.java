@@ -39,6 +39,7 @@ import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
@@ -248,6 +249,12 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         Log.i("###", "Tempo di fine: " + (end - st));
         Log.i("###", "Numero di questions: " + questDAO.numberOfRows());
 
+        AlternativeDAOImpl impl = new AlternativeDAOImpl(this);
+        ArrayList<Alternative> array = impl.getAllAlternatives();
+
+        for(Alternative a: array){
+           a.printLog("!!!!");
+        }
         /*for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
             Log.i("###",""+questions.size());

@@ -1,20 +1,13 @@
 package jumapp.com.smartest.adapters;
 
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
-import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -73,7 +66,7 @@ public class DemoColorPagerAdapter extends PagerAdapter {
         int i=0;
         while(i<10) {
              View viewQuest=LayoutInflater.from(frame.getContext())
-                    .inflate(R.layout.answer_layout, container, false);
+                    .inflate(R.layout.answer_layout_tmp, container, false);
             frame.addView(viewQuest);
 
             i++;
