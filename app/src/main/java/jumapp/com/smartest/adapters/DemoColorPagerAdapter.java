@@ -1,9 +1,20 @@
 package jumapp.com.smartest.adapters;
 
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
+import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,13 +31,53 @@ public class DemoColorPagerAdapter extends PagerAdapter {
     public DemoColorPagerAdapter() {
     }
 
+
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.layout_exercise_simulation, container, false);
 
-        TextView textView = (TextView) view.findViewById(R.id.title);
-        //textView.setText("Page: " + mItems.get(position).name);
+        LinearLayout frame=(LinearLayout)view.findViewById(R.id.layout_exercise_frame);
+        final TextView tv = (TextView) view.findViewById(R.id.textViewQuestionStudy);
+        tv.setMovementMethod(new ScrollingMovementMethod());
+        final LinearLayout linear= (LinearLayout) view.findViewById(R.id.layout_exercise_linear);
+
+        tv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int tvH=tv.getHeight();
+                int lH= linear.getHeight();
+
+                if(tvH> lH*0.7 ){
+                    ViewGroup.LayoutParams params = tv.getLayoutParams();
+                    params.height = (int) (lH*0.7);
+                    tv.setLayoutParams(params);
+                    Log.i("###", "sono nel if ed ho modificato la size");
+                }
+
+                if(tvH< lH*0.2){
+                    ViewGroup.LayoutParams params = tv.getLayoutParams();
+                    params.height = (int) (lH*0.2);
+                    tv.setLayoutParams(params);
+                    Log.i("###", "sono nel if ed ho modificato la size");
+                }
+
+                tv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+            }
+        });
+
+
+
+        int i=0;
+        while(i<10) {
+             View viewQuest=LayoutInflater.from(frame.getContext())
+                    .inflate(R.layout.answer_layout, container, false);
+            frame.addView(viewQuest);
+
+            i++;
+        }
         container.addView(view);
 
         return view;

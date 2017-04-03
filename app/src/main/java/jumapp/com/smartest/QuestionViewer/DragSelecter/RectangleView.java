@@ -1,4 +1,4 @@
-package jumapp.com.smartest.QuestionViewer;
+package jumapp.com.smartest.QuestionViewer.DragSelecter;
 
 import android.annotation.TargetApi;
 import android.content.Context;

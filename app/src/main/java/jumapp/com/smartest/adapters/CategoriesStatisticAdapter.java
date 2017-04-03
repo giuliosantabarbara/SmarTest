@@ -9,7 +9,12 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
+import java.util.ArrayList;
+
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 
 
 /**
@@ -18,8 +23,8 @@ import jumapp.com.smartest.R;
 
 public class CategoriesStatisticAdapter extends StatisticsAdapter {
 
-    public CategoriesStatisticAdapter(Context context, String[] text, int[] progress) {
-        super(context, text, progress);
+    public CategoriesStatisticAdapter(Context context,String nam[], int[] n,int contest_id) {
+        super(context,nam , n);
     }
     //this method will be called for every item of your listview
     @Override

@@ -1,4 +1,4 @@
-package jumapp.com.smartest.QuestionViewer;
+package jumapp.com.smartest.QuestionViewer.DragSelecter;
 
 
 import android.app.Fragment;
@@ -16,8 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.Toast;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
@@ -48,6 +46,12 @@ public class FragmentDragSelecter  extends Fragment implements
         prefs = getActivity().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
         numberOfButtonSelected=0;
+        String category_selected=null;
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            category_selected = bundle.getString("category_selected");
+        }
 
         // Setup adapter and callbacks
         mAdapter = new MainAdapter(this);
@@ -55,6 +59,7 @@ public class FragmentDragSelecter  extends Fragment implements
         mAdapter.setSelectionListener(this);
         // Restore selected indices after Activity recreation
         mAdapter.restoreInstanceState(savedInstanceState);
+
 
         // Setup the RecyclerView
         mList = (DragSelectRecyclerView) view.findViewById(R.id.list_question_viewer);

@@ -3,92 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:weightSum="2"
+    android:id="@+id/layout_exercise_linear"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:weightSum="100">
+    android:orientation="vertical">
 
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="85"
+    <TextView
         android:layout_margin="10dp"
-        android:weightSum="100">
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_question"
+        android:id="@+id/textViewQuestionStudy"
+        android:scrollbars = "vertical"
+        android:gravity="center"
+        android:textColor="@android:color/white" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <ScrollView
+        android:id="@+id/scrollview_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
             <LinearLayout
+                android:layout_margin="10dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-
                 android:layout_height="match_parent"
+                android:id="@+id/layout_exercise_frame"
+               >
 
-                android:weightSum="100">
-
-
-                <TextView
-                    android:text="@string/question"
-                    android:layout_width="match_parent"
-                    android:layout_margin="10dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/main_color_dark"
-                    android:id="@+id/textViewQuestion"
-                    android:textColor="@android:color/white"
-                    android:layout_weight="85" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <RadioGroup
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_round_rect"
-                        android:layout_margin="10dp">
-
-                        <RadioButton android:id="@+id/radio_a"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="@string/a"
-                            android:theme="@style/Theme.Intro"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/selector_question"
-                            />
-
-                        <RadioButton android:id="@+id/radio_b"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="@string/b"
-                            android:theme="@style/Theme.Intro"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/selector_question"
-                           />
-                        <RadioButton android:id="@+id/radio_c"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="@string/c"
-
-                            android:theme="@style/Theme.Intro"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/selector_question"
-                           />
-                        <RadioButton android:id="@+id/radio_d"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="@string/d"
-                            android:theme="@style/Theme.Intro"
-                            android:textColor="@android:color/white"
-                            android:background="@drawable/selector_question"
-                            />
-                    </RadioGroup>
-                </FrameLayout>
-
-            </LinearLayout>
-        </ScrollView>
-
-    </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
+
+
+
+
+
