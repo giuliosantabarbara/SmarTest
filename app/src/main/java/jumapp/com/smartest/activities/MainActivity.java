@@ -21,8 +21,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
@@ -41,12 +39,9 @@ import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
-import jumapp.com.smartest.fragments.SimulationEndFragment;
 
 
 public class MainActivity extends AppCompatActivity implements CircleHamButtonFragment.OnSelectedButtonListener, NavigationView.OnNavigationItemSelectedListener {
@@ -54,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     /*@Bind(R.id.agenda_calendar_view)
     AgendaCalendarView mAgendaCalendarView;*/
 
-    SharedPreferences prefs;
+    private SharedPreferences prefs;
     SharedPreferences.Editor editor;
     private ArrayList<Contest> myContests= new ArrayList<Contest>();
     private ChildEventListener childEventListener;
@@ -71,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        prefs = this.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
        //DatabaseReference ref = database.getReference();
@@ -176,11 +173,14 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+            Log.i("####","MAIN BACK PRESSED RAMO ELSE");
+            if (getFragmentManager().getBackStackEntryCount() > 0) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
+
+
     }
 
 
@@ -224,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     public void dowloadPrimoContest(View v){
 
-        Connector fireConnector= new FirebaseConnector(this,"java/contests");
+        Connector fireConnector= new FirebaseConnector(this,"contests");
+
         contestDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
                 .setTitleText("Connecting to the Server");
@@ -351,5 +352,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         unregisterReceiver(contestDataReceiver);
         super.onPause();
     }
+
+
+
+
 
 }

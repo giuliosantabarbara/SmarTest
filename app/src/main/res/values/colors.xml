@@ -11,7 +11,13 @@
     <color name="pallino">#0000ff</color>
 
 
+    <color name="grid_label_text_normal">#FFF</color>
+    <color name="grid_label_text_selected">#B3FFFFFF</color>
+    <color name="grid_foreground_selected">#B3000000</color>
+    <color name="colorSquare">#7f0c00</color>
 
+    <color name="main_color_dark">#0f1f38</color>
+    <color name="main_color_middle">#1a405f</color>
 
 
     <color name="primary">#607D8B</color>

@@ -13,13 +13,13 @@
     android:layout_marginLeft="10sp"
     android:paddingLeft="11sp"
     android:layout_width="fill_parent"
-    android:textColor="#9b92b3"
+    android:textColor="#ffffff"
     android:layout_height="wrap_content" />
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
         android:id="@+id/progress"
         android:layout_height="30dp"
-        android:layout_width="285dp"
+        android:layout_width="339dp"
         android:layout_gravity="center"
         app:rcBackgroundPadding="5dp" />
     <Space
@@ -27,4 +27,5 @@
         android:layout_height="10dp"
         android:layout_weight="0"
         tools:ignore="NestedWeights" />
+
 </LinearLayout>
