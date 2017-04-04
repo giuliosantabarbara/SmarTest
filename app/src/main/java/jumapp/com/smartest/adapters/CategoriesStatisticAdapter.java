@@ -9,12 +9,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
-import java.util.ArrayList;
-
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Question;
 
 
 /**

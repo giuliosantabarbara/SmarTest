@@ -1,6 +1,5 @@
 package jumapp.com.smartest.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -40,9 +39,9 @@ import devlight.io.library.ntb.NavigationTabBar;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
 import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;

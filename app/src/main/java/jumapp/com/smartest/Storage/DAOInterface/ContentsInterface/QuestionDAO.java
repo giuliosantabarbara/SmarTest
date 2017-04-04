@@ -1,10 +1,10 @@
-package jumapp.com.smartest.Storage.DAOInterface;
+package jumapp.com.smartest.Storage.DAOInterface.ContentsInterface;
 
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 18/03/2017.

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOObject.Alternative;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 02/04/2017.

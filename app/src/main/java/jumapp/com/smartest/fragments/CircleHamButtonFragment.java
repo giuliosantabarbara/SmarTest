@@ -22,8 +22,8 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 import java.util.ArrayList;
 
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
 
 
 /**

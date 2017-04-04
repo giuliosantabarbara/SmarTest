@@ -1,4 +1,4 @@
-package jumapp.com.smartest.Storage.DAOImpl;
+package jumapp.com.smartest.Storage.DAOImpl.ContentsImpl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,9 +10,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 18/03/2017.

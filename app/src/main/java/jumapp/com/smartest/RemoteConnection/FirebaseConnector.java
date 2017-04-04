@@ -1,38 +1,17 @@
 package jumapp.com.smartest.RemoteConnection;
 
-import android.app.Activity;
-import android.app.IntentService;
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 import jumapp.com.smartest.RemoteConnection.IntentService.AlternativeDownloadService;
 import jumapp.com.smartest.RemoteConnection.IntentService.AttachmentDownloadService;
 import jumapp.com.smartest.RemoteConnection.IntentService.MetaDataDownloadService;
 import jumapp.com.smartest.RemoteConnection.IntentService.QuestionDownloadService;
-import jumapp.com.smartest.Storage.DAOImpl.AlternativeDAOImpl;
-import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
-import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
-import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
-import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Alternative;
-import jumapp.com.smartest.Storage.DAOObject.Attachment;
-import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
 
 /**
  * Created by marco on 18/03/2017.

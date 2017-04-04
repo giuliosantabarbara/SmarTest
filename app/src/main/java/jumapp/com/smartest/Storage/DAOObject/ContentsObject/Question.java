@@ -1,4 +1,4 @@
-package jumapp.com.smartest.Storage.DAOObject;
+package jumapp.com.smartest.Storage.DAOObject.ContentsObject;
 
 import android.util.Log;
 
