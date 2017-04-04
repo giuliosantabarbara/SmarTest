@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -41,6 +42,7 @@ import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
 
@@ -240,8 +242,10 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
     public void stampaContestNelLog(View v){
 
-        ContestDAO conDAO= new ContestDAOImpl(this);
+
         QuestionDAOImpl questDAO= new QuestionDAOImpl(this);
+       /* ContestDAO conDAO= new ContestDAOImpl(this);
+
         long st=System.currentTimeMillis();
         Log.i("###", "Partito");
         ArrayList<Contest> contests= conDAO.getAllContests();
@@ -254,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         for(Alternative a: array){
            a.printLog("!!!!");
-        }
+        }*/
         /*for(Contest c: contests){
             ArrayList<Question> questions=c.getQuestions();
             Log.i("###",""+questions.size());
@@ -264,6 +268,21 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
        /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
         ArrayList<Attachment> attachments= atDAO.getAllAttachments();
         for(Attachment a: attachments ) a.printLog("!!!!!!!!");*/
+        ArrayList<String> str=questDAO.getAllCategoriesByContestId(1);
+        for(String s : str )Log.i("###","*"+s+"*");
+
+        ArrayList<Question> studied=questDAO.getAllQuestionByCategoryAndContestId(1, "actuality");
+
+        Log.i("###","START SALVARE");
+        SQLiteDatabase conn=questDAO.openWritableConnection();
+        for (Question q: studied) questDAO.setQuestionStudied(q.getQuestion_id(),true,conn);
+        conn.close();
+        Log.i("###", "STOP STUDIATE");
+
+        studied=questDAO.getAllQuestionByCategoryAndContestId(1, "actuality");
+        Log.i("###","SIZE: "+studied.size());
+        for (Question q: studied) Log.i("###", "IS STUDIED: " +q.getStudied());
+
     }
 
 

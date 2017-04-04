@@ -16,11 +16,16 @@ public interface QuestionDAO {
     public SQLiteDatabase openWritableConnection();
     public ArrayList<String> getAllCategoriesByContestId(long contest_id);
     public ArrayList<Integer> getPercentageStudiedByCategory(long contest_id);
+    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
+    public void setQuestionStudied(long questionId,boolean studied,SQLiteDatabase dbQuest);
 
     public Question getQuestionById(long questionId,SQLiteDatabase dbAtt);
-    public Question deleteQuestion(long questionId);
+
+
+
+    public Question deleteQuestion(long questionId,SQLiteDatabase dbQuest);
     public ArrayList<Question> getAllQuestions();
 
-    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
+
 
 }

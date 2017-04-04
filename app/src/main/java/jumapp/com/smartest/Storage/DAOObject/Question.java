@@ -1,5 +1,7 @@
 package jumapp.com.smartest.Storage.DAOObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by marco on 18/03/2017.
  */
-public class Question {
+public class Question  implements Parcelable {
 
     private long question_id, contest_id;
     private String category, text;
@@ -135,4 +137,24 @@ public class Question {
     public void setQuestion_id(long question_id) {
         this.question_id = question_id;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(question_id);
+        dest.writeLong(contest_id);
+        dest.writeString(category);
+        dest.writeString(text);
+        dest.writeInt(studied ? 1 : 0);
+        dest.writeInt(favorited ? 1 : 0);
+        dest.writeInt(hasAttach ? 1 : 0);
+        dest.writeList(alternatives);
+        dest.writeList(attachments);
+    }
+
+
 }

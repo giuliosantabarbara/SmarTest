@@ -1,7 +1,10 @@
 package jumapp.com.smartest.QuestionViewer.DragSelecter;
 
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,7 +24,12 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
 
+import java.util.ArrayList;
+
+import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
+import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 
 /**
  * Created by marco on 31/03/2017.
@@ -37,11 +45,13 @@ public class FragmentDragSelecter  extends Fragment implements
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private  Toolbar toolbar;
+    private Context context;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.question_viewer_drag_selecter, container, false);
+        context=view.getContext();
 
         prefs = getActivity().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
@@ -155,15 +165,28 @@ public class FragmentDragSelecter  extends Fragment implements
     public boolean onCabItemClicked(MenuItem item) {
         Log.i("LISTENER", "onCabItemClicked");
         if (item.getItemId() == R.id.done) {
-            StringBuilder sb = new StringBuilder();
-            int traverse = 0;
+              int traverse = 0;
+            ArrayList<Question> questions= new ArrayList<Question>();
+            QuestionsByCategorySingleton sing= QuestionsByCategorySingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
-                if (traverse > 0) sb.append(", ");
-                sb.append(mAdapter.getItem(index));
-                traverse++;
+                //if (traverse > 0) sb.append(", ");
+                questions.add(sing.getQuestionByIndex(index));
             }
-
             mAdapter.clearSelected();
+
+
+            FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            StudyFragment stdFrg= new StudyFragment();
+            Bundle b= new Bundle();
+            b.putParcelableArrayList("questions_parceable",questions);
+            stdFrg.setArguments(b);
+
+            fragmentTransaction.add(R.id.activity_main, stdFrg);
+            fragmentTransaction.addToBackStack("back");
+            fragmentTransaction.commit();
+
         }
         return true;
     }

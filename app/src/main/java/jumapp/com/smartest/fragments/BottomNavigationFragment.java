@@ -47,6 +47,7 @@ import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
 import jumapp.com.smartest.adapters.ExercisesStatisticAdapter;
+import jumapp.com.smartest.adapters.ListCategoryExerAdapter;
 import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
 
 
@@ -60,11 +61,11 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
     Context context;
     private View main_view;
-    private int contest_id=1;
+    private int contest_id = 1;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
     private QuestionDAO quest;
-    public static ArrayList<Question> questionsByCategory=null;
+    public static ArrayList<Question> questionsByCategory = null;
 
     @Nullable
     @Override
@@ -84,7 +85,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
     private void initUI(View view) {
         prefs = getActivity().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
-        quest= new QuestionDAOImpl(context);
+        quest = new QuestionDAOImpl(context);
 
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.vp_horizontal_ntb);
         /*mAgendaCalendarView= (AgendaCalendarView) view.findViewById(R.id.agenda_calendar_view);
@@ -111,7 +112,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                 switch (position) {
                     case 0:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_home, null, false);
-                        ((TextView)view.findViewById(R.id.slider_content_text)).setMovementMethod(new ScrollingMovementMethod());
+                        ((TextView) view.findViewById(R.id.slider_content_text)).setMovementMethod(new ScrollingMovementMethod());
                         container.addView(view);
 
                         break;
@@ -122,48 +123,41 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                         //get the names and studying percentage of each category to fill the statistic view
 
-
-                        ArrayList<Integer> array_list=quest.getPercentageStudiedByCategory(1);
-                        int[] result= new int[array_list.size()];
-                        int m=0;
-                        for(Integer in: array_list){
-                            Log.i("###","integer: "+in);
-                            result[m]= in;
+                        ArrayList<Integer> array_list = quest.getPercentageStudiedByCategory(1);
+                        int[] result = new int[array_list.size()];
+                        int m = 0;
+                        for (Integer in : array_list) {
+                            Log.i("###", "integer: " + in);
+                            result[m] = in;
                             m++;
                         }
 
-                        final ArrayList<String> names= quest.getAllCategoriesByContestId(contest_id);
-                        int[] n= new int[names.size()];
-                        String[] nam= new String[names.size()];
-                        int k=0;
-                        for(String s: names){
-                            nam[k]=s;
-                            n[k]=3;
+                        final ArrayList<String> names = quest.getAllCategoriesByContestId(contest_id);
+                        int[] n = new int[names.size()];
+                        String[] nam = new String[names.size()];
+                        int k = 0;
+                        for (String s : names) {
+                            nam[k] = s;
+                            n[k] = 3;
                             k++;
 
                         }
 
 
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
-                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n,contest_id);
+                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nam, n, contest_id);
                         myList.setAdapter(ad);
-
-
 
                         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Log.i("####", "Cliccato numero: " + position);
-
-                                Log.i("####", "Partito " +names.get(position));
-                                questionsByCategory=quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));
-                                Log.i("####", "Finito" +questionsByCategory.get(0).getText());
+                                questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));Log.i("####", "Finito" + questionsByCategory.get(0).getText());
                                 QuestionsByCategorySingleton.getInstance().setQuestions(questionsByCategory);
 
 
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                FragmentDragSelecter fr= new FragmentDragSelecter();
+                                FragmentDragSelecter fr = new FragmentDragSelecter();
                                 fragmentTransaction.add(R.id.activity_main, fr);
                                 fragmentTransaction.addToBackStack("back");
                                 fragmentTransaction.commit();
@@ -172,104 +166,16 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         });
 
 
-
-
                         break;
 
                     case 2:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_simulazione_esercitazione, null, false);
                         container.addView(view);
-                        RadioGroup rgp = (RadioGroup) view.findViewById(R.id.radio_group);
-                        int buttons = 30;
-                        for (int i = 1; i <= buttons; i++) {
-                            RadioButton rbn = new RadioButton(context);
-                            rbn.setId(i + 1000);
-                            rbn.setText("RadioButton" + i);
-                            rgp.addView(rbn);
-                        }
-                        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollview_choices);
-                        scrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                View radioGroup = getActivity().findViewById(R.id.radio_group);
-                                scrollView.setFocusable(false);
-                                //scrollView.scrollTo(0, radioGroup.getBottom());
-                            }
-                        });
 
-                        Button button = (Button) getActivity().findViewById(R.id.button_esercitazione);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                FragmentManager fragmentManager = getFragmentManager();
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.add(R.id.activity_main, new ExerciseFragment());
-                                fragmentTransaction.addToBackStack("back");
-                                fragmentTransaction.commit();
-                               /*Intent myIntent = new Intent(getActivity(), ExerciseActivity.class);
-                                ((MainActivity)getActivity()).startActivity(myIntent);*/
-                            }
-                        });
-
-                        Button buttonPicker = (Button) getActivity().findViewById(R.id.buttonPickerNumber);
-                        buttonPicker.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                LinearLayout LL = new LinearLayout(context);
-                                LL.setOrientation(LinearLayout.HORIZONTAL);
-
-
-                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(50, 50);
-                                params.gravity = Gravity.CENTER;
-
-                                LinearLayout.LayoutParams numPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                numPicerParams.weight = 1;
-
-                                LinearLayout.LayoutParams qPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                qPicerParams.weight = 1;
-
-                                MaterialNumberPicker numberPicker = new MaterialNumberPicker.Builder(context)
-                                        .minValue(1)
-                                        .maxValue(10)
-                                        .defaultValue(1)
-                                        .backgroundColor(Color.WHITE)
-                                        .separatorColor(Color.TRANSPARENT)
-                                        .textColor(Color.BLACK)
-                                        .textSize(20)
-                                        .enableFocusability(false)
-                                        .wrapSelectorWheel(true)
-                                        .build();
-
-                                MaterialNumberPicker numberPickerB = new MaterialNumberPicker.Builder(context)
-                                        .minValue(1)
-                                        .maxValue(10)
-                                        .defaultValue(1)
-                                        .backgroundColor(Color.WHITE)
-                                        .separatorColor(Color.TRANSPARENT)
-                                        .textColor(Color.BLACK)
-                                        .textSize(20)
-                                        .enableFocusability(false)
-                                        .wrapSelectorWheel(true)
-                                        .build();
-
-                                LL.setLayoutParams(params);
-                                LL.addView(numberPicker, numPicerParams);
-                                LL.addView(numberPickerB, qPicerParams);
-                                //linearLayoutVertical.addView(LL.getRootView());
-
-                                new AlertDialog.Builder(context)
-                                        .setTitle("Picker try")
-                                        .setView(LL)
-                                        .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Snackbar.make(findViewById(R.id.your_container), "You picked : " + numberPicker.getValue(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        })
-                                        .show();
-
-                            }
-                        });
+                        ListView ListCategoryExer = (ListView) getActivity().findViewById(R.id.listViewCategorieExercise);
+                        ArrayList<String> categoriesName = quest.getAllCategoriesByContestId(contest_id);
+                        ListCategoryExerAdapter listCategoryExerAdapter = new ListCategoryExerAdapter(context, categoriesName);
+                        ListCategoryExer.setAdapter(listCategoryExerAdapter);
 
                         break;
                     case 3:

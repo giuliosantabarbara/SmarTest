@@ -8,69 +8,15 @@
     android:theme="@style/Theme.Intro"
     android:weightSum="100">
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
-        android:layout_weight="15"
-        android:background="@drawable/bg_round_rect"
-        android:gravity="center"
-        android:text="UFFICIALI ESERCITO 2017"
-        android:textColor="#9b92b3"
-        android:textStyle="bold"/>
+        android:background="#0f1f38"
+        android:id="@+id/listViewCategorieExercise"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="60" />
 
-    <ScrollView
-        android:id="@+id/scrollview_choices"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="40"
-        android:layout_margin="10dp"
-        android:fillViewport="true">
-
-        <RadioGroup
-            android:id="@+id/radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-        </RadioGroup>
-    </ScrollView>
-
-    <TextView
-        android:text="@string/modalita"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:id="@+id/textMod" />
-
-
-    <Button
-        android:text="Button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="15"
-
-        android:id="@+id/buttonPickerNumber" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="15">
-
-        <Button
-            android:text="@string/question_viewer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/qstViewer"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Prova schermata esercitazione"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_esercitazione"
-            android:layout_weight="1" />
-    </LinearLayout>
 
 
 </LinearLayout>

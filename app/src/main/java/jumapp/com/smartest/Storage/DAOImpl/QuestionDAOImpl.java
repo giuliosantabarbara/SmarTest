@@ -93,7 +93,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         contentValues.put("isStudied ", isStudied);
         contentValues.put("contest_id", q.getContest_id());
         contentValues.put("Text",q.getText());
-        contentValues.put("hasAttachment",hasAttach);
+        contentValues.put("hasAttachment", hasAttach);
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
     }
 
@@ -147,6 +147,17 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         res.close();
 
         return questions;
+    }
+
+    @Override
+    public void setQuestionStudied(long questionId, boolean studied,SQLiteDatabase dbQuest) {
+        int valore=0;
+        if(studied) valore=1;
+       // dbQuest.execSQL("UPDATE \""+CONTACTS_TABLE_NAME+"\" SET isStudied='"+valore+"' WHERE question_id='"+questionId+"'");
+        ContentValues contentValues = new ContentValues();
+       contentValues.put("isStudied ", valore);
+        dbQuest.update(CONTACTS_TABLE_NAME, contentValues, "question_id="+questionId, null);
+
     }
 
     public SQLiteDatabase openConnection(){
@@ -268,8 +279,14 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
 
     @Override
-    public Question deleteQuestion(long questionId) {
-        return null;
+    public Question deleteQuestion(long questionId, SQLiteDatabase dbQuest) {
+
+        Question result= getQuestionById(questionId,dbQuest);
+        if(result!=null) {
+            dbQuest.delete(CONTACTS_TABLE_NAME, "question_id='" + questionId + "'", null);
+        }
+        return result;
+
     }
 
 
@@ -346,9 +363,14 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         res.moveToFirst();
         while(res.isAfterLast() == false){
             array_list.add(res.getCount());
+            res.moveToNext();
         }
         res.close();
         db.close();
+
+        for(Integer i: array_list){
+            Log.i("####","percenutale per categoria: "+i);
+        }
 
         return array_list;
     }

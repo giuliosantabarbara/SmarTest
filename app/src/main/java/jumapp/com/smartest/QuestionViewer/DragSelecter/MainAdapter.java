@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,15 +35,13 @@ import jumapp.com.smartest.fragments.ExerciseFragment;
  */
 public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainViewHolder> {
 
-    private final static int[] COLORS = color();
-    private final static String[] TEXT=textInitialization();
-    private static Context context;
+   private static Context context;
     private SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
 
     //
 
-    public static int[] color(){
+    public int[] color(){
        ArrayList<Question> questions = QuestionsByCategorySingleton.getInstance().getQuestions();
         int [] insieme= new int[questions.size()];
         for(int i=0; i<questions.size(); i++){
@@ -59,9 +58,12 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         //ArrayList<Question> questions = ((QuestionsByCategory) parent.getContext()getApplication()).getSomeVariable();
         ArrayList<Question> questions = QuestionsByCategorySingleton.getInstance().getQuestions();
         String [] insieme= new String[questions.size()];
-        for(int i=0; i<questions.size(); i++){
-            insieme[i]=""+(i+1);
+
+         for( int i=0; i<questions.size(); i++){
+             insieme[i]=""+(i+1);
+
         }
+
         return insieme;
     }
 
@@ -80,7 +82,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
     }
 
     public String getItem(int index) {
-        return TEXT[index];
+        return textInitialization()[index];
     }
 
     @Override
@@ -112,7 +114,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
 
         //noinspection RedundantCast
         ((FrameLayout) holder.colorSquare).setForeground(d);
-        holder.colorSquare.setBackgroundColor(COLORS[position]);
+        holder.colorSquare.setBackgroundColor(color()[position]);
 
 
     }
@@ -121,7 +123,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
 
     @Override
     public int getItemCount() {
-        return TEXT.length;
+        return textInitialization().length;
     }
 
     public static class MainViewHolder extends RecyclerView.ViewHolder
@@ -157,8 +159,6 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
 
                 prefs = itemView.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
                 int numberOfButtonSelected=prefs.getInt("numberOfButtonSelected",0);
-                editor.putInt("question_selected", getAdapterPosition());
-                editor.commit();
 
                 if(  numberOfButtonSelected==0 ) {
                     final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
@@ -167,12 +167,18 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
                     myAnim.setInterpolator(interpolator);
                     v.startAnimation(myAnim);
 
-                    editor.putInt("question_selected", getAdapterPosition());
-                    editor.commit();
 
                     FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.activity_main, new StudyFragment());
+
+                    StudyFragment stdFrg= new StudyFragment();
+                    ArrayList<Question> questions=QuestionsByCategorySingleton.getInstance().getQuestions();
+                    Bundle b= new Bundle();
+                    b.putParcelableArrayList("questions_parceable",questions);
+                    b.putInt("question_selected", getAdapterPosition());
+                    stdFrg.setArguments(b);
+
+                    fragmentTransaction.add(R.id.activity_main, stdFrg);
                     fragmentTransaction.addToBackStack("back");
                     fragmentTransaction.commit();
 
