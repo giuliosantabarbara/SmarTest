@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -54,10 +55,10 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
         dbN.close();
     }
 
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
+    public int numberOfRows(SQLiteDatabase db){
+        //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        db.close();
+        //db.close();
         return numRows;
     }
 
@@ -78,8 +79,8 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
             int year = res.getInt(res.getColumnIndex("year"));
 
             SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
-
-            ArrayList<SimulationCategory> scList = sc.getCategoriesBySimulationId(simulationId,dbSimulation);
+            //Log.i("ID: ",""+simulationId);
+            ArrayList<SimulationCategory> scList = sc.getCategoriesBySimulationId(simulationId,sc.getReadableDatabase());
 
             Simulation tmp= new Simulation(simulationId,contestId,day,month,year,scList);
             array_list.add(tmp);
@@ -94,8 +95,9 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
 
         Cursor res =  dbSimulation.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where simulation_id='"+simulationId+"'", null );
         res.moveToFirst();
+        Log.i("Simualtion get sim",""+res.getCount());
         Simulation tmp = null;
-        if(res.isAfterLast() != false) {
+        while(res.isAfterLast() == false) {
 
             int contestId = res.getInt(res.getColumnIndex("contest_id"));
             int day = res.getInt(res.getColumnIndex("day"));
@@ -103,12 +105,14 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
             int year = res.getInt(res.getColumnIndex("year"));
 
             SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
-
-            ArrayList<SimulationCategory> scList = sc.getCategoriesBySimulationId(simulationId,dbSimulation);
+            SQLiteDatabase conn = sc.openWritableConnection();
+            ArrayList<SimulationCategory> scList = sc.getCategoriesBySimulationId(simulationId,conn);
 
             tmp= new Simulation(simulationId,contestId,day,month,year,scList);
+            Log.i("Simualtion get sim",""+tmp);
             res.moveToNext();
         }
+        //openReadableConnection().close();
         res.close();
 
         return tmp;
@@ -124,16 +128,35 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
         contentValues.put("year", s.getYear());
 
         SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
-        Cursor res =  db.rawQuery( "SELECT last_insert_rowid() AS rowid FROM\"" + CONTACTS_TABLE_NAME + "\" LIMIT 1", null );
-        res.moveToFirst();
-        res.close();
-        int rowId = res.getInt(res.getColumnIndex("simulation_id"));
 
-        for (SimulationCategory category : s.getSimulationCategories()){
-            category.setId_simulation(rowId);
-            sc.insert(category,db);
+        int rowId;
+
+        if (numberOfRows(db)==0){
+            Log.i("POOOOOOO","asd");
+            rowId=0;
         }
+
+        else {
+            Cursor res = db.rawQuery("SELECT max(simulation_id) as rowid FROM\"" + CONTACTS_TABLE_NAME + "\" LIMIT 1", null);
+            res.moveToFirst();
+            rowId = res.getInt(res.getColumnIndex("rowid"));
+            //Log.i("???",""+(rowId+1));
+            res.close();
+
+        }
+
+        SQLiteDatabase conn = sc.openWritableConnection();
+        for (SimulationCategory category : s.getSimulationCategories()){
+            category.setId_simulation(rowId+1);
+            Log.i("SETTA",""+category.getId_simulation());
+            sc.insert(category,conn);
+        }
+        conn.close();
+
+        //if (!db.isOpen())
+          //  db = this.openWritableConnection();
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        //db.close();
 
     }
 
@@ -143,13 +166,28 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
     }
 
 
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
+
     @Override
     public ArrayList<Simulation> deleteAllSimulation(long contestId, SQLiteDatabase dbSimulation) {
         ArrayList<Simulation> result= getSimulationsByContestId(contestId, dbSimulation);
         if(result!=null) {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(CONTACTS_TABLE_NAME, "contest_id='" + contestId + "'", null);
-            db.close();
+            //SQLiteDatabase db = this.getWritableDatabase();
+
+            SimulationCategoryDAOImpl simCatDAO= new SimulationCategoryDAOImpl(context);
+            SQLiteDatabase conn = simCatDAO.openWritableConnection();
+            for(Simulation c: result){
+                ArrayList<SimulationCategory> simTmp = c.getSimulationCategories();
+                for(SimulationCategory cat: simTmp){
+                    simCatDAO.deleteAllCategories(cat.getId_simulation(),conn);
+                }
+            }
+
+            conn.close();
+            dbSimulation.delete(CONTACTS_TABLE_NAME, "contest_id='" + contestId + "'", null);
+            //db.close();
         }
         return result;
     }
@@ -157,10 +195,21 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
     @Override
     public Simulation deleteSimulation(long simulationId, SQLiteDatabase dbSimulation) {
         Simulation s = getSimulationBySimulationId(simulationId,dbSimulation);
+        Log.i("Simualtion needed into",""+s);
         if (s!=null){
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(CONTACTS_TABLE_NAME, "simulation_id='" + simulationId + "'", null);
-            db.close();
+
+            SimulationCategoryDAOImpl simCatDAO= new SimulationCategoryDAOImpl(context);
+            SQLiteDatabase conn = simCatDAO.openWritableConnection();
+
+            ArrayList<SimulationCategory> simTmp = s.getSimulationCategories();
+            for(SimulationCategory cat: simTmp){
+                simCatDAO.deleteAllCategories(cat.getId_simulation(),conn);
+            }
+            conn.close();
+
+            //SQLiteDatabase db = this.getWritableDatabase();
+            dbSimulation.delete(CONTACTS_TABLE_NAME, "simulation_id='" + simulationId + "'", null);
+            //db.close();
         }
         return s;
     }

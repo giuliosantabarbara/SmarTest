@@ -29,6 +29,13 @@ public class SimulationCategory {
         this.percentage = percentage;
     }
 
+    public SimulationCategory(String categoryName, int numAnswered, int totQuestions){
+        this.categoryName=categoryName;
+        this.numAnswered=numAnswered;
+        this.totQuestions=totQuestions;
+    }
+
+
     public void setId_simulation(int id_simulation) {
         this.id_simulation = id_simulation;
     }

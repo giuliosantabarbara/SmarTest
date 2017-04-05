@@ -26,6 +26,16 @@ public class Simulation {
 
     }
 
+    public Simulation(long id_contest, int day, int month, int year, ArrayList<SimulationCategory> simulationCategories){
+
+        this.id_contest = id_contest;
+        this.day= day;
+        this.month=month;
+        this.year=year;
+        this.simulationCategories=simulationCategories;
+
+    }
+
     public long getId_contest() {
         return id_contest;
     }

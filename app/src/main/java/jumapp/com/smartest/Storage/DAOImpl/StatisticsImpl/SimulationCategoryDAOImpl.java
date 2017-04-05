@@ -109,9 +109,9 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
     public ArrayList<SimulationCategory> deleteAllCategories(long simulationId, SQLiteDatabase dbSimulationCategory) {
         ArrayList<SimulationCategory> result= getCategoriesBySimulationId(simulationId, dbSimulationCategory);
         if(result!=null) {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(CONTACTS_TABLE_NAME, "simulation_id='" + simulationId + "'", null);
-            db.close();
+            //SQLiteDatabase db = this.getWritableDatabase();
+            dbSimulationCategory.delete(CONTACTS_TABLE_NAME, "simulation_id='" + simulationId + "'", null);
+            //db.close();
         }
         return result;
     }

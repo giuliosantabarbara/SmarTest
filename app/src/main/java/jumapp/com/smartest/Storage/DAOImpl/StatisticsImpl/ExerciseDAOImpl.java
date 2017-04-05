@@ -130,7 +130,7 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
     }
 
 
-    /*@Override
+    @Override
     public ArrayList<Exercise> deleteExercise(long contest_id, SQLiteDatabase dbExercise) {
         ArrayList<Exercise> result= getExerciseByContestId(contest_id, dbExercise);
         if(result!=null) {
@@ -139,7 +139,7 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
             db.close();
         }
         return result;
-    }*/
+    }
 
 
 }

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -38,9 +39,18 @@ import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.AlternativeDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.ExerciseDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.SimulationCategoryDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.SimulationDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.ExerciseDAO;
+import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationCategoryDAO;
+import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
 
@@ -264,6 +274,159 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
        /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
         ArrayList<Attachment> attachments= atDAO.getAllAttachments();
         for(Attachment a: attachments ) a.printLog("!!!!!!!!");*/
+    }
+
+
+
+    public void insertEsercitazione(View v){
+
+        ExerciseDAO exDAO= new ExerciseDAOImpl(this);
+        ArrayList<Exercise> tmp = new ArrayList<Exercise>();
+
+
+        for (int i =0; i<5; i++){
+            Exercise e = new Exercise(1,"Prova"+i,10,100);
+            tmp.add(e);
+        }
+
+        for (int i =0; i<3; i++){
+            Exercise e = new Exercise(2,"ProvaDue"+i,20,30);
+            tmp.add(e);
+        }
+
+        SQLiteDatabase conn = exDAO.openWritableConnection();
+
+        for(Exercise e: tmp){
+            exDAO.insert(e,conn);
+        }
+
+    }
+
+    public void readEsercitazione(View v){
+
+        ExerciseDAO exDAO= new ExerciseDAOImpl(this);
+        ArrayList<Exercise> tmp = new ArrayList<Exercise>();
+        ArrayList<String> str = new ArrayList<String>();
+
+        tmp = exDAO.getExerciseByContestId(1,exDAO.openWritableConnection());
+
+        for(Exercise e: tmp){
+            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+        }
+
+        tmp = exDAO.getExerciseByContestId(2,exDAO.openWritableConnection());
+
+        for(Exercise e: tmp){
+            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+        }
+
+
+        str = exDAO.getAllCategoriesByContestId(1);
+        for(String s: str){
+            Log.i("!",""+s);
+        }
+
+        str = exDAO.getAllCategoriesByContestId(2);
+        for(String s: str){
+            Log.i("!",""+s);
+        }
+        tmp = exDAO.deleteExercise(1,exDAO.openWritableConnection());
+        for(Exercise e: tmp){
+            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+        }
+        tmp = exDAO.getExerciseByContestId(1,exDAO.openWritableConnection());
+        Log.i("!","STATO: "+tmp);
+        for(Exercise e: tmp){
+            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+        }
+
+    }
+
+    public void insertSimulazione(View v){
+
+        SimulationDAO exDAO= new SimulationDAOImpl(this);
+        ArrayList<Simulation> tmp = new ArrayList<Simulation>();
+        ArrayList<SimulationCategory> simulCat = new ArrayList<SimulationCategory>();
+        String[] categoryName = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica"};
+        int[] numans = new int[]{10, 20, 5, 33, 75, 12};
+        int[] numtot = new int[]{10, 30, 15, 45, 100, 20};
+
+        for (int i =0; i<6; i++){
+            SimulationCategory  sc = new SimulationCategory(categoryName[i],numans[i],numtot[i]);
+            simulCat.add(sc);
+        }
+
+        for (int i =0; i<3; i++){
+            Simulation  s = new Simulation(1,5,4,2017,simulCat);
+            tmp.add(s);
+        }
+
+        SQLiteDatabase conn = exDAO.openWritableConnection();
+
+        for(Simulation s: tmp){
+            exDAO.insert(s,conn);
+        }
+
+        conn.close();
+
+    }
+
+    public void readSimulazione(View v){
+
+        SimulationDAOImpl simDAO= new SimulationDAOImpl(this);
+
+        SQLiteDatabase co = simDAO.openReadableConnection();
+        ArrayList<Simulation> tmpNew  = simDAO.getSimulationsByContestId(1,co);
+
+        for(Simulation e: tmpNew){
+            Log.i("!",""+e.getId_contest()+" - "+e.getDay()+" - "+e.getMonth()+" - "+e.getYear()+" - "+e.getId_simulation());
+            ArrayList<SimulationCategory> simTmp = e.getSimulationCategories();
+            Log.i("NumeroItem: ",""+simTmp.size());
+            for(SimulationCategory c: simTmp){
+                Log.i("!!","In simulazione: "+c.getId_simulation()+" - "+c.getCategoryName()+" - "+c.getNumAnswered()+" - "+c.getTotQuestions()+" - "+c.getPercentage());
+            }
+
+        }
+        co.close();
+    }
+
+    public void deleteSimulazioni(View v){
+
+        SimulationDAOImpl simDAO= new SimulationDAOImpl(this);
+        ArrayList<Simulation> tmp = new ArrayList<Simulation>();
+        //ArrayList<String> str = new ArrayList<String>();
+
+        SQLiteDatabase co = simDAO.openWritableConnection();
+        tmp = simDAO.deleteAllSimulation(1,co);
+
+
+        for(Simulation e: tmp){
+            Log.i("!",""+e.getId_contest()+" - "+e.getDay()+" - "+e.getMonth()+" - "+e.getYear());
+            ArrayList<SimulationCategory> simTmp = e.getSimulationCategories();
+            for(SimulationCategory c: simTmp){
+                Log.i("!!","DELETED: "+c.getId_simulation()+" - "+c.getCategoryName()+" - "+c.getNumAnswered()+" - "+c.getTotQuestions()+" - "+c.getPercentage());
+            }
+
+        }
+        co.close();
+    }
+
+    public void deleteSimulazione(View v){
+
+        SimulationDAOImpl simDAO= new SimulationDAOImpl(this);
+
+
+        SQLiteDatabase co = simDAO.openWritableConnection();
+        Simulation tmp = simDAO.deleteSimulation(3,co);
+        Log.i("Simualtion needed",""+tmp);
+        if (tmp!=null){
+            Log.i("!",""+tmp.getId_contest()+" - "+tmp.getDay()+" - "+tmp.getMonth()+" - "+tmp.getYear());
+            ArrayList<SimulationCategory> simTmp = tmp.getSimulationCategories();
+            for(SimulationCategory c: simTmp){
+                Log.i("!!","DELETED: "+c.getId_simulation()+" - "+c.getCategoryName()+" - "+c.getNumAnswered()+" - "+c.getTotQuestions()+" - "+c.getPercentage());
+            }
+        }
+        co.close();
     }
 
 
