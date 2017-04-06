@@ -55,10 +55,10 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
         dbN.close();
     }
 
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
+    public int numberOfRows(SQLiteDatabase db){
+        //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        db.close();
+        //db.close();
         return numRows;
     }
 
@@ -80,6 +80,10 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
         return this.getWritableDatabase();
     }
 
+    @Override
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
 
 
     @Override

@@ -282,17 +282,30 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         ExerciseDAO exDAO= new ExerciseDAOImpl(this);
         ArrayList<Exercise> tmp = new ArrayList<Exercise>();
+        String[] categoryName = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica"};
+        int[] numans = new int[]{10, 20, 5, 33, 75, 12};
+        int[] numtot = new int[]{10, 30, 15, 45, 100, 20};
 
+        String[] categoryNameDue = new String[]{"Civica", "Contrari", "Sinonimi"};
+        int[] numansDue = new int[]{3, 14, 6};
+        int[] numtotDue = new int[]{15, 35, 10};
 
-        for (int i =0; i<5; i++){
-            Exercise e = new Exercise(1,"Prova"+i,10,100);
-            tmp.add(e);
+        SQLiteDatabase co = exDAO.openReadableConnection();
+
+        if (exDAO.getExerciseByContestId(1,co).size()==0){
+            for (int i =0; i<categoryName.length; i++){
+                Exercise e = new Exercise(1,categoryName[i],numans[i],numtot[i]);
+                tmp.add(e);
+            }
         }
 
-        for (int i =0; i<3; i++){
-            Exercise e = new Exercise(2,"ProvaDue"+i,20,30);
-            tmp.add(e);
+        if (exDAO.getExerciseByContestId(2,co).size()==0) {
+            for (int i = 0; i < categoryNameDue.length; i++) {
+                Exercise e = new Exercise(2, categoryNameDue[i], numansDue[i], numtotDue[i]);
+                tmp.add(e);
+            }
         }
+        co.close();
 
         SQLiteDatabase conn = exDAO.openWritableConnection();
 
@@ -308,38 +321,52 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         ArrayList<Exercise> tmp = new ArrayList<Exercise>();
         ArrayList<String> str = new ArrayList<String>();
 
-        tmp = exDAO.getExerciseByContestId(1,exDAO.openWritableConnection());
+
+        SQLiteDatabase conn = exDAO.openWritableConnection();
+
+        tmp = exDAO.getExerciseByContestId(1,conn);
 
         for(Exercise e: tmp){
-            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+            Log.i("!Ex1",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
         }
 
-        tmp = exDAO.getExerciseByContestId(2,exDAO.openWritableConnection());
+        tmp = exDAO.getExerciseByContestId(2,conn);
 
         for(Exercise e: tmp){
-            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+            Log.i("!Ex2",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
         }
 
 
-        str = exDAO.getAllCategoriesByContestId(1);
+        str = exDAO.getAllCategoriesByContestId(1,conn);
         for(String s: str){
-            Log.i("!",""+s);
+            Log.i("!Cat1",""+s);
         }
 
-        str = exDAO.getAllCategoriesByContestId(2);
+        str = exDAO.getAllCategoriesByContestId(2,conn);
         for(String s: str){
-            Log.i("!",""+s);
-        }
-        tmp = exDAO.deleteExercise(1,exDAO.openWritableConnection());
-        for(Exercise e: tmp){
-            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
-        }
-        tmp = exDAO.getExerciseByContestId(1,exDAO.openWritableConnection());
-        Log.i("!","STATO: "+tmp);
-        for(Exercise e: tmp){
-            Log.i("!",""+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+            Log.i("!Cat2",""+s);
         }
 
+        conn.close();
+    }
+
+    public void deleteEsercitazione(View v){
+
+        ExerciseDAO exDAO= new ExerciseDAOImpl(this);
+        ArrayList<Exercise> tmp = new ArrayList<Exercise>();
+        //ArrayList<String> str = new ArrayList<String>();
+
+        SQLiteDatabase co = exDAO.openWritableConnection();
+        tmp = exDAO.deleteExerciseByContestId(1,co);
+
+
+        for(Exercise e: tmp){
+
+            Log.i("!!","DELETED: "+e.getId_contest()+" - "+e.getCategoryName()+" - "+e.getNumAnswered()+" - "+e.getTotQuestions()+" - "+e.getPercentage());
+
+
+        }
+        co.close();
     }
 
     public void insertSimulazione(View v){

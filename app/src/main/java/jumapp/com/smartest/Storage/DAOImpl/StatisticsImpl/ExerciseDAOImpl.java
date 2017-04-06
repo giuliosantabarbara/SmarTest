@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -54,10 +53,10 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
         dbN.close();
     }
 
-    public int numberOfRows(){
-        SQLiteDatabase db = this.getReadableDatabase();
+    public int numberOfRows(SQLiteDatabase db){
+        //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        db.close();
+        //db.close();
         return numRows;
     }
 
@@ -86,6 +85,10 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
         return this.getWritableDatabase();
     }
 
+    @Override
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
 
 
     @Override
@@ -115,28 +118,26 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
 
 
     @Override
-    public ArrayList<String> getAllCategoriesByContestId(long contest_id) {
+    public ArrayList<String> getAllCategoriesByContestId(long contest_id, SQLiteDatabase dbExercise) {
         ArrayList<String> array_list = new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contest_id+"' group by category_name", null );
+        Cursor res =  dbExercise.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contest_id+"' group by category_name", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
             array_list.add(res.getString(res.getColumnIndex("category_name")));
             res.moveToNext();
         }
         res.close();
-        db.close();
         return array_list;
     }
 
 
     @Override
-    public ArrayList<Exercise> deleteExercise(long contest_id, SQLiteDatabase dbExercise) {
+    public ArrayList<Exercise> deleteExerciseByContestId(long contest_id, SQLiteDatabase dbExercise) {
         ArrayList<Exercise> result= getExerciseByContestId(contest_id, dbExercise);
         if(result!=null) {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(CONTACTS_TABLE_NAME, "contest_id='" + contest_id + "'", null);
-            db.close();
+            //SQLiteDatabase db = this.getWritableDatabase();
+            dbExercise.delete(CONTACTS_TABLE_NAME, "contest_id='" + contest_id + "'", null);
+            //db.close();
         }
         return result;
     }
