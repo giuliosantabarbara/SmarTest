@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -34,6 +35,9 @@ import com.ogaclejapan.smarttablayout.utils.ViewPagerItems;
 
 import java.util.ArrayList;
 
+import az.plainpie.PieView;
+import az.plainpie.animation.PieAngleAnimation;
+import az.plainpie.animation.PieStrokeWidthAnimation;
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import devlight.io.library.ntb.NavigationTabBar;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
@@ -44,9 +48,11 @@ import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
+import jumapp.com.smartest.adapters.AdapterGrid;
 import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
 import jumapp.com.smartest.adapters.ExercisesStatisticAdapter;
 import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
+import jumapp.com.smartest.utility.ExerciseStatisticItem;
 
 
 /**
@@ -279,11 +285,11 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                         ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(context)
                                 .add(R.string.es, R.layout.layout_page_exercise)
-                                .add(R.string.ex, R.layout.layout_page_exame)
+                                .add(R.string.ex, R.layout.layout_page_simulation)
                                 .create());
                         final ViewPager viewPagerStatistics = (ViewPager) view.findViewById(R.id.viewpager);
                         viewPagerStatistics.setAdapter(adapter);
-
+                        viewPagerStatistics.setCurrentItem(0);
 
                         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
                         viewPagerTab.setViewPager(viewPagerStatistics);
@@ -295,11 +301,27 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                                 if (position == 0 && first) {
 
+                                    final ArrayList<ExerciseStatisticItem> items = new ArrayList<>();
                                     String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
+                                    int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
+                                    for (int i = 0; i < nameproducts.length; i++) {
+                                        ExerciseStatisticItem s = new ExerciseStatisticItem(nameproducts[i],num[i]);
+                                        items.add(s);
+                                    }
+
+                                    GridView gridView = (GridView) getView().findViewById(R.id.gridView);
+                                    AdapterGrid gridAdapter = new AdapterGrid(context, R.layout.list_view_exercise_statistic, items);
+                                    gridView.setAdapter(gridAdapter);
+
+                                    /*final GridView gridView = (GridView)getView().findViewById(R.id.gridview);
+                                    AdapterGrid a = new AdapterGrid(context);
+                                    gridView.setAdapter(a);*/
+
+                                    /*String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
                                     int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
                                     final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
                                     ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
-                                    myListStatistics.setAdapter(st);
+                                    myListStatistics.setAdapter(st);*/
                                     first = false;
 
                                 }
@@ -311,16 +333,26 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 switch (position) {
                                     case 0:
 
+
+                                        final ArrayList<ExerciseStatisticItem> items = new ArrayList<>();
                                         String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
                                         int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
-                                        final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
+                                        /*final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
                                         ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
-                                        myListStatistics.setAdapter(st);
+                                        myListStatistics.setAdapter(st);*/
+                                        for (int i = 0; i < nameproducts.length; i++) {
+                                            ExerciseStatisticItem s = new ExerciseStatisticItem(nameproducts[i],num[i]);
+                                            items.add(s);
+                                        }
+
+                                        GridView gridView = (GridView) getView().findViewById(R.id.gridView);
+                                        AdapterGrid gridAdapter = new AdapterGrid(context, R.layout.list_view_exercise_statistic, items);
+                                        gridView.setAdapter(gridAdapter);
                                         break;
                                     case 1:
                                         String[] name = new String[]{"Simulazione 1", "Simulazione 2", "Simulazione 3", "Simulazione 4"};
                                         int[] nume = new int[]{75, 25, 55, 33, 75, 12, 35};
-                                        final ListView myListStatisticsSim = (ListView) getView().findViewById(R.id.listViewExameStatistics);
+                                        final ListView myListStatisticsSim = (ListView) getView().findViewById(R.id.listViewSimulationStatistics);
                                         SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, name, nume);
                                         myListStatisticsSim.setAdapter(stSim);
                                         /*myListStatisticsSim.setOnKeyListener(new View.OnKeyListener() {
@@ -342,7 +374,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                 return false;
                                             }
                                         });*/
-                                        myListStatisticsSim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                       /* myListStatisticsSim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                 String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
@@ -351,7 +383,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                                 SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, nameproducts, num);
                                                 myListStatisticsSim.setAdapter(stSim);
                                             }
-                                        });
+                                        });*/
                                         break;
                                 }
 
