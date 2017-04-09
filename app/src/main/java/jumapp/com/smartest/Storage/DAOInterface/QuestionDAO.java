@@ -18,6 +18,7 @@ public interface QuestionDAO {
     public ArrayList<Integer> getPercentageStudiedByCategory(long contest_id);
     public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
     public void setQuestionStudied(long questionId,boolean studied,SQLiteDatabase dbQuest);
+    public int numberOfRowsByContest(long contestId);
 
     public Question getQuestionById(long questionId,SQLiteDatabase dbAtt);
 

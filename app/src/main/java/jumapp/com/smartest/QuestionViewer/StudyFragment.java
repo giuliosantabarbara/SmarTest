@@ -11,17 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nshmura.recyclertablayout.RecyclerTabLayout;
+import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.Question;
-import jumapp.com.smartest.adapters.DemoColorPagerAdapter;
-import jumapp.com.smartest.adapters.ExcerciseAdapter;
-import jumapp.com.smartest.utility.ColorItem;
-import jumapp.com.smartest.utility.NumberList;
 
 /**
  * Created by marco on 02/04/2017.
@@ -50,6 +45,7 @@ public class StudyFragment extends Fragment implements View.OnClickListener{
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager_fragment_study);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(extras.getInt("question_selected"));
+        viewPager.setPageTransformer(true, new ZoomOutSlideTransformer());
 
         return view;
     }

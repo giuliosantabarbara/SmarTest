@@ -77,6 +77,7 @@ public class MetaDataDownloadService {
             Log.i("$$$", "Entro nel handle intent");
             ContestDAO conDao = new ContestDAOImpl(context);
             final SQLiteDatabase db = conDao.openWritableConnection();
+            db.beginTransaction();
             ArrayList<Contest> currentContests = conDao.getAllContests(db);
             ArrayList<Long> intCurrentContests = new ArrayList<Long>();
             for (Contest myC : currentContests) intCurrentContests.add(myC.getId_contest());
@@ -96,6 +97,8 @@ public class MetaDataDownloadService {
                     context.sendBroadcast(intentC);
                 }
             }
+            db.setTransactionSuccessful();
+            db.endTransaction();
             db.close();
 
         }

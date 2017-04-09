@@ -66,12 +66,14 @@ public class AttachmentDownloadService {
             Log.i("###", "INIZIO SERVICE ATTACH");
             final AttachmentDAO questDao = new AttachmentDAOImpl(context);
             final SQLiteDatabase db = questDao.openWritableConnection();
+            db.beginTransaction();
             for (DataSnapshot messageSnapshot : dataSnapshotAttachment.getChildren()) {
                 Attachment q = messageSnapshot.getValue(Attachment.class);
                 questDao.insert(q, db);
             }
             Log.i("###", "SERVICE HA FINITO ELABORAZIONE ATT");
-
+            db.setTransactionSuccessful();
+            db.endTransaction();
             db.close();
         }
     }

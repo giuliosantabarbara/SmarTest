@@ -11,17 +11,17 @@ import jumapp.com.smartest.Storage.DAOObject.Question;
  * Created by marco on 02/04/2017.
  */
 
-public class QuestionsByCategorySingleton extends Application {
+public class QuestionsSingleton extends Application {
 
-    private static QuestionsByCategorySingleton mInstance;
+    private static QuestionsSingleton mInstance;
 
-    private ArrayList<Question> questions;
+    private ArrayList<Question> questions= new ArrayList<Question>();
 
-    protected QuestionsByCategorySingleton(){}
+    protected QuestionsSingleton(){}
 
-    public static  QuestionsByCategorySingleton getInstance(){
+    public static  QuestionsSingleton getInstance(){
         if(null == mInstance){
-            mInstance = new QuestionsByCategorySingleton();
+            mInstance = new QuestionsSingleton();
         }
         return mInstance;
     }

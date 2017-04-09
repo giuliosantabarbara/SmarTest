@@ -14,17 +14,17 @@
         android:textColor="@color/white"
         android:gravity="center"
         android:background="@drawable/shape"
-        android:id="@+id/exercise_category_tv" />
+        android:id="@+id/exercise_category_textV" />
 
     <TextView
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:paddingTop="2dip"
-        android:paddingBottom="3dip"
         android:layout_marginLeft="10sp"
         android:paddingLeft="11sp"
         android:layout_width="fill_parent"
         android:textColor="#ffffff"
+        android:longClickable="false"
+        android:clickable="false"
         android:id="@+id/text_spacer"
-        android:layout_height="wrap_content" />
+        android:layout_height="20dp" />
 
 </LinearLayout>

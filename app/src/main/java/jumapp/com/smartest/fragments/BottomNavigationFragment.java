@@ -1,13 +1,9 @@
 package jumapp.com.smartest.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,16 +12,14 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,21 +27,23 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.ViewPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.ViewPagerItems;
 
+import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+
 import java.util.ArrayList;
 
-import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import devlight.io.library.ntb.NavigationTabBar;
+import jumapp.com.smartest.Exercise.ExerciseFragment;
+import jumapp.com.smartest.Exercise.ViewManager.ExerciseProgressBarManager;
+import jumapp.com.smartest.Exercise.ViewManager.ExerciseTextViewManager;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
-import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
+import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
-import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
 import jumapp.com.smartest.adapters.ExercisesStatisticAdapter;
-import jumapp.com.smartest.adapters.ListCategoryExerAdapter;
 import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
 
 
@@ -93,7 +89,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return 5;
+                return 4;
             }
 
             @Override
@@ -117,6 +113,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
                         break;
                     case 1:
+                        Log.i("###", "SONO NEL CASO 1");
 
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_studio_esercitazione, null, false);
                         container.addView(view);
@@ -151,10 +148,14 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));Log.i("####", "Finito" + questionsByCategory.get(0).getText());
-                                QuestionsByCategorySingleton.getInstance().setQuestions(questionsByCategory);
 
+                                long start=  System.currentTimeMillis();;
+                                questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));
+                                long end=  System.currentTimeMillis();
+                                Log.i("LLL Total time",""+(end-start));
 
+                                Log.i("####", "Finito" + questionsByCategory.get(0).getText());
+                                QuestionsSingleton.getInstance().setQuestions(questionsByCategory);
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                 FragmentDragSelecter fr = new FragmentDragSelecter();
@@ -172,12 +173,48 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_simulazione_esercitazione, null, false);
                         container.addView(view);
 
-                        ListView ListCategoryExer = (ListView) getActivity().findViewById(R.id.listViewCategorieExercise);
                         ArrayList<String> categoriesName = quest.getAllCategoriesByContestId(contest_id);
-                        ListCategoryExerAdapter listCategoryExerAdapter = new ListCategoryExerAdapter(context, categoriesName);
-                        ListCategoryExer.setAdapter(listCategoryExerAdapter);
 
+                        final LinearLayout linearExer = (LinearLayout) view.findViewById(R.id.slider_simulation_exer_layout);
+                        final LinearLayout linearFrame= (LinearLayout) view.findViewById(R.id.category_exercise_frame_linear_layout);
+                        final ScrollView scroll= (ScrollView) view.findViewById(R.id.scroll_view_categorie_exercise);
+                        Button startExer= (Button) view.findViewById(R.id.button_short_exercise);
+
+                        final DiscreteSeekBar progressBar= (DiscreteSeekBar) view.findViewById(R.id.exercise_progress_bar);
+                        ExerciseProgressBarManager progressBarManager= new ExerciseProgressBarManager(view,progressBar);
+                        progressBarManager.init();
+
+                        scroll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                ViewGroup.LayoutParams params = scroll.getLayoutParams();
+                                params.height =(int) (linearExer.getHeight() * 0.95) ;
+                                scroll.setLayoutParams(params);
+                                scroll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            }
+                        });
+
+                        for(String catName: categoriesName){
+                            final View viewQuest = LayoutInflater.from(container.getContext()).inflate(R.layout.exercise_category_list, container, false);
+                            final TextView txt = (TextView) viewQuest.findViewById(R.id.exercise_category_textV);
+                            ExerciseTextViewManager textManager= new ExerciseTextViewManager(view,txt);
+                            textManager.init(catName);
+                            linearFrame.addView(viewQuest);
+                        }
+
+                        startExer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                ExerciseFragment fr = new ExerciseFragment();
+                                fragmentTransaction.add(R.id.activity_main, fr);
+                                fragmentTransaction.addToBackStack("back");
+                                fragmentTransaction.commit();
+                            }
+                        });
                         break;
+
                     case 3:
 
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_statistics, null, false);
@@ -271,7 +308,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         });
 
                         break;
-                    case 4:
+                    /*case 4:
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.bottone, null, false);
                         container.addView(view);
                         Button b = (Button) getActivity().findViewById(R.id.button);
@@ -283,7 +320,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 ((MainActivity) getActivity()).startActivity(myIntent);
                             }
                         });
-                        break;
+                        break;*/
                        /* view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.calendar_view, null, false);
                         container.addView(view);
                         Toast.makeText(context,"Sono in 3", Toast.LENGTH_SHORT).show();
@@ -343,7 +380,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         .badgeTitle("icon")
                         .build()
         );
-        models.add(
+       /* models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_fifth),
                         Color.parseColor(colors[4]))
@@ -351,7 +388,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         .title("Piano di Studio")
                         .badgeTitle("777")
                         .build()
-        );
+        );*/
 
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 0);

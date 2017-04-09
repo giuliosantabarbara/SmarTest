@@ -10,6 +10,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
+import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
 import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Attachment;
@@ -68,11 +70,12 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         dbN.close();
     }
 
-    public int numberOfRows(){
+    @Override
+    public int numberOfRowsByContest(long contestId){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        db.close();
-        return numRows;
+
+        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "'", null);
+        return res.getCount();
     }
 
     @Override
@@ -99,17 +102,27 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
     @Override
     public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam) {
-        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        ArrayList<Question> questions = new ArrayList<Question>();
 
+        long start=  System.currentTimeMillis();;
+        AlternativeDAO alt= new AlternativeDAOImpl(context);
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+        ArrayList<Question> questions = new ArrayList<Question>();
         SQLiteDatabase dbQuest = this.getReadableDatabase();
         SQLiteDatabase dbAlt=alt.openConnection();
         SQLiteDatabase dbAtt=att.openConnection();
+        long endInit=  System.currentTimeMillis();;
+
+        Log.i("LLL init TIme: ", "" + (endInit - start));
 
         Cursor res =  dbQuest.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "' AND " +
-                "Category='"+categoryParam+"'", null);
+                "Category='" + categoryParam + "'", null);
         res.moveToFirst();
+        long queryTIme=  System.currentTimeMillis();
+
+        Log.i("LLL query TIme: ",""+(queryTIme-endInit));
+        long sumAtt=0;
+        long sumAlt=0;
+
 
         while(res.isAfterLast() == false) {
 
@@ -132,19 +145,30 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
             long contest_id = Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
             ArrayList<Attachment> attachments=new ArrayList<Attachment>();
 
+            long startAlt=  System.currentTimeMillis();
             ArrayList<Alternative> alternatives = alt.getAllAlternativesByQuestionId(question_id, dbAlt, dbAtt);
+            long endAlt=  System.currentTimeMillis();
+            sumAlt+=(endAlt-startAlt);
 
+            long startAtt=  System.currentTimeMillis();
             if(hasAttachment) {
                 attachments = att.getAllAttachmentsByLinkId(question_id, "question", dbAtt);
-
             }
+            long endAtt=  System.currentTimeMillis();
+            sumAtt+=(endAtt-startAtt);
 
             Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
                     alternatives,attachments,hasAttachment);
             questions.add(tmp);
             res.moveToNext();
         }
+        Log.i("LLL altern time: ", ""+sumAlt);
+        Log.i("LLL attach time: ", ""+sumAtt);
+
         res.close();
+        dbAlt.close();
+        dbAtt.close();
+        dbQuest.close();
 
         return questions;
     }

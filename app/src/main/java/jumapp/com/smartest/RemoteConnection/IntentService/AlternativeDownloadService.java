@@ -69,6 +69,7 @@ public class AlternativeDownloadService {
             Log.i("###", "INIZIO SERVICE ALTERN");
             final AlternativeDAO questDao = new AlternativeDAOImpl(context);
             final SQLiteDatabase db = questDao.openWritableConnection();
+            db.beginTransaction();
             for (DataSnapshot messageSnapshot : dataSnapshotAlternative.getChildren()) {
                 Alternative q = messageSnapshot.getValue(Alternative.class);
                 questDao.insert(q, db);
@@ -77,6 +78,8 @@ public class AlternativeDownloadService {
             Intent endIntent = new Intent();
             endIntent.setAction(INTENT_ACTION_CONTEST);
             context.sendBroadcast(endIntent);
+            db.setTransactionSuccessful();
+            db.endTransaction();
             db.close();
         }
     }

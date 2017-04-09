@@ -71,16 +71,15 @@ public class QuestionDownloadService {
             Log.i("###", "INIZIO SERVICE QUEST");
             final QuestionDAO questDao = new QuestionDAOImpl(context);
             final SQLiteDatabase db = questDao.openWritableConnection();
+            db.beginTransaction();
             for (DataSnapshot messageSnapshot : dataSnapshotQuestion.getChildren()) {
                 Question q = messageSnapshot.getValue(Question.class);
                 questDao.insert(q, db);
             }
             Log.i("###", "SERVICE HA FINITO ELABORAZIONE QUEST");
-
+            db.setTransactionSuccessful();
+            db.endTransaction();
             db.close();
-
         }
-
     }
-
 }

@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
+import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Attachment;
 
@@ -44,7 +45,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
                         "question_id integer, hasAttachment integer)"
         );
 
-     //   db.execSQL("CREATE INDEX alternative_question_id_index on " + CONTACTS_TABLE_NAME + " (question_id);");
+        db.execSQL("CREATE INDEX alternative_question_id_index on " + CONTACTS_TABLE_NAME + " (question_id);");
 
 
     }
@@ -139,7 +140,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         return array_list;
     }
 
-
+    @Override
     public SQLiteDatabase openConnection(){
         return this.getReadableDatabase();
     }
@@ -149,16 +150,20 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
     }
 
     @Override
-    public ArrayList<Alternative> getAllAlternativesByQuestionId(long questionId,
-                                                                 SQLiteDatabase dbAlt, SQLiteDatabase dbAtt) {
-        long st=System.currentTimeMillis();
+    public ArrayList<Alternative> getAllAlternativesByQuestionId(long questionId,SQLiteDatabase dbAlt, SQLiteDatabase dbAtt) {
+
         ArrayList<Alternative> array_list = new ArrayList<Alternative>();
+        long start=System.currentTimeMillis();
         Cursor res =  dbAlt.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where question_id='" + questionId + "'", null);
         res.moveToFirst();
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        long endInit=System.currentTimeMillis();
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+
 
         long sumAtt=0;
+       // Log.i("LLL init ALTERNATIVE: ", "" + (endInit - start));
 
+        long startWhile=System.currentTimeMillis();
         while(res.isAfterLast() == false){
 
             long alternative_id=Long.parseLong(res.getString(res.getColumnIndex("alternative_id")));
@@ -171,15 +176,11 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
             int intHasAttachment=Integer.parseInt(res.getString(res.getColumnIndex("hasAttachment")));
             if(intHasAttachment==1) hasAttachment=true;
 
-
-
             long stAttach=System.currentTimeMillis();
             ArrayList<Attachment> attachments=null;
             if (hasAttachment) {
                 attachments = att.getAllAttachmentsByLinkId(alternative_id, "alternative", dbAtt);
-                if(alternative_id==6) Log.i("#####################", "SIZE: " + attachments.size());
             }
-
             long endAttach = System.currentTimeMillis();
             sumAtt=sumAtt+(endAttach-stAttach);
 
@@ -188,10 +189,9 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
             res.moveToNext();
         }
         res.close();
-
-        long end=System.currentTimeMillis();
-        //    Log.i("###", "Tempo del get Attachments in Alternatives:" + sumAtt);
-        //   Log.i("###","Tempo alternatives extra operations:"+(end-st-sumAtt));
+        long endWHILE=System.currentTimeMillis();
+      //  Log.i("LLL ALT GET ATT TIM: ", "" + (sumAtt));
+       // Log.i("LLL ALT GET all TIM: ", "" + (endWHILE-startWhile));
 
         return array_list;
     }

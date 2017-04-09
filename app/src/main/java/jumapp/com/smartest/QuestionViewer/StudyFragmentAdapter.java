@@ -74,7 +74,7 @@ public class StudyFragmentAdapter extends PagerAdapter {
         ArrayList<Alternative> alternatives = quest.getAlternatives();
 
 
-        for (Alternative a : alternatives) {
+        if(alternatives!=null)for (Alternative a : alternatives) {
 
             View viewQuest = LayoutInflater.from(container.getContext())
                     .inflate(R.layout.answer_layout_tmp, container, false);

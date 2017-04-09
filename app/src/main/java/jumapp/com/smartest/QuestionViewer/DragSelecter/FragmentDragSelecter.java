@@ -26,7 +26,7 @@ import com.afollestad.materialcab.MaterialCab;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
+import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.Question;
@@ -64,7 +64,11 @@ public class FragmentDragSelecter  extends Fragment implements
         }
 
         // Setup adapter and callbacks
+        editor.putString("drag_selecter_created","study");
+        editor.commit();
+
         mAdapter = new MainAdapter(this);
+        mAdapter.setContext(context);
         // Receives selection updates, recommended to set before restoreInstanceState() so initial reselection is received
         mAdapter.setSelectionListener(this);
         // Restore selected indices after Activity recreation
@@ -167,7 +171,7 @@ public class FragmentDragSelecter  extends Fragment implements
         if (item.getItemId() == R.id.done) {
               int traverse = 0;
             ArrayList<Question> questions= new ArrayList<Question>();
-            QuestionsByCategorySingleton sing= QuestionsByCategorySingleton.getInstance();
+            QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
                 //if (traverse > 0) sb.append(", ");
                 questions.add(sing.getQuestionByIndex(index));
