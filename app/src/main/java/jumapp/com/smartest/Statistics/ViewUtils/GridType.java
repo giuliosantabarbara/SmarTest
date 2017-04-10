@@ -1,10 +1,5 @@
-package jumapp.com.smartest.adapters;
+package jumapp.com.smartest.Statistics.ViewUtils;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 
 /**
  * Created by giulio on 09/04/17.

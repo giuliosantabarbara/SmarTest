@@ -1,4 +1,4 @@
-package jumapp.com.smartest.utility;
+package jumapp.com.smartest.Statistics.Singleton;
 
 import android.database.sqlite.SQLiteDatabase;
 
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDAO;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 
 /**
  * Created by giulio on 08/04/17.

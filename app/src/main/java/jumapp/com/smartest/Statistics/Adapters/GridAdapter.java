@@ -1,4 +1,4 @@
-package jumapp.com.smartest.adapters;
+package jumapp.com.smartest.Statistics.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import az.plainpie.PieView;
 import az.plainpie.animation.PieAngleAnimation;
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
+import jumapp.com.smartest.Statistics.ViewUtils.GridType;
 
 /**
  * Created by giulio on 06/04/17.
  */
-public class AdapterGrid extends ArrayAdapter<GridType> {
+public class GridAdapter extends ArrayAdapter<GridType> {
 
 
     private Context context;
@@ -28,7 +27,7 @@ public class AdapterGrid extends ArrayAdapter<GridType> {
     private ArrayList<GridType> arrayList = new ArrayList<GridType>();
 
 
-    public AdapterGrid(Context context,int layoutResourceId, ArrayList<GridType> arrayList) {
+    public GridAdapter(Context context, int layoutResourceId, ArrayList<GridType> arrayList) {
         super(context, layoutResourceId,arrayList);
         this.layoutResourceId = layoutResourceId;
         this.context = context;

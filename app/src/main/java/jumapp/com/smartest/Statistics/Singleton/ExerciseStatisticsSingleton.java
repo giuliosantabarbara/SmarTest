@@ -1,9 +1,8 @@
-package jumapp.com.smartest.utility;
+package jumapp.com.smartest.Statistics.Singleton;
 
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.ExerciseDAO;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
@@ -48,9 +47,7 @@ public class ExerciseStatisticsSingleton {
     }
 
     public void setExercises(ArrayList<Exercise> exercises) {
-
         this.exercises = exercises;
-
     }
 
     public void setExercise(Exercise exercise) {
@@ -59,5 +56,4 @@ public class ExerciseStatisticsSingleton {
         exerciseDao.insert(exercise,conn);
         conn.close();
     }
-
 }

@@ -1,11 +1,9 @@
-package jumapp.com.smartest.adapters;
+package jumapp.com.smartest.Statistics.Adapters;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 
 /**

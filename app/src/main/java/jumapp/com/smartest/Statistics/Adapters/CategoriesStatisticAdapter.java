@@ -1,4 +1,4 @@
-package jumapp.com.smartest.adapters;
+package jumapp.com.smartest.Statistics.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;

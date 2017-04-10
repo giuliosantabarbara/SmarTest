@@ -19,10 +19,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -36,21 +34,13 @@ import java.util.ArrayList;
 
 import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import devlight.io.library.ntb.NavigationTabBar;
-import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
-import jumapp.com.smartest.QuestionViewer.QuestionsByCategorySingleton;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.SimulationDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 import jumapp.com.smartest.activities.MainActivity;
 import jumapp.com.smartest.activities.StudyPlanIntro;
-import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
-import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
-import jumapp.com.smartest.utility.SimulationStatisticsSingleton;
-import jumapp.com.smartest.utility.StatisticsManager;
+import jumapp.com.smartest.Statistics.ViewManager.StatisticsManager;
 
 
 /**
@@ -74,12 +64,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         main_view = inflater.inflate(R.layout.activity_horizontal_ntb, container, false);
         context = main_view.getContext();
-
-
-
-        //mAgendaCalendarView = ButterKnife.findById(LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.calendar_view, null, false), R.id.agenda_calendar_view);
-        //Log.i("Valore inizioAgenda: ",""+mAgendaCalendarView);
-        // Log.i("Valore mAgenda fuori: ",""+mAgendaCalendarView);
 
         initUI(main_view);
         return main_view;
@@ -281,23 +265,18 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_statistics, null, false);
                         container.addView(view);
 
-
                         ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(context)
                                 .add(R.string.es, R.layout.layout_page_exercise)
                                 .add(R.string.ex, R.layout.layout_page_simulation)
                                 .create());
                         final ViewPager viewPagerStatistics = (ViewPager) view.findViewById(R.id.viewpager);
                         viewPagerStatistics.setAdapter(adapter);
-                        viewPagerStatistics.setCurrentItem(0);
 
                         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
                         viewPagerTab.setViewPager(viewPagerStatistics);
 
-                        StatisticsManager manager = new StatisticsManager(context,1);
+                        StatisticsManager manager = new StatisticsManager(context,contest_id);
                         manager.init(viewPagerTab,getView(),viewPagerStatistics);
-
-
-
 
                         break;
                     case 4:

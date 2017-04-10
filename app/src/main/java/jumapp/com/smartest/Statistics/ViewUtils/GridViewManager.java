@@ -1,11 +1,8 @@
-package jumapp.com.smartest.adapters;
-
-import android.util.Log;
+package jumapp.com.smartest.Statistics.ViewUtils;
 
 import java.util.ArrayList;
 
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
-import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 
 /**
@@ -34,7 +31,6 @@ public class GridViewManager {
             }
 
         }
-        Log.i("SONO DENTRO GRID MAN","");
         return g;
     }
 }
