@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -34,13 +35,16 @@ import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
 import jumapp.com.smartest.RemoteConnection.IntentService.AlternativeDownloadService;
 import jumapp.com.smartest.RemoteConnection.IntentService.MetaDataDownloadService;
+import jumapp.com.smartest.RemoteConnection.IntentService.rootDownload;
 import jumapp.com.smartest.Storage.DAOImpl.AlternativeDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.Question;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
 
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         setContentView(R.layout.activity_main);
 
         prefs = this.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
+        editor=prefs.edit();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
        //DatabaseReference ref = database.getReference();
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                     if (conDAO.numberOfRows() == 0) {
                         final SweetAlertDialog pDialog = new SweetAlertDialog(context,
                                 SweetAlertDialog.PROGRESS_TYPE)
-                                .setTitleText("Connecting to the Server");
+                                .setTitleText("Downloading Banca Dati!");
                         pDialog.show();
                         pDialog.setCancelable(false);
                         new MyCountDownTimer(3000, 500, pDialog, conDAO).Start();
@@ -123,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                 }
             });
         }
+
+        editor.putLong("contest_selected",1);
+        editor.commit();
 
 
     }
@@ -159,9 +167,24 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if(s.equalsIgnoreCase("uno")){
 
-            fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
-            fragmentTransaction.addToBackStack("back");
-            fragmentTransaction.commit();
+
+            QuestionDAO quest= new QuestionDAOImpl(this);
+            if(quest.numberOfRowsByContest(1)==0){
+                Connector fireConnector= new FirebaseConnector(this,"contests");
+
+                contestDialog = new SweetAlertDialog(this,
+                        SweetAlertDialog.PROGRESS_TYPE)
+                        .setTitleText("Downloading Banca Dati!");
+                contestDialog.show();
+                contestDialog.setCancelable(false);
+                fireConnector.downloadContest(1);
+            }
+
+           else {
+                fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
+                fragmentTransaction.addToBackStack("back");
+                fragmentTransaction.commit();
+            }
         }
         if (s.equalsIgnoreCase("studia")) {
             fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
@@ -229,41 +252,40 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         contestDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("Connecting to the Server");
+                .setTitleText("Downloading Banca Dati!");
         contestDialog.show();
-
-
         contestDialog.setCancelable(false);
-
         fireConnector.downloadContest(1);
+
+       /* Log.i("###", "HO PREMUTO IL BOTTONE");
+        long start= System.currentTimeMillis();
+        rootDownload r= new rootDownload(this);
+        r.start();
+        long end= System.currentTimeMillis();*/
     }
 
     public void stampaContestNelLog(View v){
 
-        ContestDAO conDAO= new ContestDAOImpl(this);
-        QuestionDAOImpl questDAO= new QuestionDAOImpl(this);
-        long st=System.currentTimeMillis();
-        Log.i("###", "Partito");
-        ArrayList<Contest> contests= conDAO.getAllContests();
-        long end=System.currentTimeMillis();
-        Log.i("###", "Tempo di fine: " + (end - st));
-        Log.i("###", "Numero di questions: " + questDAO.numberOfRows());
 
-        AlternativeDAOImpl impl = new AlternativeDAOImpl(this);
-        ArrayList<Alternative> array = impl.getAllAlternatives();
+      /*  QuestionDAOImpl questDAO= new QuestionDAOImpl(this);
+        ArrayList<String> str=questDAO.getAllCategoriesByContestId(1);
+        for(String s : str )Log.i("###","*"+s+"*");
 
-        for(Alternative a: array){
-           a.printLog("!!!!");
-        }
-        /*for(Contest c: contests){
-            ArrayList<Question> questions=c.getQuestions();
-            Log.i("###",""+questions.size());
-            c.printLog("$$$");
-        }*/
+        ArrayList<Question> studied=questDAO.getAllQuestionByCategoryAndContestId(1, "actuality");
 
-       /* AttachmentDAOImpl atDAO= new AttachmentDAOImpl(this);
-        ArrayList<Attachment> attachments= atDAO.getAllAttachments();
-        for(Attachment a: attachments ) a.printLog("!!!!!!!!");*/
+        Log.i("###","START SALVARE");
+        SQLiteDatabase conn=questDAO.openWritableConnection();
+        for (Question q: studied) questDAO.setQuestionStudied(q.getQuestion_id(),true,conn);
+        conn.close();
+        Log.i("###", "STOP STUDIATE");
+
+        studied=questDAO.getAllQuestionByCategoryAndContestId(1, "actuality");
+        Log.i("###","SIZE: "+studied.size());
+        for (Question q: studied) Log.i("###", "IS STUDIED: " +q.getStudied());
+            */
+        Log.i("###", "HO PREMUTO IL BOTTONE");
+        rootDownload r= new rootDownload(this);
+        r.start();
     }
 
 
@@ -297,6 +319,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                                 .setConfirmText("OK")
                                 .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                         handler.removeCallbacks(this);
+
+
+
 
                     }else{
                         handler.postDelayed(this, countDownInterval);
@@ -337,9 +362,14 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO: React to the Intent Broadcast received.
-            contestDialog.setTitleText("Download completato!")
+            contestDialog.setTitleText("Downloading Banca Dati!")
                     .setConfirmText("OK")
                     .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
+            fragmentTransaction.addToBackStack("back");
+            fragmentTransaction.commit();
         }
     }
 

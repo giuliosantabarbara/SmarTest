@@ -21,9 +21,14 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.RemoteConnection.Connector;
+import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
 import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 
 
 /**
@@ -39,6 +44,7 @@ public class CircleHamButtonFragment extends Fragment {
     }
     private int call;
     HamButton.Builder builderHam2;
+    SweetAlertDialog contestDialog;
 
 
     //controlla e effettua associazione interfaccia-activity
@@ -70,18 +76,20 @@ public class CircleHamButtonFragment extends Fragment {
         Log.i("Valore ham final ",""+bmbHamDue);
         //bmbHam.setVisibility(View.VISIBLE);
         bmbHamDue.setButtonEnum(ButtonEnum.Ham);
-        bmbHamDue.setPiecePlaceEnum(PiecePlaceEnum.HAM_5);
-        bmbHamDue.setButtonPlaceEnum(ButtonPlaceEnum.HAM_5);
+        bmbHamDue.setPiecePlaceEnum(PiecePlaceEnum.HAM_1);
+        bmbHamDue.setButtonPlaceEnum(ButtonPlaceEnum.HAM_1);
 
-        for (int j = 0; j < bmbHamDue.getPiecePlaceEnum().pieceNumber(); j++) {
+        //j<bmbHamDue.getPiecePlaceEnum().pieceNumber()
+        for (int j = 0; j < 1; j++) {
             HamButton.Builder builderHam = new HamButton.Builder()
                     .normalImageRes(R.drawable.bat)
-                    .normalText("Prova");
+                    .normalText("2017");
 
             bmbHamDue.addBuilder(builderHam.listener(new OnBMClickListener() {
                 @Override
                 public void onBoomButtonClick(int index) {
                     sendBodyTextToActivity("uno");
+
                 }
             }));
         }
@@ -93,10 +101,11 @@ public class CircleHamButtonFragment extends Fragment {
         bmbHam2.setButtonPlaceEnum(ButtonPlaceEnum.HAM_1);
 
 
-        for (int j = 0; j < bmbHam2.getPiecePlaceEnum().pieceNumber(); j++) {
+        //j<bmbHam2.getPiecePlaceEnum().pieceNumber()
+        for (int j = 0; j < 1; j++) {
             builderHam2 = new HamButton.Builder();
             builderHam2.normalImageRes(R.drawable.bat);
-            builderHam2.normalText("Prova");
+            builderHam2.normalText("Ufficiali");
 
             HamButton.Builder builder=builderHam2.listener(new OnBMClickListener() {
                 @Override
@@ -131,8 +140,8 @@ public class CircleHamButtonFragment extends Fragment {
                 @Override
                 public void onBoomButtonClick(int index) {
                     bmbHam1.setVisibility(View.GONE);
+                    bmbHam2.setVisibility(View.VISIBLE);
                     bmbHam2.boom();
-
                 }
             }));
 

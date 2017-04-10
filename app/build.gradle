@@ -35,6 +35,8 @@ dependencies {
 
     }
 
+    compile 'org.adw.library:discrete-seekbar:1.0.1'
+    compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     compile 'com.afollestad:drag-select-recyclerview:0.4.0'
     compile 'com.afollestad:material-cab:0.1.12'
     compile 'cn.pedant.sweetalert:library:1.3'

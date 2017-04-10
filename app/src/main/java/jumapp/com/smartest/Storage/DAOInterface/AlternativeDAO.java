@@ -17,5 +17,6 @@ public interface AlternativeDAO {
     public Alternative getAlternativeById(long alternativeId,SQLiteDatabase dbAtt);
     public void insert(Alternative a,SQLiteDatabase db);
     public Alternative deleteAlterantive(long alternativeId,SQLiteDatabase dbAtt);
+    public SQLiteDatabase openConnection();
 
 }

@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
 import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
 import jumapp.com.smartest.Storage.DAOObject.Contest;
@@ -18,7 +21,6 @@ import jumapp.com.smartest.Storage.DAOObject.Question;
  * Created by marco on 18/03/2017.
  */
 public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
-
 
 
     public static final String DATABASE_NAME = "Contest.db";
@@ -327,4 +329,3 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
 
 
 }
-

@@ -9,7 +9,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
+import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
+import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
 import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Attachment;
@@ -20,7 +25,6 @@ import jumapp.com.smartest.Storage.DAOObject.Question;
  * Created by marco on 18/03/2017.
  */
 public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
-
 
 
 
@@ -47,7 +51,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
                         "contest_id integer, hasAttachment integer)"
         );
 
-       // db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
+        // db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
     }
 
     @Override
@@ -68,11 +72,12 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         dbN.close();
     }
 
-    public int numberOfRows(){
+    @Override
+    public int numberOfRowsByContest(long contestId){
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        db.close();
-        return numRows;
+
+        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "'", null);
+        return res.getCount();
     }
 
     @Override
@@ -93,23 +98,33 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         contentValues.put("isStudied ", isStudied);
         contentValues.put("contest_id", q.getContest_id());
         contentValues.put("Text",q.getText());
-        contentValues.put("hasAttachment",hasAttach);
+        contentValues.put("hasAttachment", hasAttach);
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
     }
 
     @Override
     public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam) {
-        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        ArrayList<Question> questions = new ArrayList<Question>();
 
+        long start=  System.currentTimeMillis();;
+        AlternativeDAO alt= new AlternativeDAOImpl(context);
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+        ArrayList<Question> questions = new ArrayList<Question>();
         SQLiteDatabase dbQuest = this.getReadableDatabase();
         SQLiteDatabase dbAlt=alt.openConnection();
         SQLiteDatabase dbAtt=att.openConnection();
+        long endInit=  System.currentTimeMillis();;
+
+        Log.i("LLL init TIme: ", "" + (endInit - start));
 
         Cursor res =  dbQuest.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "' AND " +
-                "Category='"+categoryParam+"'", null);
+                "Category='" + categoryParam + "'", null);
         res.moveToFirst();
+        long queryTIme=  System.currentTimeMillis();
+
+        Log.i("LLL query TIme: ",""+(queryTIme-endInit));
+        long sumAtt=0;
+        long sumAlt=0;
+
 
         while(res.isAfterLast() == false) {
 
@@ -132,21 +147,43 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
             long contest_id = Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
             ArrayList<Attachment> attachments=new ArrayList<Attachment>();
 
+            long startAlt=  System.currentTimeMillis();
             ArrayList<Alternative> alternatives = alt.getAllAlternativesByQuestionId(question_id, dbAlt, dbAtt);
+            long endAlt=  System.currentTimeMillis();
+            sumAlt+=(endAlt-startAlt);
 
+            long startAtt=  System.currentTimeMillis();
             if(hasAttachment) {
                 attachments = att.getAllAttachmentsByLinkId(question_id, "question", dbAtt);
-
             }
+            long endAtt=  System.currentTimeMillis();
+            sumAtt+=(endAtt-startAtt);
 
             Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
                     alternatives,attachments,hasAttachment);
             questions.add(tmp);
             res.moveToNext();
         }
+        Log.i("LLL altern time: ", ""+sumAlt);
+        Log.i("LLL attach time: ", ""+sumAtt);
+
         res.close();
+        dbAlt.close();
+        dbAtt.close();
+        dbQuest.close();
 
         return questions;
+    }
+
+    @Override
+    public void setQuestionStudied(long questionId, boolean studied,SQLiteDatabase dbQuest) {
+        int valore=0;
+        if(studied) valore=1;
+        // dbQuest.execSQL("UPDATE \""+CONTACTS_TABLE_NAME+"\" SET isStudied='"+valore+"' WHERE question_id='"+questionId+"'");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isStudied ", valore);
+        dbQuest.update(CONTACTS_TABLE_NAME, contentValues, "question_id="+questionId, null);
+
     }
 
     public SQLiteDatabase openConnection(){
@@ -268,8 +305,14 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
 
     @Override
-    public Question deleteQuestion(long questionId) {
-        return null;
+    public Question deleteQuestion(long questionId, SQLiteDatabase dbQuest) {
+
+        Question result= getQuestionById(questionId,dbQuest);
+        if(result!=null) {
+            dbQuest.delete(CONTACTS_TABLE_NAME, "question_id='" + questionId + "'", null);
+        }
+        return result;
+
     }
 
 
@@ -346,9 +389,14 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         res.moveToFirst();
         while(res.isAfterLast() == false){
             array_list.add(res.getCount());
+            res.moveToNext();
         }
         res.close();
         db.close();
+
+        for(Integer i: array_list){
+            Log.i("####","percenutale per categoria: "+i);
+        }
 
         return array_list;
     }

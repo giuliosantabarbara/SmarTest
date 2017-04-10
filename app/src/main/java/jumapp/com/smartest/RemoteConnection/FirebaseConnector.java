@@ -66,12 +66,15 @@ public class FirebaseConnector implements Connector {
         ContestDAO conDao = new ContestDAOImpl(context);
         Contest con = conDao.getContestById(id);
 
+        Log.i("###", "CHIAMO ATTACH DOWNLOAD SERVICE");
         AttachmentDownloadService attch = new AttachmentDownloadService(context, con.getAttachmentsURL());
         attch.start();
 
+        Log.i("###", "CHIAMO QUEST DOWNLOAD SERVICE");
         QuestionDownloadService quest= new QuestionDownloadService(context, con.getQuestionsURL());
         quest.start();
 
+        Log.i("###", "CHIAMO ALT DOWNLOAD SERVICE");
         AlternativeDownloadService alt= new AlternativeDownloadService(context,con.getAlternativesURL());
         alt.start();
 

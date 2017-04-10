@@ -3,11 +3,11 @@ package jumapp.com.smartest.QuestionViewer.DragSelecter;
 /**
  * Created by marco on 31/03/2017.
  */
-class MyBounceInterpolator implements android.view.animation.Interpolator {
+public class MyBounceInterpolator implements android.view.animation.Interpolator {
     double mAmplitude = 1;
     double mFrequency = 10;
 
-    MyBounceInterpolator(double amplitude, double frequency) {
+    public MyBounceInterpolator(double amplitude, double frequency) {
         mAmplitude = amplitude;
         mFrequency = frequency;
     }

@@ -17,6 +17,7 @@ public interface AttachmentDAO  {
     public void insert(Attachment a,SQLiteDatabase db);
     public Attachment deleteAttachment(long attachmentId);
     public ArrayList<Attachment> getAllAttachments();
+    public SQLiteDatabase openConnection();
 
 
 }

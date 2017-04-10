@@ -11,7 +11,7 @@
     android:theme="@style/RecyclerTabLayoutTheme.Basic">
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+        android:id="@+id/view_pag_fragment_exercise"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header"
@@ -19,46 +19,8 @@
         android:background="@color/main_color_dark" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:weightSum="100">
-
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:text="TextView" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="15" />
-
-        <ImageView
-            android:id="@+id/imageMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="27.08"
-            android:onClick="popupMenu"
-            app:srcCompat="@drawable/ic_arrow_drop_down_circle" />
-
-    </LinearLayout>
-
     <com.nshmura.recyclertablayout.RecyclerTabLayout
-        android:id="@+id/recycler_tab_layout"
+        android:id="@+id/recycler_tab_layout_exercise"
         rtl_tabBackground="?attr/alpha"
         rtl_tabSelectedTextColor="#ffffff"
         rtl_tabIndicatorColor="#ffffff"

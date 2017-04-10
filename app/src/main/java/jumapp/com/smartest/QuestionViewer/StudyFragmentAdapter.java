@@ -2,6 +2,8 @@ package jumapp.com.smartest.QuestionViewer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -39,11 +41,7 @@ public class StudyFragmentAdapter extends PagerAdapter {
 
         prefs = view.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
 
-        QuestionsByCategorySingleton qsing = QuestionsByCategorySingleton.getInstance();
-        final Question quest = qsing.getQuestionByIndex(prefs.getInt("question_selected", 0)+position);
-
-        Log.i("###", "POSITION/QUESTION_SELECTED: " + position);
-
+        final Question quest = mItems.get(position);
         LinearLayout frame = (LinearLayout) view.findViewById(R.id.layout_exercise_frame);
         final TextView tv = (TextView) view.findViewById(R.id.textViewQuestionStudy);
         tv.setText(quest.getText());
@@ -74,19 +72,21 @@ public class StudyFragmentAdapter extends PagerAdapter {
 
 
         ArrayList<Alternative> alternatives = quest.getAlternatives();
-        Log.i("!!!!: ","");
 
 
-        for (Alternative a : alternatives) {
+        if(alternatives!=null)for (Alternative a : alternatives) {
 
             View viewQuest = LayoutInflater.from(container.getContext())
                     .inflate(R.layout.answer_layout_tmp, container, false);
             TextView txt = (TextView) viewQuest.findViewById(R.id.text_view_answer_alternative);
             txt.setText(a.getText());
+            if(a.getRight()) {
+                Drawable dr= ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_green);
+                txt.setBackground(dr);
+            }
             frame.addView(viewQuest);
 
-            Log.i("prova: ","::::"+txt.getText());
-            Log.i("!!!!: ",""+a.getText());
+
 
         }
         container.addView(view);
