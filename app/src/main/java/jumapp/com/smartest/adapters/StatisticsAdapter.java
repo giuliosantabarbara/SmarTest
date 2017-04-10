@@ -5,31 +5,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.lang.reflect.GenericArrayType;
+import java.util.ArrayList;
+
 /**
  * Created by giuli on 08/03/2017.
  */
 
 public class StatisticsAdapter extends BaseAdapter {
     Context con;
-    String[] text;
-    int [] progress;
+    ArrayList<?> arrayList;
 
-    public StatisticsAdapter(Context context, String[] text, int [] progress)
+    public StatisticsAdapter(Context context, ArrayList<?> arrayList)
     {
         this.con = context;
-        this.text = text;
-        this.progress=progress;
+        this.arrayList = arrayList;
 
     }
 
     @Override
     public int getCount() {
-        return text.length;
+        return arrayList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return text[position];
+        return arrayList.get(position);
     }
 
     @Override

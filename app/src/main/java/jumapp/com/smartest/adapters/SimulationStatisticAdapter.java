@@ -4,10 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
+
+
+
+import java.util.ArrayList;
 
 import az.plainpie.PieView;
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 
 
 /**
@@ -16,8 +23,8 @@ import jumapp.com.smartest.R;
 
 public class SimulationStatisticAdapter extends StatisticsAdapter {
 
-    public SimulationStatisticAdapter(Context context, String[] text, int[] progress) {
-        super(context, text, progress);
+    public SimulationStatisticAdapter(Context context, ArrayList<Simulation> simulations) {
+        super(context, simulations);
     }
 
     //this method will be called for every item of your listview
@@ -26,9 +33,19 @@ public class SimulationStatisticAdapter extends StatisticsAdapter {
         LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView= inflater.inflate(R.layout.list_view_simulation_statistics, parent, false);
         TextView tx = (TextView) convertView.findViewById(R.id.text_view_simulation_statistic); //recognize your view like this
-        tx.setText(text[position]);
+        Simulation s = (Simulation)(arrayList.get(position));
+        tx.setText("Simulazione " +s.getId_simulation());
+        int tot =0;
+        ArrayList <SimulationCategory> sc = s.getSimulationCategories();
+
+        for(SimulationCategory smC : sc){
+
+            tot+=smC.getPercentage();
+        }
+
         PieView pieView = (PieView) convertView.findViewById(R.id.pieViewSimulation);
-        pieView.setPercentage((float)progress[position]);
+        pieView.setPercentage((float)tot/sc.size());
+
         return convertView;
     }
 }

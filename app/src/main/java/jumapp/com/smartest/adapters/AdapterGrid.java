@@ -2,48 +2,39 @@ package jumapp.com.smartest.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import az.plainpie.PieView;
 import az.plainpie.animation.PieAngleAnimation;
-import co.ceryle.fitgridview.FitGridAdapter;
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.utility.ExerciseStatisticItem;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 
 /**
  * Created by giulio on 06/04/17.
  */
-public class AdapterGrid extends ArrayAdapter<ExerciseStatisticItem> {
+public class AdapterGrid extends ArrayAdapter<GridType> {
 
 
     private Context context;
     private int layoutResourceId;
-    private ArrayList<ExerciseStatisticItem> data = new ArrayList<ExerciseStatisticItem>();
+    private ArrayList<GridType> arrayList = new ArrayList<GridType>();
 
-    public AdapterGrid(Context context,int layoutResourceId, ArrayList<ExerciseStatisticItem> data) {
-        super(context, layoutResourceId,data);
+
+    public AdapterGrid(Context context,int layoutResourceId, ArrayList<GridType> arrayList) {
+        super(context, layoutResourceId,arrayList);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data=data;
+        this.arrayList=arrayList;
+        Log.i("Dentro ADAPTER","");
     }
-
-    /*public AdapterGrid(Context context) {
-
-        this.context = context;
-        Log.i("ENTRATO NEL constr","");
-    }*/
 
 
     @Override
@@ -64,8 +55,8 @@ public class AdapterGrid extends ArrayAdapter<ExerciseStatisticItem> {
             holder = (ViewHolder) row.getTag();
         }
 
-        ExerciseStatisticItem item = data.get(position);
-        holder.title.setText(item.getTitle());
+        GridType item = arrayList.get(position);
+        holder.title.setText(item.getCategoryName());
         holder.pieView.setPercentage(item.getPercentage());
         //holder.pieView.setMainBackgroundColor(R.color.main_color_middle);
         //holder.pieView.setMainBackgroundColor(R.color.main_color_middle);

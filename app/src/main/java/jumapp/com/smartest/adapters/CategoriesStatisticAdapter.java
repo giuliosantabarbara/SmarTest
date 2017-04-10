@@ -16,9 +16,9 @@ import jumapp.com.smartest.R;
  * Created by giuli on 07/03/2017.
  */
 
-public class CategoriesStatisticAdapter extends StatisticsAdapter {
+public class CategoriesStatisticAdapter { //extends StatisticsAdapter {
 
-    public CategoriesStatisticAdapter(Context context,String nam[], int[] n,int contest_id) {
+    /*public CategoriesStatisticAdapter(Context context,String nam[], int[] n,int contest_id) {
         super(context,nam , n);
     }
     //this method will be called for every item of your listview
@@ -33,6 +33,6 @@ public class CategoriesStatisticAdapter extends StatisticsAdapter {
         bar.setProgressBackgroundColor(Color.parseColor("#1a405f"));
         bar.setProgressColor(Color.parseColor("#4090D0"));
         return convertView;
-    }
+    }*/
 
 }

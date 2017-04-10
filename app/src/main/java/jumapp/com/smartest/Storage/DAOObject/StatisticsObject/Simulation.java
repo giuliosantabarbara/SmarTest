@@ -59,4 +59,5 @@ public class Simulation {
     public ArrayList<SimulationCategory> getSimulationCategories() {
         return simulationCategories;
     }
+
 }

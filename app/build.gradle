@@ -34,7 +34,6 @@ dependencies {
         compile 'com.github.gigamole.arcprogressstackview:library:1.0.3'
 
     }
-
     compile 'com.github.ceryle:fitgridview:v1.0.3'
     compile 'com.afollestad:drag-select-recyclerview:0.4.0'
     compile 'com.afollestad:material-cab:0.1.12'

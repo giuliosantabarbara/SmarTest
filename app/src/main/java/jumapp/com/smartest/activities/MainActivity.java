@@ -313,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
             exDAO.insert(e,conn);
         }
 
+        conn.close();
     }
 
     public void readEsercitazione(View v){

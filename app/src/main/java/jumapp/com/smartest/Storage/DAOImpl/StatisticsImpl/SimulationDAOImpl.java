@@ -97,6 +97,8 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
         res.moveToFirst();
         Log.i("Simualtion get sim",""+res.getCount());
         Simulation tmp = null;
+        SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
+        SQLiteDatabase conn = sc.openWritableConnection();
         while(res.isAfterLast() == false) {
 
             int contestId = res.getInt(res.getColumnIndex("contest_id"));
@@ -104,14 +106,14 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
             int month = res.getInt(res.getColumnIndex("month"));
             int year = res.getInt(res.getColumnIndex("year"));
 
-            SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
-            SQLiteDatabase conn = sc.openWritableConnection();
+
             ArrayList<SimulationCategory> scList = sc.getCategoriesBySimulationId(simulationId,conn);
 
             tmp= new Simulation(simulationId,contestId,day,month,year,scList);
             Log.i("Simualtion get sim",""+tmp);
             res.moveToNext();
         }
+        conn.close();
         //openReadableConnection().close();
         res.close();
 
