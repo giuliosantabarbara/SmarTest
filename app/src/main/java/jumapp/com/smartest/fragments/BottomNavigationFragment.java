@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
+import jumapp.com.smartest.ContestSingleton;
 import jumapp.com.smartest.Exercise.ExerciseFragment;
 import jumapp.com.smartest.Exercise.ViewManager.ExerciseProgressBarManager;
 import jumapp.com.smartest.Exercise.ViewManager.ExerciseTextViewManager;
@@ -69,9 +71,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
         main_view = inflater.inflate(R.layout.activity_horizontal_ntb, container, false);
         context = main_view.getContext();
 
-        //mAgendaCalendarView = ButterKnife.findById(LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.calendar_view, null, false), R.id.agenda_calendar_view);
-        //Log.i("Valore inizioAgenda: ",""+mAgendaCalendarView);
-        // Log.i("Valore mAgenda fuori: ",""+mAgendaCalendarView);
+        ContestSingleton.getInstance(context);
 
         initUI(main_view);
         return main_view;

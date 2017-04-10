@@ -24,7 +24,6 @@ import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.Exercise.Singleton.QuestionsExerciseShortSingleton;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
@@ -35,84 +34,52 @@ import jumapp.com.smartest.Storage.DAOObject.Question;
  */
 public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainViewHolder> {
 
-   private static Context context;
+    private static Context context;
     private SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
 
     //
 
-    public void setContext(Context context){
-        this.context=context;
+    public void setContext(Context context) {
+        this.context = context;
     }
 
-    public int[] color(){
+    public int[] color() {
         //Log.i("@@@","color");
 
         prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
-        String created_by=prefs.getString("drag_selecter_created",null);
+        String created_by = prefs.getString("drag_selecter_created", null);
 
-       ArrayList<Question> questions;
-       if(created_by.equalsIgnoreCase("study"))questions= QuestionsSingleton.getInstance().getQuestions();
-        else{
-            //exercise_short
-            questions= QuestionsExerciseShortSingleton.getInstance().getQuestions();
-        }
-        int [] insieme= new int[questions.size()];
-        for(int i=0; i<questions.size(); i++){
-            if(questions.get(i).getStudied()) insieme[i]= Color.parseColor("#009688");
-            else insieme[i]=Color.parseColor("#A9A9A9");
+        ArrayList<Question> questions;
+        questions = QuestionsSingleton.getInstance().getQuestions();
+
+        int[] insieme = new int[questions.size()];
+        for (int i = 0; i < questions.size(); i++) {
+            if (questions.get(i).getStudied()) insieme[i] = Color.parseColor("#009688");
+            else insieme[i] = Color.parseColor("#A9A9A9");
         }
 
 
         return insieme;
     }
 
-    public  String[] textInitialization(){
+    public String[] textInitialization() {
 
         //Log.i("@@@","text");
 
         //ArrayList<Question> questions = ((QuestionsByCategory) parent.getContext()getApplication()).getSomeVariable();
         prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
-        String created_by=prefs.getString("drag_selecter_created",null);
+        String created_by = prefs.getString("drag_selecter_created", null);
 
         ArrayList<Question> questions;
-        String [] insieme ;
-        if(created_by.equalsIgnoreCase("exercise_short")){
-
-            questions= QuestionsExerciseShortSingleton.getInstance().getQuestions();
-            insieme= new String[questions.size()];
-            String previousName=null;
-            ArrayList<String> names= new ArrayList<String>();
-            int indexFor=0;
-            int indexResult=0;
-            for(Question q:questions){
-                if(previousName==null){
-                    previousName=q.getCategory();
-                    names.add(previousName);
-                    insieme[indexResult]="1\n"+previousName;
-                    indexFor++;
-                }
-                else if(previousName.equalsIgnoreCase(q.getCategory())){
-                    indexFor++;
-                    insieme[indexResult]=(indexFor+1)+"\n"+previousName;
-                }else{
-                    indexFor++;
-                    indexResult++;
-                    previousName=q.getCategory();
-                    insieme[indexResult]=(indexFor+1)+"\n"+previousName;
-                }
+        String[] insieme;
+            questions = QuestionsSingleton.getInstance().getQuestions();
+            insieme = new String[questions.size()];
+            for (int i = 0; i < questions.size(); i++) {
+                insieme[i] = "" + (i + 1);
             }
-        }
-        else{
-            //exercise_short
-            questions= QuestionsSingleton.getInstance().getQuestions();
-            insieme= new String[questions.size()];
-            for( int i=0; i<questions.size(); i++){
-                insieme[i]=""+(i+1);
-            }
-        }
 
 
         return insieme;
@@ -144,7 +111,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_viewer_griditem_main, parent, false);
 
 
-        context=parent.getContext();
+        context = parent.getContext();
         prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
 
@@ -176,10 +143,9 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
     }
 
 
-
     @Override
     public int getItemCount() {
-        Log.i("@@@","getItem");
+        Log.i("@@@", "getItem");
         return textInitialization().length;
     }
 
@@ -207,7 +173,6 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         }
 
 
-
         @Override
         public void onClick(View v) {
             if (mCallback != null) {
@@ -216,9 +181,9 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
                 //Log.i("###", "POSITION " + getAdapterPosition());
 
                 prefs = itemView.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
-                int numberOfButtonSelected=prefs.getInt("numberOfButtonSelected",0);
+                int numberOfButtonSelected = prefs.getInt("numberOfButtonSelected", 0);
 
-                if(  numberOfButtonSelected==0 ) {
+                if (numberOfButtonSelected == 0) {
                     final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
                     // Use bounce interpolator with amplitude 0.2 and frequency 20
                     MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
@@ -226,13 +191,13 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
                     v.startAnimation(myAnim);
 
 
-                    FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+                    FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                    StudyFragment stdFrg= new StudyFragment();
-                    ArrayList<Question> questions=QuestionsSingleton.getInstance().getQuestions();
-                    Bundle b= new Bundle();
-                    b.putParcelableArrayList("questions_parceable",questions);
+                    StudyFragment stdFrg = new StudyFragment();
+                    ArrayList<Question> questions = QuestionsSingleton.getInstance().getQuestions();
+                    Bundle b = new Bundle();
+                    b.putParcelableArrayList("questions_parceable", questions);
                     b.putInt("question_selected", getAdapterPosition());
                     stdFrg.setArguments(b);
 

@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
 import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
 import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
@@ -22,7 +25,6 @@ import jumapp.com.smartest.Storage.DAOObject.Question;
  * Created by marco on 18/03/2017.
  */
 public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
-
 
 
 
@@ -49,7 +51,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
                         "contest_id integer, hasAttachment integer)"
         );
 
-       // db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
+        // db.execSQL("CREATE INDEX alternative_question_id_index on "+ CONTACTS_TABLE_NAME+ " (contest_id);");
     }
 
     @Override
@@ -177,9 +179,9 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
     public void setQuestionStudied(long questionId, boolean studied,SQLiteDatabase dbQuest) {
         int valore=0;
         if(studied) valore=1;
-       // dbQuest.execSQL("UPDATE \""+CONTACTS_TABLE_NAME+"\" SET isStudied='"+valore+"' WHERE question_id='"+questionId+"'");
+        // dbQuest.execSQL("UPDATE \""+CONTACTS_TABLE_NAME+"\" SET isStudied='"+valore+"' WHERE question_id='"+questionId+"'");
         ContentValues contentValues = new ContentValues();
-       contentValues.put("isStudied ", valore);
+        contentValues.put("isStudied ", valore);
         dbQuest.update(CONTACTS_TABLE_NAME, contentValues, "question_id="+questionId, null);
 
     }

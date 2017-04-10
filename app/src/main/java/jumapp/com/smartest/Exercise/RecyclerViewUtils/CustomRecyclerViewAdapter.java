@@ -1,6 +1,7 @@
 package jumapp.com.smartest.Exercise.RecyclerViewUtils;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -38,11 +39,13 @@ public class CustomRecyclerViewAdapter extends RecyclerTabLayout.Adapter<CustomR
 
             @Override
             public void onBindViewHolder(ViewHolder holder, int position) {
-                Log.i("###","on Bind View");
+                Log.i("###", "on Bind View");
                 ColorItem colorItem = mAdapater.getColorItem(position);
                 holder.title.setText(colorItem.name);
                 holder.color.setBackgroundColor(colorItem.color);
-                holder.color.setBackgroundResource(R.drawable.custom_shape_grey);
+                if( colorItem.getColorItem()== Color.RED) holder.color.setBackgroundResource(R.drawable.custom_shape_red);
+                else if(colorItem.getColorItem()==Color.GREEN)holder.color.setBackgroundResource(R.drawable.custom_shape_green);
+                else holder.color.setBackgroundResource(R.drawable.custom_shape_grey);
 
                 SpannableString name = new SpannableString(colorItem.name);
                 if (position == getCurrentIndicatorPosition()) {

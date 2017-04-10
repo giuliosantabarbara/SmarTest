@@ -3,6 +3,9 @@ package jumapp.com.smartest.Storage.DAOInterface;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
 import jumapp.com.smartest.Storage.DAOObject.Question;
 
@@ -19,6 +22,8 @@ public interface QuestionDAO {
     public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
     public void setQuestionStudied(long questionId,boolean studied,SQLiteDatabase dbQuest);
     public int numberOfRowsByContest(long contestId);
+
+
 
     public Question getQuestionById(long questionId,SQLiteDatabase dbAtt);
 

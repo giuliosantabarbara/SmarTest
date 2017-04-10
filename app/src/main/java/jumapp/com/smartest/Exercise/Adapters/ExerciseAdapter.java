@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jumapp.com.smartest.QuestionViewer.DragSelecter.MyBounceInterpolator;
-import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.Question;
@@ -32,16 +31,17 @@ public class ExerciseAdapter extends PagerAdapter {
 
     private ArrayList<Question> questions= new ArrayList<Question>();
 
+    private boolean isSelectedRight=false;
+
     public ExerciseAdapter() {
     }
 
 
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         View view = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.layout_exercise_simulation, container, false);
-
 
         final Question quest = questions.get(position);
         LinearLayout frame = (LinearLayout) view.findViewById(R.id.layout_exercise_frame);
@@ -49,6 +49,7 @@ public class ExerciseAdapter extends PagerAdapter {
         tv.setText(quest.getText());
         tv.setMovementMethod(new ScrollingMovementMethod());
         final LinearLayout linear = (LinearLayout) view.findViewById(R.id.layout_exercise_linear);
+
 
         tv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -82,25 +83,42 @@ public class ExerciseAdapter extends PagerAdapter {
             final TextView txt = (TextView) viewQuest.findViewById(R.id.text_view_answer_alternative);
             txt.setText(a.getText());
 
-            txt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(a.getRight()){
-                        Drawable dr= ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_green);
-                        txt.setBackground(dr);
-                    }
-                    else{
-                        Drawable dr= ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_red);
-                        txt.setBackground(dr);
-                        final Animation myAnim = AnimationUtils.loadAnimation(viewQuest.getContext(), R.anim.bounce);
-                        // Use bounce interpolator with amplitude 0.2 and frequency 20
-                        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
-                        myAnim.setInterpolator(interpolator);
-                        v.startAnimation(myAnim);
-                    }
-                }
-            });
+            if(mItems.get(position).getSetted() &&a.getRight()){
+                Drawable dr = ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_green);
+                txt.setBackground(dr);
+            }else {
 
+                txt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (a.getRight()) {
+                            Drawable dr = ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_green);
+                            txt.setBackground(dr);
+                            isSelectedRight = true;
+
+                            if (!mItems.get(position).getSetted()) {
+                                mItems.get(position).setColorItem(Color.GREEN);
+                                mItems.get(position).setSetted();
+                            }
+
+                        } else {
+                            Drawable dr = ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_red);
+                            txt.setBackground(dr);
+                            final Animation myAnim = AnimationUtils.loadAnimation(viewQuest.getContext(), R.anim.bounce);
+                            // Use bounce interpolator with amplitude 0.2 and frequency 20
+                            MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+                            myAnim.setInterpolator(interpolator);
+                            v.startAnimation(myAnim);
+
+                            if (!mItems.get(position).getSetted()) {
+                                mItems.get(position).setColorItem(Color.RED);
+                                mItems.get(position).setSetted();
+                            }
+                            isSelectedRight = false;
+                        }
+                    }
+                });
+            }
 
             frame.addView(viewQuest);
 
@@ -132,23 +150,12 @@ public class ExerciseAdapter extends PagerAdapter {
 
     public ColorItem getColorItem(int position) {
         Log.i("###", "get color item");
-
-        return  new ColorItem("22", Color.BLUE);
-        //return mItems.get(position);
+        return mItems.get(position);
     }
 
     public void initItems() {
 
-        List<ColorItem> itemsTMP = new ArrayList<>();
-
-        for (int i=1; i<= questions.size(); i++){
-            ColorItem colorItem = new ColorItem();
-            colorItem.name = "   "+i;
-            colorItem.color = Color.BLACK;
-            itemsTMP.add(colorItem);
-        }
-
-        mItems = itemsTMP;
+        for (int i=0; i< questions.size(); i++) mItems.add(new ColorItem(""+i,Color.GRAY));
     }
 
     public void addAllQuestion(ArrayList<Question> questions) {

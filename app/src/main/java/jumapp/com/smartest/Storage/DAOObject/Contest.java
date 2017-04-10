@@ -3,6 +3,10 @@ package jumapp.com.smartest.Storage.DAOObject;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Created by marco on 18/03/2017.
