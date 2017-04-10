@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
@@ -10,68 +11,127 @@
 
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Download Contest MetaData"
             android:id="@+id/button"
-            android:onClick="downloadContestMetaData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/button4"
-            android:visibility="invisible"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:onClick="downloadContestMetaData"
+            android:text="Download Contest MetaData" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Download primo Contest"
-            android:onClick="dowloadPrimoContest"
             android:id="@+id/button2"
-            android:visibility="invisible"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/button"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:onClick="dowloadPrimoContest"
+            android:text="Download primo Contest" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancella Tutto"
             android:id="@+id/button3"
-            android:visibility="invisible"
-            android:onClick="cancellaTutto"
-            android:layout_marginTop="54dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="54dp"
+            android:onClick="cancellaTutto"
+            android:text="Cancella Tutto" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancella Tutto Tranne MetaData Contest"
             android:id="@+id/button4"
-            android:visibility="invisible"
-            android:onClick="cancellaTuttoTranneMetaData"
-            android:layout_below="@+id/button3"
-            android:layout_centerHorizontal="true" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stampa contest nel LOG"
+            android:layout_below="@+id/button3"
+            android:layout_centerHorizontal="true"
+            android:onClick="cancellaTuttoTranneMetaData"
+            android:text="Cancella Tutto Tranne MetaData Contest" />
+
+        <Button
             android:id="@+id/button5"
-            android:visibility="invisible"
-            android:onClick="stampaContestNelLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
             android:layout_below="@+id/button2"
-            android:layout_alignStart="@+id/button2" />
+            android:onClick="stampaContestNelLog"
+            android:text="Stampa contest nel LOG" />
+
+        <Button
+            android:id="@+id/caricaEsercitazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/button5"
+            android:onClick="insertEsercitazione"
+            android:text="Inserisci esercitazione" />
+
+        <Button
+            android:id="@+id/stampaEsercitazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/caricaEsercitazione"
+            android:onClick="readEsercitazione"
+            android:text="Stampa esercitazione" />
+
+        <Button
+            android:id="@+id/caricaSimulazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/stampaEsercitazione"
+            android:onClick="insertSimulazione"
+            android:text="Inserisci simulazione" />
+
+        <Button
+            android:id="@+id/stampaSimulazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/caricaSimulazione"
+            android:onClick="readSimulazione"
+            android:text="Stampa simulazioni" />
+
+        <Button
+            android:id="@+id/cancellaSimulazioni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/stampaSimulazione"
+            android:onClick="deleteSimulazioni"
+            android:text="Cancella simulazioni" />
+
+        <Button
+            android:id="@+id/cancellaSimulazione"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/cancellaSimulazioni"
+            android:onClick="deleteSimulazione"
+            android:text="Cancella simulazione 3" />
+
+        <Button
+            android:id="@+id/cancellaEX1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/button2"
+            android:layout_below="@+id/cancellaSimulazione"
+            android:onClick="deleteEsercitazione"
+            android:text="Cancella ex 1" />
 
         <ImageView
+            android:id="@+id/start_icon_pencil"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:id="@+id/start_icon_pencil"
-            android:src="@drawable/start_icon_pencil"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_toEndOf="@+id/button" />
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/button"
+            android:adjustViewBounds="true"
+            android:src="@drawable/start_icon_pencil" />
 
     </RelativeLayout>
+
 </LinearLayout>

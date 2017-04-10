@@ -1,4 +1,4 @@
-package jumapp.com.smartest.adapters;
+package jumapp.com.smartest.Statistics.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,21 +9,16 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
-import java.util.ArrayList;
-
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Question;
 
 
 /**
  * Created by giuli on 07/03/2017.
  */
 
-public class CategoriesStatisticAdapter extends StatisticsAdapter {
+public class CategoriesStatisticAdapter { //extends StatisticsAdapter {
 
-    public CategoriesStatisticAdapter(Context context,String nam[], int[] n,int contest_id) {
+    /*public CategoriesStatisticAdapter(Context context,String nam[], int[] n,int contest_id) {
         super(context,nam , n);
     }
     //this method will be called for every item of your listview
@@ -38,6 +33,6 @@ public class CategoriesStatisticAdapter extends StatisticsAdapter {
         bar.setProgressBackgroundColor(Color.parseColor("#1a405f"));
         bar.setProgressColor(Color.parseColor("#4090D0"));
         return convertView;
-    }
+    }*/
 
 }

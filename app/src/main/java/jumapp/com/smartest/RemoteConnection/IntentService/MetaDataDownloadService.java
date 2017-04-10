@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,12 +15,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
 
 /**
  * Created by marco on 30/03/2017.

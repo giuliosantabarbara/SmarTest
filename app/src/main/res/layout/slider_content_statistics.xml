@@ -1,24 +1,27 @@
+
 <LinearLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="100"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slider_content_statistics">
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/viewpagertab"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/tab_height"
         android:clipToPadding="false"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
+        android:layout_gravity="center"
         app:stl_defaultTabTextColor="@color/white"
         app:stl_defaultTabTextHorizontalPadding="18dp"
         app:stl_dividerColor="@color/transparent"
         app:stl_dividerThickness="0dp"
-        app:stl_indicatorColor="@color/black_20"
+        app:stl_indicatorColor="@color/main_color_middle"
         app:stl_indicatorCornerRadius="18dp"
         app:stl_indicatorGravity="center"
         app:stl_indicatorInterpolation="smart"
@@ -30,12 +33,38 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="85"
+        android:layout_height="wrap_content"
         android:layout_below="@id/viewpagertab"
-        />
+        android:layout_margin="10dp" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:id="@+id/statistics_linear_animation"
+        android:background="@drawable/shape_middle_round_corner"
+        android:visibility="gone"
+        android:weightSum="100"
+        android:layout_height="match_parent">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="15"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white"
+            android:id="@+id/textViewSimulation" />
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:numColumns="3"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/gridLayoutStatisticsRecap"
+            android:layout_weight="85" />
+    </LinearLayout>
 
 </LinearLayout>

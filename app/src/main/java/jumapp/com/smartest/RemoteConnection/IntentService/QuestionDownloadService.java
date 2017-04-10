@@ -13,9 +13,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 30/03/2017.

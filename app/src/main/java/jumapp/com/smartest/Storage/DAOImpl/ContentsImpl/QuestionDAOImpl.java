@@ -1,4 +1,4 @@
-package jumapp.com.smartest.Storage.DAOImpl;
+package jumapp.com.smartest.Storage.DAOImpl.ContentsImpl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,13 +13,15 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import jumapp.com.smartest.Storage.DAOInterface.AlternativeDAO;
-import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Alternative;
-import jumapp.com.smartest.Storage.DAOObject.Attachment;
-import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AlternativeDAO;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AttachmentDAO;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Attachment;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
+
+
 
 /**
  * Created by marco on 18/03/2017.

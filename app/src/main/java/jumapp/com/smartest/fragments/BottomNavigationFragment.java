@@ -1,5 +1,7 @@
 package jumapp.com.smartest.fragments;
 
+import android.app.AlertDialog;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -21,6 +23,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,20 +37,23 @@ import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
+
 import jumapp.com.smartest.ContestSingleton;
 import jumapp.com.smartest.Exercise.ExerciseFragment;
 import jumapp.com.smartest.Exercise.ViewManager.ExerciseProgressBarManager;
 import jumapp.com.smartest.Exercise.ViewManager.ExerciseTextViewManager;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
+
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOImpl.QuestionDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.QuestionDAO;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
-import jumapp.com.smartest.adapters.CategoriesStatisticAdapter;
-import jumapp.com.smartest.adapters.ExercisesStatisticAdapter;
-import jumapp.com.smartest.adapters.SimulationStatisticAdapter;
+
+import jumapp.com.smartest.activities.StudyPlanIntro;
+import jumapp.com.smartest.Statistics.ViewManager.StatisticsManager;
+
 
 
 /**
@@ -141,10 +148,18 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         }
 
 
+ /*HEAD
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
                         CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nam, n, contest_id);
                         myList.setAdapter(ad);
 
+///=======
+                        final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
+                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n,contest_id);
+                        myList.setAdapter(ad);
+
+
+////statisticsStorage
                         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -164,7 +179,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 fragmentTransaction.commit();
 
                             }
-                        });
+                        });*/
 
 
                         break;
@@ -220,92 +235,18 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_statistics, null, false);
                         container.addView(view);
 
-
                         ViewPagerItemAdapter adapter = new ViewPagerItemAdapter(ViewPagerItems.with(context)
                                 .add(R.string.es, R.layout.layout_page_exercise)
-                                .add(R.string.ex, R.layout.layout_page_exame)
+                                .add(R.string.ex, R.layout.layout_page_simulation)
                                 .create());
                         final ViewPager viewPagerStatistics = (ViewPager) view.findViewById(R.id.viewpager);
                         viewPagerStatistics.setAdapter(adapter);
 
-
                         SmartTabLayout viewPagerTab = (SmartTabLayout) view.findViewById(R.id.viewpagertab);
                         viewPagerTab.setViewPager(viewPagerStatistics);
 
-                        viewPagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                            boolean first = true;
-
-                            @Override
-                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                                if (position == 0 && first) {
-
-                                    String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
-                                    int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
-                                    final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
-                                    ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
-                                    myListStatistics.setAdapter(st);
-                                    first = false;
-
-                                }
-                            }
-
-                            @Override
-                            public void onPageSelected(int position) {
-
-                                switch (position) {
-                                    case 0:
-
-                                        String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
-                                        int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
-                                        final ListView myListStatistics = (ListView) getView().findViewById(R.id.listViewExerciseStatistics);
-                                        ExercisesStatisticAdapter st = new ExercisesStatisticAdapter(context, nameproducts, num);
-                                        myListStatistics.setAdapter(st);
-                                        break;
-                                    case 1:
-                                        String[] name = new String[]{"Simulazione 1", "Simulazione 2", "Simulazione 3", "Simulazione 4"};
-                                        int[] nume = new int[]{75, 25, 55, 33, 75, 12, 35};
-                                        final ListView myListStatisticsSim = (ListView) getView().findViewById(R.id.listViewExameStatistics);
-                                        SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, name, nume);
-                                        myListStatisticsSim.setAdapter(stSim);
-                                        /*myListStatisticsSim.setOnKeyListener(new View.OnKeyListener() {
-                                            @Override
-                                            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                                String[] name = new String[] { "Simulazione 1", "Simulazione 2", "Simulazione 3", "Simulazione 4" };
-                                                int[] nume = new int[] { 75, 25, 55, 33, 75, 12,35 };
-                                                if(event.getAction() == KeyEvent.ACTION_DOWN)
-                                                {
-                                                     ListView listView = (ListView) v;
-                                                    switch(keyCode)
-                                                    {
-                                                        case KeyEvent.KEYCODE_BACK:
-                                                            SimulationStatisticAdapter stSim = new   SimulationStatisticAdapter(context, name,nume);
-                                                            myListStatisticsSim.setAdapter(stSim);
-                                                            break;
-                                                    }
-                                                }
-                                                return false;
-                                            }
-                                        });*/
-                                        myListStatisticsSim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                String[] nameproducts = new String[]{"Storia", "Matematica", "Attualità", "Geometria", "Geografia", "Grammatica", "Logica"};
-                                                int[] num = new int[]{10, 20, 5, 33, 75, 12, 35};
-                                                final ListView myListStatistics = (ListView) view.findViewById(R.id.listViewExameStatistics);
-                                                SimulationStatisticAdapter stSim = new SimulationStatisticAdapter(context, nameproducts, num);
-                                                myListStatisticsSim.setAdapter(stSim);
-                                            }
-                                        });
-                                        break;
-                                }
-
-                            }
-
-                            @Override
-                            public void onPageScrollStateChanged(int state) {
-
-                            }
-                        });
+                        StatisticsManager manager = new StatisticsManager(context,contest_id);
+                        manager.init(viewPagerTab,getView(),viewPagerStatistics);
 
                         break;
                     /*case 4:

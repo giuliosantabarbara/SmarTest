@@ -3,13 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <ListView
+    <Button
+        android:id="@+id/button7"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_round_rect"
-        android:id="@+id/listViewExameStatistics"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="85" />
-
+        android:layout_height="wrap_content"
+        android:text="Button" />
 </LinearLayout>

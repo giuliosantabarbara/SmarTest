@@ -1,4 +1,4 @@
-package jumapp.com.smartest.Storage.DAOImpl;
+package jumapp.com.smartest.Storage.DAOImpl.ContentsImpl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import jumapp.com.smartest.Storage.DAOInterface.AttachmentDAO;
-import jumapp.com.smartest.Storage.DAOObject.Attachment;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AttachmentDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Attachment;
 
 /**
  * Created by marco on 18/03/2017.

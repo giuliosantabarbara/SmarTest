@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:plainpie="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/text_view_exercise_statistic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffff" />
+
+        <az.plainpie.PieView
+            android:id="@+id/pieViewEcercise"
+            android:layout_width="85dp"
+            android:layout_height="101dp"
+            android:layout_gravity="center"
+            plainpie:inner_pie_padding="30"
+            plainpie:inner_text_visibility="true"
+            plainpie:percentage="75"
+            plainpie:percentage_size="25"/>
+
+
+</LinearLayout>

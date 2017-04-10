@@ -1,4 +1,4 @@
-package jumapp.com.smartest.Storage.DAOObject;
+package jumapp.com.smartest.Storage.DAOObject.ContentsObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
