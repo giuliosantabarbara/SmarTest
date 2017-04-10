@@ -29,7 +29,6 @@ public class GridViewManager {
                 GridType t = new GridType(sc.getCategoryName(),sc.getPercentage());
                 g.add(t);
             }
-
         }
         return g;
     }
