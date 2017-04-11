@@ -12,9 +12,8 @@
     android:weightSum="100">
 
 
-
-
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="10dp"
@@ -23,7 +22,7 @@
         android:gravity="center"
         android:text="UFFICIALI ESERCITO 2017"
         android:textColor="#ffffff"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <!--verde chiaro android:background="#bbcf4a"-->
 

@@ -16,10 +16,10 @@ public class ExerciseStatisticsSingleton {
 
 
     private static ExerciseStatisticsSingleton mInstance;
-    private ExerciseDAO exerciseDao;
+    private static ExerciseDAO exerciseDao;
     private long contestId;
 
-    private ArrayList<Exercise> exercises= new ArrayList<Exercise>();
+    private static ArrayList<Exercise> exercises= new ArrayList<Exercise>();
 
     protected ExerciseStatisticsSingleton(ExerciseDAO exerciseDao, long contestId){
 
@@ -50,8 +50,8 @@ public class ExerciseStatisticsSingleton {
         this.exercises = exercises;
     }
 
-    public void setExercise(Exercise exercise) {
-        this.exercises.add(exercise);
+    public static void setExercise(Exercise exercise) {
+        exercises.add(exercise);
         SQLiteDatabase conn = exerciseDao.openWritableConnection();
         exerciseDao.insert(exercise,conn);
         conn.close();

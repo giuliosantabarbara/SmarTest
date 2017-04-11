@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
 
+
 import jumapp.com.smartest.ContestSingleton;
 import jumapp.com.smartest.Exercise.ExerciseFragment;
 import jumapp.com.smartest.Exercise.ViewManager.ExerciseProgressBarManager;
@@ -46,6 +48,7 @@ import jumapp.com.smartest.QuestionViewer.DragSelecter.FragmentDragSelecter;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 
 import jumapp.com.smartest.R;
+import jumapp.com.smartest.Statistics.Adapters.CategoriesStatisticAdapter;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
@@ -53,7 +56,6 @@ import jumapp.com.smartest.activities.MainActivity;
 
 import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.Statistics.ViewManager.StatisticsManager;
-
 
 
 /**
@@ -79,6 +81,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
         context = main_view.getContext();
 
         ContestSingleton.getInstance(context);
+
 
         initUI(main_view);
         return main_view;
@@ -148,18 +151,14 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         }
 
 
- /*HEAD
-                        final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
-                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context, nam, n, contest_id);
-                        myList.setAdapter(ad);
 
-///=======
+
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
-                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n,contest_id);
+                        CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n);
                         myList.setAdapter(ad);
 
 
-////statisticsStorage
+
                         myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -179,7 +178,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 fragmentTransaction.commit();
 
                             }
-                        });*/
+                        });
 
 
                         break;

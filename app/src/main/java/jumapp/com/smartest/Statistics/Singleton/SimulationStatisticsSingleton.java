@@ -15,10 +15,10 @@ public class SimulationStatisticsSingleton {
 
 
     private static SimulationStatisticsSingleton mInstance;
-    private SimulationDAO simulationDao;
+    private static SimulationDAO simulationDao;
     private long contestId;
 
-    private ArrayList<Simulation> simulations= new ArrayList<Simulation>();
+    private static ArrayList<Simulation> simulations= new ArrayList<Simulation>();
 
     protected SimulationStatisticsSingleton(SimulationDAO simulationDao, long contestId){
 
@@ -51,8 +51,8 @@ public class SimulationStatisticsSingleton {
 
     }
 
-    public void setSimulation(Simulation simulation) {
-        this.simulations.add(simulation);
+    public static void setSimulation(Simulation simulation) {
+        simulations.add(simulation);
         SQLiteDatabase conn = simulationDao.openWritableConnection();
         simulationDao.insert(simulation,conn);
         conn.close();
