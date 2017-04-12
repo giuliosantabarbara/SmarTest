@@ -14,6 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import java.util.ArrayList;
+
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Statistics.Singleton.ExerciseStatisticsSingleton;
 import jumapp.com.smartest.Statistics.Singleton.SimulationStatisticsSingleton;
@@ -24,6 +27,8 @@ import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDA
 import jumapp.com.smartest.Statistics.Adapters.GridAdapter;
 import jumapp.com.smartest.Statistics.ViewUtils.GridViewManager;
 import jumapp.com.smartest.Statistics.Adapters.SimulationStatisticAdapter;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
+import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 
 /**
  * Created by giulio on 08/04/17.
@@ -56,8 +61,12 @@ public class StatisticsManager {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 0 && first) {
                     GridView gridView = (GridView) view.findViewById(R.id.gridView);
-                    GridAdapter gridAdapter = new GridAdapter(context, R.layout.grid_view_exercise_statistic, GridViewManager.getGridType(exercisesSingleton.getExercises()));
-                    gridView.setAdapter(gridAdapter);
+                    ArrayList<Exercise> ex = exercisesSingleton.getExercises();
+                    if (ex.size()!=0){
+                        GridAdapter gridAdapter = new GridAdapter(context, R.layout.grid_view_exercise_statistic, GridViewManager.getGridType(ex));
+                        gridView.setAdapter(gridAdapter);
+                    }
+
                     first = false;
                 }
             }
@@ -116,16 +125,20 @@ public class StatisticsManager {
                 simulationSpecs.setText("Dettagli Simulazione "+(position+1));
                 GridView gridView = (GridView) view.findViewById(R.id.gridLayoutStatisticsRecap);
 
-                GridAdapter gridAdapter = new GridAdapter(context, R.layout.grid_view_exercise_statistic, GridViewManager.getGridType(simulationsSingleton.getSimulationByIndex(position).getSimulationCategories()));
-                gridView.setAdapter(gridAdapter);
-                ViewGroup.LayoutParams params = viewPagerStatistics.getLayoutParams();
-                if (myListStatisticsSim.getHeight() > (linearExer.getHeight() * 0.6)) {
-                    int new_height = (int) (linearExer.getHeight() * 0.43);
-                    params.height = new_height;
-                    viewPagerStatistics.setLayoutParams(params);
-                    Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.entrance);
-                    stat_linear_animation.startAnimation(myAnim);
+                Simulation sm = simulationsSingleton.getSimulationByIndex(position);
+                if (sm!=null){
+                    GridAdapter gridAdapter = new GridAdapter(context, R.layout.grid_view_exercise_statistic, GridViewManager.getGridType(sm.getSimulationCategories()));
+                    gridView.setAdapter(gridAdapter);
+                    ViewGroup.LayoutParams params = viewPagerStatistics.getLayoutParams();
+                    if (myListStatisticsSim.getHeight() > (linearExer.getHeight() * 0.6)) {
+                        int new_height = (int) (linearExer.getHeight() * 0.43);
+                        params.height = new_height;
+                        viewPagerStatistics.setLayoutParams(params);
+                        Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.entrance);
+                        stat_linear_animation.startAnimation(myAnim);
+                    }
                 }
+
             }
         });
     }

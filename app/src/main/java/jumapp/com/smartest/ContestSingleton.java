@@ -12,10 +12,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import jumapp.com.smartest.Exercise.Pair;
-import jumapp.com.smartest.Storage.DAOImpl.ContestDAOImpl;
-import jumapp.com.smartest.Storage.DAOInterface.ContestDAO;
-import jumapp.com.smartest.Storage.DAOObject.Contest;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 10/04/2017.

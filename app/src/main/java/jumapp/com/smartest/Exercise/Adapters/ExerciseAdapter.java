@@ -20,8 +20,8 @@ import java.util.List;
 
 import jumapp.com.smartest.QuestionViewer.DragSelecter.MyBounceInterpolator;
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOObject.Alternative;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 import jumapp.com.smartest.Exercise.RecyclerViewUtils.ColorItem;
 
 

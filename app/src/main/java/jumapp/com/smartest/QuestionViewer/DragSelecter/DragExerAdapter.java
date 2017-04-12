@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 05/04/2017.

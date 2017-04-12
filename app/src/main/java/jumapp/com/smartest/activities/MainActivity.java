@@ -35,6 +35,10 @@ import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
 import jumapp.com.smartest.RemoteConnection.IntentService.AlternativeDownloadService;
 import jumapp.com.smartest.RemoteConnection.IntentService.MetaDataDownloadService;
+import jumapp.com.smartest.RemoteConnection.IntentService.rootDownload;
+import jumapp.com.smartest.Statistics.Adapters.SimulationStatisticAdapter;
+import jumapp.com.smartest.Statistics.Singleton.ExerciseStatisticsSingleton;
+import jumapp.com.smartest.Statistics.Singleton.SimulationStatisticsSingleton;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.AlternativeDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.AttachmentDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.ContestDAOImpl;
@@ -43,6 +47,7 @@ import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.ExerciseDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.SimulationCategoryDAOImpl;
 import jumapp.com.smartest.Storage.DAOImpl.StatisticsImpl.SimulationDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.ExerciseDAO;
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationCategoryDAO;
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDAO;
@@ -296,6 +301,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
 
 
+
+
+
     public void insertEsercitazione(View v){
 
         ExerciseDAO exDAO= new ExerciseDAOImpl(this);
@@ -325,13 +333,13 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         }
         co.close();
 
-        SQLiteDatabase conn = exDAO.openWritableConnection();
+        //QLiteDatabase conn = exDAO.openWritableConnection();
 
         for(Exercise e: tmp){
-            exDAO.insert(e,conn);
+            ExerciseStatisticsSingleton.setExercise(e);
         }
 
-        conn.close();
+        //conn.close();
     }
 
     public void readEsercitazione(View v){
@@ -407,13 +415,13 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
             tmp.add(s);
         }
 
-        SQLiteDatabase conn = exDAO.openWritableConnection();
+        //SQLiteDatabase conn = exDAO.openWritableConnection();
 
         for(Simulation s: tmp){
-            exDAO.insert(s,conn);
+            SimulationStatisticsSingleton.setSimulation(s);
         }
 
-        conn.close();
+        //conn.close();
 
     }
 

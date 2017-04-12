@@ -16,7 +16,7 @@ import com.ToxicBakery.viewpager.transforms.ZoomOutSlideTransformer;
 import java.util.ArrayList;
 
 import jumapp.com.smartest.R;
-import jumapp.com.smartest.Storage.DAOObject.Question;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
  * Created by marco on 02/04/2017.
