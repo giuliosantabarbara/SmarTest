@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.RemoteConnection.Connector;
 import jumapp.com.smartest.RemoteConnection.FirebaseConnector;
@@ -58,6 +60,7 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
+import jumapp.com.smartest.fragments.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity implements CircleHamButtonFragment.OnSelectedButtonListener, NavigationView.OnNavigationItemSelectedListener {
@@ -85,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         prefs = this.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor=prefs.edit();
+
+
+        //Settings preferences
+        PreferenceManager.setDefaultValues(this, R.xml.user_settings, false);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
        //DatabaseReference ref = database.getReference();
@@ -151,15 +158,16 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        if (id == R.id.nav_manage) {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            SettingsFragment sf=new SettingsFragment();
+            Bundle bundle=new Bundle();
+            bundle.putString("from", "main_activity");
+            sf.setArguments(bundle);
+            fragmentTransaction.add(R.id.activity_main, sf,"first_first");
+            fragmentTransaction.commit();
+        }  else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
@@ -584,9 +592,4 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         unregisterReceiver(contestDataReceiver);
         super.onPause();
     }
-
-
-
-
-
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Notifiche">
+
+        <CheckBoxPreference
+            android:title="Ricevi Notifiche"
+            android:summary="Vuoi ricevere notifiche sull'aggiunta di un nuovo concorso?"
+            android:key="receiveNotifications"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Statistiche">
+
+        <Preference
+            android:title="Cancella tutto"
+            android:summary="Vuoi cancellare tutte le statistiche?"
+            android:key="stats_pref" />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Sub Screens">
+
+        <PreferenceScreen
+            android:key="voicemail_category"
+            android:title="Voicemail"
+            android:persistent="false">
+
+            <Preference
+                android:title="Provider"
+                android:summary="Airtel"
+                android:key="provider" />
+
+            <!-- and other preference objects ... -->
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

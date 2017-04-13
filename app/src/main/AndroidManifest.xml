@@ -29,9 +29,7 @@
                 <action android:name="www.jumapp.com.send.contest.download" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.StudyPlanIntro"
-            android:theme="@style/Theme.Intro" />
+
 
         <service
             android:name=".RemoteConnection.IntentService.QuestionDownloadService$DownloadServiceQuestion"
@@ -52,11 +50,7 @@
             android:name=".ContestSingleton$RetrieveContestService"
             android:exported="false" />
 
-        <activity
-            android:name=".activities.FullscreenActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme" />
+
     </application>
 
 </manifest>

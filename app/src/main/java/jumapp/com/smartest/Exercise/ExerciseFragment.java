@@ -76,6 +76,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         ArrayList<Pair> pairs = DictionaryCategoryNumberSingleton.getInstance().getPairs();
 
         int last_contest_singoleton_id = prefs.getInt("contest_singleton_id", 0);
+
         if (last_contest_singoleton_id == 0)
             new AlertContestSingleton(context, view, 500, adapter, pairs).Start();
         else {

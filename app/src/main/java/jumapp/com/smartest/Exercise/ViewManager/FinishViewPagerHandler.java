@@ -83,6 +83,8 @@ public class FinishViewPagerHandler implements ViewPager.OnPageChangeListener {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
 
+
+
                     }
                 })
                 .show();

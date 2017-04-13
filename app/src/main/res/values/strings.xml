@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SmarTest</string>
     <string name="studia">Studia</string>
+    <string name="smartest_site">jumapp.com</string>
+    <string name="smartest_mail">jumplatform@gmail.com</string>
     <string name="es">Esercitazione</string>
     <string name="ex">Simulazione</string>
     <string name="stat">Statistiche</string>
@@ -9,6 +11,9 @@
     <string name="details">Dettagli </string>
     <string name="modalita">Modalita </string>
     <string name="statistics">Statistiche </string>
+    <string name="continua">Continua </string>
+
+    <string name="not_pass">Non Superato!</string>
     <string name="wrong">Sbagliate </string>
     <string name="not_aswered">Non date </string>
     <string name="question_viewer">Visualizza Domande</string>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="100"
+    android:id="@+id/linear_picker">
+
+    <TextView
+        android:id="@+id/t1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="15"
+        android:background="@drawable/bg_round_rect"
+        android:gravity="center"
+        android:text="UFFICIALI ESERCITO 2017"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/t2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="30"
+        android:background="@drawable/bg_round_rect"
+        android:gravity="center"
+        android:text="@string/exercise_sample"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:id="@+id/space"
+        android:layout_height="0dp"
+        android:layout_weight="20"/>
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/progress_picker"
+        android:layout_height="0dp"
+        android:layout_weight="7"
+        android:layout_width="339dp"
+        android:layout_gravity="center"
+        app:rcBackgroundPadding="5dp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:id="@+id/spaceDue"
+        android:layout_height="0dp"
+        android:layout_weight="30"/>
+
+</LinearLayout>

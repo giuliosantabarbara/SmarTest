@@ -92,7 +92,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return 4;
+                return 5;
             }
 
             @Override
@@ -240,10 +240,17 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         manager.init(viewPagerTab,getView(),viewPagerStatistics);
 
                         break;
-                    /*case 4:
-                        view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.bottone, null, false);
+                    case 4:
+                        view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_picker_color, null, false);
                         container.addView(view);
-                        Button b = (Button) getActivity().findViewById(R.id.button);
+
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        ColorPickerFragment fr = new ColorPickerFragment();
+                        fragmentTransaction.add(R.id.activity_main, fr);
+                        fragmentTransaction.addToBackStack("back");
+                        fragmentTransaction.commit();
+                        /*Button b = (Button) getActivity().findViewById(R.id.button);
                         b.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -251,8 +258,8 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                                 Intent myIntent = new Intent(getActivity(), StudyPlanIntro.class);
                                 ((MainActivity) getActivity()).startActivity(myIntent);
                             }
-                        });
-                        break;*/
+                        });*/
+                        break;
                        /* view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.calendar_view, null, false);
                         container.addView(view);
                         Toast.makeText(context,"Sono in 3", Toast.LENGTH_SHORT).show();
@@ -312,7 +319,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         .badgeTitle("icon")
                         .build()
         );
-       /* models.add(
+        models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_fifth),
                         Color.parseColor(colors[4]))
@@ -320,7 +327,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         .title("Piano di Studio")
                         .badgeTitle("777")
                         .build()
-        );*/
+        );
 
         navigationTabBar.setModels(models);
         navigationTabBar.setViewPager(viewPager, 0);

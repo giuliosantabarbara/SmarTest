@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:orientation="vertical"
-    android:background="#423752"
+    android:background="@color/main_color_dark"
     android:weightSum="100">
 
     <TextView
@@ -16,7 +16,7 @@
         android:background="@drawable/bg_round_rect"
         android:gravity="center"
         android:text="UFFICIALI ESERCITO 2017"
-        android:textColor="#9b92b3"
+        android:textColor="@color/white"
         android:textStyle="bold"/>
 
 
@@ -69,7 +69,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="20"
+                android:layout_weight="25"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_round_rect"
                 android:weightSum="100">
@@ -79,6 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="30"
+                    android:layout_marginTop="10dp"
                     android:weightSum="100">
 
                     <Space
@@ -102,6 +103,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
                         android:layout_weight="25"
+                        android:textColor="@color/white"
                         android:id="@+id/textCorrect" />
 
                     <ImageView
@@ -120,6 +122,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
                         android:layout_weight="25"
+                        android:textColor="@color/white"
                         android:id="@+id/textWong" />
                     <ImageView
                         android:id="@+id/colorNotAnswered"
@@ -137,6 +140,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
                         android:layout_weight="25"
+                        android:textColor="@color/white"
                         android:id="@+id/textNotAnswered" />
 
                 </LinearLayout>
@@ -158,6 +162,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/textViewCorrect"
                         android:textAlignment="center"
+                        android:textColor="@color/white"
                         android:layout_weight="10" />
 
                     <Space
@@ -171,6 +176,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/textViewWrong"
                         android:textAlignment="center"
+                        android:textColor="@color/white"
                         android:layout_weight="10" />
 
                     <Space
@@ -184,6 +190,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/textViewNotAnswered"
                         android:textAlignment="center"
+                        android:textColor="@color/white"
                         android:layout_weight="10" />
                     <Space
                         android:layout_width="0dp"
@@ -191,13 +198,24 @@
                         android:layout_weight="6" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/outcome"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="30"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="#ff0000"
+                    android:textSize="25dp"
+                    android:text="@string/not_pass" />
+
 
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5" />
+                android:layout_weight="3" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -211,18 +229,12 @@
                     android:layout_weight="0.79" />
 
                 <Button
-                    android:text="@string/statistics"
+                    android:text="@string/continua"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/buttonStatistics"
                     android:layout_weight="0.79" />
 
-                <Button
-                    android:text="@string/details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/buttonDetails"
-                    android:layout_weight="0.79" />
 
                 <Space
                     android:layout_width="wrap_content"
