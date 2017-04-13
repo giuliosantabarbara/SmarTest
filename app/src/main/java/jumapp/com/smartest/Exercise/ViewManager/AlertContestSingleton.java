@@ -1,5 +1,6 @@
 package jumapp.com.smartest.Exercise.ViewManager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -31,8 +32,9 @@ public class AlertContestSingleton {
     private ExerciseAdapter adapter;
     private  ArrayList<Pair> pairs;
     private  View view;
+    private ViewPager viewPager;
 
-    public AlertContestSingleton(Context context,View view, long pCountDownInterval, ExerciseAdapter adapter,  ArrayList<Pair> pairs) {
+    public AlertContestSingleton(Context context,View view, ViewPager viewPager,long pCountDownInterval, ExerciseAdapter adapter,  ArrayList<Pair> pairs) {
         this.countDownInterval = pCountDownInterval;
         this.context = context;
         prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
@@ -43,9 +45,10 @@ public class AlertContestSingleton {
 
         this.pDialog = new SweetAlertDialog(context,
                 SweetAlertDialog.PROGRESS_TYPE)
-                .setTitleText("Downloading Banca Dati!");
+                .setTitleText("L'esercitazione sta per iniziare!");
         pDialog.show();
         pDialog.setCancelable(false);
+        this.viewPager=viewPager;
 
 
     }
@@ -59,14 +62,13 @@ public class AlertContestSingleton {
                 pDialog.getProgressHelper().setBarColor(context.getResources().getColor(R.color.blue_btn_bg_color));
 
                 if (prefs.getInt("contest_singleton_id",0)==1) {
-                    pDialog.setTitleText("Download completato!")
+                    pDialog.setTitleText("Inizia l'esercitazione!")
                             .setConfirmText("OK")
                             .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     handler.removeCallbacks(this);
                     adapter.addAllQuestion(ContestSingleton.getInstance(context).getRandomQuestions(pairs));
-                    ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pag_fragment_exercise);
                     viewPager.setAdapter(adapter);
-                    viewPager.setOnPageChangeListener(new FinishViewPagerHandler(viewPager, context));
+                    viewPager.setOnPageChangeListener(new FinishViewPagerHandler(viewPager, (Activity)context));
 
                     RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) view.findViewById(R.id.recycler_tab_layout_exercise);
                     recyclerTabLayout.setUpWithAdapter(new CustomRecyclerViewAdapter(viewPager));

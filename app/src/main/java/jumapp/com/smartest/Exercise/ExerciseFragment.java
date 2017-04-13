@@ -1,5 +1,6 @@
 package jumapp.com.smartest.Exercise;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +38,9 @@ import jumapp.com.smartest.Exercise.ViewManager.AlertContestSingleton;
 import jumapp.com.smartest.Exercise.ViewManager.FinishViewPagerHandler;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Exercise.RecyclerViewUtils.CustomRecyclerViewAdapter;
+import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
+import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
@@ -56,6 +61,8 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     private FragmentManager fragmentManager;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
+    private ArrayList<Pair> pairs;
+    private ViewPager viewPager;
 
     @Nullable
     @Override
@@ -63,8 +70,10 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
         view = inflater.inflate(R.layout.fragment_exercise_simulation, container, false);
         context = view.getContext();
+
         prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
         editor = prefs.edit();
+        viewPager = (ViewPager) view.findViewById(R.id.view_pag_fragment_exercise);
 
         //code to copy to init toolbar
         setHasOptionsMenu(true);
@@ -73,18 +82,15 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         initMenuFragment();
 
         ExerciseAdapter adapter = new ExerciseAdapter();
-        ArrayList<Pair> pairs = DictionaryCategoryNumberSingleton.getInstance().getPairs();
+        pairs = DictionaryCategoryNumberSingleton.getInstance().getPairs();
 
         int last_contest_singoleton_id = prefs.getInt("contest_singleton_id", 0);
-
         if (last_contest_singoleton_id == 0)
-            new AlertContestSingleton(context, view, 500, adapter, pairs).Start();
+            new AlertContestSingleton(getActivity(), view, viewPager, 500, adapter, pairs).Start();
         else {
             adapter.addAllQuestion(ContestSingleton.getInstance(context).getRandomQuestions(pairs));
-            ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pag_fragment_exercise);
             viewPager.setAdapter(adapter);
-            viewPager.setOnPageChangeListener(new FinishViewPagerHandler(viewPager, context));
-
+            viewPager.setOnPageChangeListener(new FinishViewPagerHandler(viewPager, getActivity()));
             RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) view.findViewById(R.id.recycler_tab_layout_exercise);
             recyclerTabLayout.setUpWithAdapter(new CustomRecyclerViewAdapter(viewPager));
         }
@@ -134,6 +140,9 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         MenuObject close = new MenuObject();
         close.setResource(R.drawable.icn_close);
 
+        MenuObject addFav = new MenuObject("Add to favorites");
+        addFav.setResource(R.drawable.favorites);
+
         MenuObject send = new MenuObject("Send message");
         send.setResource(R.drawable.icn_1);
 
@@ -146,8 +155,6 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
                 BitmapFactory.decodeResource(getResources(), R.drawable.icn_3));
         addFr.setDrawable(bd);
 
-        MenuObject addFav = new MenuObject("Add to favorites");
-        addFav.setResource(R.drawable.icn_4);
 
         MenuObject block = new MenuObject("Block user");
         block.setResource(R.drawable.icn_5);
@@ -163,6 +170,13 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onMenuItemClick(View clickedView, int position) {
+        if(position==1){
+            QuestionDAO quest= new QuestionDAOImpl(context);
+            Question q=ExerciseAdapter.getQuestions().get(viewPager.getCurrentItem());
+            quest.setQuestionFavorited(q.getQuestion_id(),true,quest.openWritableConnection());
+          // ExerciseAdapter.getQuestions().get(viewPager.getCurrentItem()).setFavorited(true);
+        }
+
     }
 
     @Override

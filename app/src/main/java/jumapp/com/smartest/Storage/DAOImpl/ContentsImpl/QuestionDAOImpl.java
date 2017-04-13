@@ -186,6 +186,16 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         ContentValues contentValues = new ContentValues();
         contentValues.put("isStudied ", valore);
         dbQuest.update(CONTACTS_TABLE_NAME, contentValues, "question_id="+questionId, null);
+    }
+
+    @Override
+    public void setQuestionFavorited(long questionId, boolean studied,SQLiteDatabase dbQuest) {
+        int valore=0;
+        if(studied) valore=1;
+        // dbQuest.execSQL("UPDATE \""+CONTACTS_TABLE_NAME+"\" SET isStudied='"+valore+"' WHERE question_id='"+questionId+"'");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isFavorited ", valore);
+        dbQuest.update(CONTACTS_TABLE_NAME, contentValues, "question_id="+questionId, null);
 
     }
 

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -149,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
         editor.putLong("contest_selected",1);
         editor.commit();
+
+        int c=getResources().getColor(R.color.main_color_dark);
+
 
 
     }

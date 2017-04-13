@@ -58,6 +58,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         int[] insieme = new int[questions.size()];
         for (int i = 0; i < questions.size(); i++) {
             if (questions.get(i).getStudied()) insieme[i] = Color.parseColor("#009688");
+            else if(questions.get(i).getFavorited()) insieme[i] = Color.parseColor("#FFFF00");
             else insieme[i] = Color.parseColor("#A9A9A9");
         }
 

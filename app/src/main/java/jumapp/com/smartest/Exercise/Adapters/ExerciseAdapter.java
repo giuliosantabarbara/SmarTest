@@ -29,9 +29,9 @@ import jumapp.com.smartest.Exercise.RecyclerViewUtils.ColorItem;
 
 public class ExerciseAdapter extends PagerAdapter {
 
-    private List<ColorItem> mItems = new ArrayList<>();
+    private static List<ColorItem> mItems = new ArrayList<>();
 
-    private ArrayList<Question> questions= new ArrayList<Question>();
+    private static ArrayList<Question> questions= new ArrayList<Question>();
 
     Context contex;
 
@@ -161,7 +161,6 @@ public class ExerciseAdapter extends PagerAdapter {
     }
 
     public void initItems() {
-
         for (int i=0; i< questions.size(); i++) mItems.add(new ColorItem(""+(i+1),Color.GRAY));
     }
 
@@ -170,5 +169,12 @@ public class ExerciseAdapter extends PagerAdapter {
         initItems();
     }
 
+    public static List<ColorItem> getItems(){
+        return mItems;
+    }
+
+    public static ArrayList<Question> getQuestions(){
+        return questions;
+    }
 
 }
