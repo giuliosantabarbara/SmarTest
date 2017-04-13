@@ -1,12 +1,9 @@
 package jumapp.com.smartest.fragments;
 
-import android.app.AlertDialog;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,8 +21,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -54,7 +49,6 @@ import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 import jumapp.com.smartest.activities.MainActivity;
 
-import jumapp.com.smartest.activities.StudyPlanIntro;
 import jumapp.com.smartest.Statistics.ViewManager.StatisticsManager;
 
 
@@ -81,7 +75,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
         context = main_view.getContext();
 
         ContestSingleton.getInstance(context);
-
 
         initUI(main_view);
         return main_view;
@@ -230,7 +223,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         break;
 
                     case 3:
-
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_statistics, null, false);
                         container.addView(view);
 

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import jumapp.com.smartest.QuestionsHashMap;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 /**
@@ -22,6 +23,8 @@ public interface QuestionDAO {
     public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam);
     public void setQuestionStudied(long questionId,boolean studied,SQLiteDatabase dbQuest);
     public int numberOfRowsByContest(long contestId);
+
+    public QuestionsHashMap getAllQuestionsByContestIdHash(long contestid, SQLiteDatabase dbAlt,SQLiteDatabase dbQuest,SQLiteDatabase dbAtt) ;
 
 
 

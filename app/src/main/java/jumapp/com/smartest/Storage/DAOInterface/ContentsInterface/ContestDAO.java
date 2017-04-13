@@ -11,7 +11,6 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
  */
 public interface ContestDAO {
 
-    public ArrayList<Contest> getAllContests();
     public Contest getContestById(long constestId);
     public void insert(Contest c,SQLiteDatabase db );
     public SQLiteDatabase openWritableConnection();

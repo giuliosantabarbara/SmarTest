@@ -48,4 +48,6 @@
     <!--Splash Screen-->
     <item name="splash_background" type="color">@color/colorPrimary</item>
 
+    <color name="black_overlay">#66000000</color>
+
 </resources>

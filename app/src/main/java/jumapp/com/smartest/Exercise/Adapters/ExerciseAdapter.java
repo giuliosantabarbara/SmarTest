@@ -1,5 +1,6 @@
 package jumapp.com.smartest.Exercise.Adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.MyBounceInterpolator;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
@@ -31,10 +33,12 @@ public class ExerciseAdapter extends PagerAdapter {
 
     private ArrayList<Question> questions= new ArrayList<Question>();
 
-    private boolean isSelectedRight=false;
+    Context contex;
+
 
     public ExerciseAdapter() {
     }
+
 
 
 
@@ -43,10 +47,13 @@ public class ExerciseAdapter extends PagerAdapter {
         View view = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.layout_exercise_simulation, container, false);
 
+        contex=view.getContext();
+
         final Question quest = questions.get(position);
         LinearLayout frame = (LinearLayout) view.findViewById(R.id.layout_exercise_frame);
         final TextView tv = (TextView) view.findViewById(R.id.textViewQuestionStudy);
         tv.setText(quest.getText());
+        tv.setTextColor(Color.WHITE);
         tv.setMovementMethod(new ScrollingMovementMethod());
         final LinearLayout linear = (LinearLayout) view.findViewById(R.id.layout_exercise_linear);
 
@@ -94,12 +101,12 @@ public class ExerciseAdapter extends PagerAdapter {
                         if (a.getRight()) {
                             Drawable dr = ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_green);
                             txt.setBackground(dr);
-                            isSelectedRight = true;
 
                             if (!mItems.get(position).getSetted()) {
                                 mItems.get(position).setColorItem(Color.GREEN);
                                 mItems.get(position).setSetted();
                             }
+
 
                         } else {
                             Drawable dr = ContextCompat.getDrawable(viewQuest.getContext(), R.drawable.shape_red);
@@ -114,7 +121,7 @@ public class ExerciseAdapter extends PagerAdapter {
                                 mItems.get(position).setColorItem(Color.RED);
                                 mItems.get(position).setSetted();
                             }
-                            isSelectedRight = false;
+
                         }
                     }
                 });
@@ -155,7 +162,7 @@ public class ExerciseAdapter extends PagerAdapter {
 
     public void initItems() {
 
-        for (int i=0; i< questions.size(); i++) mItems.add(new ColorItem(""+i,Color.GRAY));
+        for (int i=0; i< questions.size(); i++) mItems.add(new ColorItem(""+(i+1),Color.GRAY));
     }
 
     public void addAllQuestion(ArrayList<Question> questions) {

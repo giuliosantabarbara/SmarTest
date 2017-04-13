@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-
+import jumapp.com.smartest.QuestionsHashMap;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AlternativeDAO;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AttachmentDAO;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
@@ -167,8 +167,8 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
             questions.add(tmp);
             res.moveToNext();
         }
-        Log.i("LLL altern time: ", ""+sumAlt);
-        Log.i("LLL attach time: ", ""+sumAtt);
+        Log.i("LLL altern time: ", "" + sumAlt);
+        Log.i("LLL attach time: ", "" + sumAtt);
 
         res.close();
         dbAlt.close();
@@ -215,6 +215,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         AttachmentDAOImpl att= new AttachmentDAOImpl(context);
         long sumAlt=0;
         long sumAtt=0;
+
         while(res.isAfterLast() == false) {
 
             long question_id = Long.parseLong(res.getString(res.getColumnIndex("question_id")));
@@ -251,7 +252,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
             Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
                     alternatives,attachments,hasAttachment);
-            array_list.add(tmp);
+              array_list.add(tmp);
             res.moveToNext();
         }
         res.close();
@@ -260,7 +261,75 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         Log.i("###","Tempo del get Attachments: "+sumAtt);
         Log.i("###", "Tempo question extra operation: "+(endQuest-stQuest-sumAlt-sumAtt));
         Log.i("###", "Tempo totale del getQuestionById: "+(endQuest-stQuest));
+
+
         return array_list;
+    }
+
+
+    @Override
+    public QuestionsHashMap getAllQuestionsByContestIdHash(long contestid, SQLiteDatabase dbAlt,
+                                                          SQLiteDatabase dbQuest,SQLiteDatabase dbAtt) {
+        long stQuest=System.currentTimeMillis();
+        Cursor res =  dbQuest.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contestid+"'", null );
+        res.moveToFirst();
+        AlternativeDAOImpl alt = new AlternativeDAOImpl(context);
+        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        long sumAlt=0;
+        long sumAtt=0;
+
+        QuestionsHashMap hm= new QuestionsHashMap();
+
+
+        while(res.isAfterLast() == false) {
+
+            long question_id = Long.parseLong(res.getString(res.getColumnIndex("question_id")));
+            String category = res.getString(res.getColumnIndex("Category"));
+            String text = res.getString(res.getColumnIndex("Text"));
+
+            int isFavoritedint = Integer.parseInt(res.getString(res.getColumnIndex("isFavorited")));
+            boolean isFavorited = false;
+            if (isFavoritedint == 1) isFavorited = true;
+
+            int isStudiedint = Integer.parseInt(res.getString(res.getColumnIndex("isStudied")));
+            boolean isStudied = false;
+            if (isStudiedint == 1) isStudied = true;
+
+            boolean hasAttachment=false;
+            int intHasAttachment=Integer.parseInt(res.getString(res.getColumnIndex("hasAttachment")));
+            if(intHasAttachment==1) hasAttachment=true;
+
+            long contest_id = Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
+            ArrayList<Attachment> attachments=new ArrayList<Attachment>();
+
+            long st=System.currentTimeMillis();
+            ArrayList<Alternative> alternatives = alt.getAllAlternativesByQuestionId(question_id, dbAlt,dbAtt);
+            long end=System.currentTimeMillis();
+            sumAlt=sumAlt+(end-st);
+
+
+            st=System.currentTimeMillis();
+            if(hasAttachment) {
+                attachments = att.getAllAttachmentsByLinkId(question_id, "question", dbAtt);
+                end = System.currentTimeMillis();
+            }
+            sumAtt=sumAtt+(end-st);
+
+            Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
+                    alternatives,attachments,hasAttachment);
+            hm.add(category,tmp);
+            res.moveToNext();
+        }
+        res.close();
+        long endQuest=System.currentTimeMillis();
+        Log.i("###", "Tempo del get Alternative: " + sumAlt);
+        Log.i("###", "Tempo del get Attachments: " + sumAtt);
+        Log.i("###", "Tempo question extra operation: " + (endQuest - stQuest - sumAlt - sumAtt));
+        Log.i("###", "Tempo totale del getQuestionById: " + (endQuest - stQuest));
+        Log.i("MMM", "SIZE HASH: " + hm.getSize());
+
+
+        return hm;
     }
 
     @Override

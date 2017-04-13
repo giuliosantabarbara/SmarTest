@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import jumapp.com.smartest.QuestionsHashMap;
+
 /**
  * Created by marco on 18/03/2017.
  */
@@ -16,14 +18,14 @@ public class Contest {
     private long id_contest;
     private String type, scope, position, questionsURL, attachmentsURL, alternativesURL, announcementURL, shortDescription;
     private int year;
-    private ArrayList<Question> questions= new ArrayList<Question>();
+    private QuestionsHashMap questions;
     private ArrayList<String> categories= new ArrayList<>();
 
     public  Contest(){}
 
     public Contest(long id_contest, String type, String scope, String position, String questionsURL, String attachmentsURL,
                    String alternativesURL, String announcementURL, int year, String shortDescription,
-                   ArrayList<Question> questions, ArrayList<String> categories) {
+                   QuestionsHashMap questions, ArrayList<String> categories) {
         this.id_contest = id_contest;
         this.type = type;
         this.scope = scope;
@@ -63,9 +65,7 @@ public class Contest {
         Log.i(tag, ""+this.announcementURL);
         Log.i(tag, ""+this.year);
 //        for(String s:categories) Log.i(tag,s);
-        for(Question q:questions){
-            q.printLog("QUEST");
-        }
+
     }
 
     public ArrayList<String> getCategories() {
@@ -84,11 +84,11 @@ public class Contest {
         this.shortDescription = shortDescription;
     }
 
-    public ArrayList<Question> getQuestions() {
+    public QuestionsHashMap getQuestions() {
         return questions;
     }
 
-    public void setQuestions(ArrayList<Question> questions) {
+    public void setQuestions(QuestionsHashMap questions) {
         this.questions = questions;
     }
 

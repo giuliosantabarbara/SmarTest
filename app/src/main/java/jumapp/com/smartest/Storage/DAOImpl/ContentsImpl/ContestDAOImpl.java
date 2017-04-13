@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import jumapp.com.smartest.QuestionsHashMap;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
@@ -122,7 +123,7 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
             String announcmentsURL=res.getString(res.getColumnIndex("AnnouncementsURL"));
             String shortDescription= res.getString(res.getColumnIndex("ShortDescription"));
 
-            ArrayList<Question> questions=quest.getAllQuestionsByContestId(contest_id,dbAlt, dbQuest,dbAtt);
+            QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id, dbAlt, dbQuest, dbAtt);
             // ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
 
             Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,
@@ -142,52 +143,6 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
     }
 
 
-    @Override
-    public ArrayList<Contest> getAllContests() {
-        ArrayList<Contest> array_list = new ArrayList<Contest>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\"", null);
-        res.moveToFirst();
-
-        long st=System.currentTimeMillis();
-        QuestionDAOImpl quest= new QuestionDAOImpl(context);
-        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        SQLiteDatabase dbQuest=quest.openConnection();
-        SQLiteDatabase dbAlt=alt.openConnection();
-        SQLiteDatabase dbAtt=att.openConnection();
-
-        while(res.isAfterLast() == false){
-            long contest_id=Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
-            String type=res.getString(res.getColumnIndex("Type"));
-            String scope=res.getString(res.getColumnIndex("Scope"));
-            String position=res.getString(res.getColumnIndex("Position"));
-            int year= Integer.parseInt(res.getString(res.getColumnIndex("Year")));
-            String questionsURL=res.getString(res.getColumnIndex("QuestionsURL"));
-            String attachmentsURL=res.getString(res.getColumnIndex("AttachmentsURL"));
-            String alternativesURL=res.getString(res.getColumnIndex("AlternativesURL"));
-            String announcmentsURL=res.getString(res.getColumnIndex("AnnouncementsURL"));
-            String shortDescription= res.getString(res.getColumnIndex("ShortDescription"));
-
-            ArrayList<Question> questions=quest.getAllQuestionsByContestId(contest_id,dbAlt, dbQuest,dbAtt);
-            // ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
-
-            Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,
-                    attachmentsURL,alternativesURL,announcmentsURL,year,shortDescription,questions,null);
-            array_list.add(tmp);
-            res.moveToNext();
-        }
-
-        quest.closeConnection(dbQuest);
-        alt.closeConnection(dbAlt);
-        att.closeConnection(dbAtt);
-        long end=System.currentTimeMillis();
-        Log.i("###", "time to get all Questions + extra operation della classe contestDAO " + (end - st));
-
-        res.close();
-        db.close();
-        return array_list;
-    }
 
     @Override
     public Contest getContestById(long contest_id) {
@@ -215,7 +170,7 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         SQLiteDatabase dbAlt=alt.openConnection();
         SQLiteDatabase dbAtt=att.openConnection();
 
-        ArrayList<Question> questions=quest.getAllQuestionsByContestId(contest_id,dbAlt, dbQuest,dbAtt);
+        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id, dbAlt, dbQuest, dbAtt);
         quest.closeConnection(dbQuest);
         alt.closeConnection(dbAlt);
         att.closeConnection(dbAtt);
@@ -311,7 +266,7 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         SQLiteDatabase dbAlt=alt.openConnection();
         SQLiteDatabase dbAtt=att.openConnection();
 
-        ArrayList<Question> questions=quest.getAllQuestionsByContestId(contest_id,dbAlt, dbQuest,dbAtt);
+        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id,dbAlt, dbQuest,dbAtt);
         quest.closeConnection(dbQuest);
         alt.closeConnection(dbAlt);
         att.closeConnection(dbAtt);

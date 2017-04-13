@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -23,21 +24,31 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 public class ContestSingleton extends Application {
 
     private static ContestSingleton mInstance;
-
     private static Contest contest;
+    private SharedPreferences prefs;
+    private static SharedPreferences.Editor editor;
 
     protected ContestSingleton(Context context){
-       Log.i("###", "ho chiamato il retrieve service");
+        Log.i("###", "ho chiamato il retrieve service");
+        prefs = context.getSharedPreferences("jumapp", Context.MODE_PRIVATE);
+        editor=prefs.edit();
+        editor.putInt("contest_singleton_id",0);
+        editor.commit();
         Intent intent = new Intent(context, RetrieveContestService.class);
         context.startService(intent);
         Log.i("###", "ho chiamato il retrieve service");
     }
 
-    public static  ContestSingleton getInstance(Context context){
+    public static synchronized ContestSingleton getInstance(Context context){
         if(null == mInstance){
             mInstance = new ContestSingleton(context);
         }
         return mInstance;
+    }
+
+    public boolean isReady(){
+        if(contest==null) return false;
+        else return true;
     }
 
     /*public ArrayList<Question> getRandomQuestions(ArrayList<Pair> pairs){
@@ -49,20 +60,25 @@ public class ContestSingleton extends Application {
     }*/
 
 
-   /* public ArrayList<Question> getRandomQuestions(int number){
+    public ArrayList<Question> getRandomQuestions(ArrayList<Pair> pairs){
+        ArrayList<Question> result = new ArrayList<Question>();
+        for(Pair p:pairs) {
+            String category= p.getCategory();
+            int number =p.getNumber();
+            ArrayList<Question> questions=contest.getQuestions().getQuestionsByCategory(category);
+            int[] array = new int[number];
+            int i;
+            int coef = (int) Math.ceil(Math.random() * (questions.size() / number));
+            int index;
 
-        int [] array= new int[number];
-        int i;
-        int coef=(int) Math.ceil(Math.random()*(questSingleton.size()/number));
-        int index;
-        ArrayList<Question> questions=new ArrayList<Question>();
-        for(i=1; i<(array.length+1); i++){
-            index=(i-1)*coef;
-            questions.add(questSingleton.get(index));
-            Log.i("###",""+(index));
+            for (i = 1; i < (array.length + 1); i++) {
+                index = ((i) * coef)-1;
+                result.add(questions.get(index));
+                Log.i("###", "" + (index));
+            }
         }
-        return questions;
-    }*/
+        return result;
+    }
 
 
     public static class RetrieveContestService   extends IntentService {
@@ -78,10 +94,9 @@ public class ContestSingleton extends Application {
             Log.i("###","start contest retrieve");
             ContestDAO con= new ContestDAOImpl(this);
             contest=con.getContestById(1);
-            contest.printLog("GGGMMM");
-
-
-
+            editor.putInt("contest_singleton_id",1);
+            editor.commit();
+            Log.i("###", "stop contest retrieve: "+contest.getQuestions().getSize());
         }
     }
 
