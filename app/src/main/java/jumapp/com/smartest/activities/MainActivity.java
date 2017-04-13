@@ -308,10 +308,6 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
     }
 
 
-
-
-
-
     public void insertEsercitazione(View v){
 
         ExerciseDAO exDAO= new ExerciseDAOImpl(this);
