@@ -1,9 +1,11 @@
 language: android
-
-sudo: false
+jdk: oraclejdk8
+sudo: required
 
 android:
   components:
+    - tools
+    - tools
     - build-tools-25.0.2
     - android-25
     - extra-google-m2repository
@@ -12,5 +14,6 @@ android:
   licenses:
     - android-sdk-license-.+
     
-before_install:
- - chmod +x gradlew
+script:
+   - ./gradlew build connectedCheck
+   - chmod +x ./gradlew
