@@ -11,3 +11,6 @@ android:
 
   licenses:
     - android-sdk-license-.+
+    
+before_install:
+ - chmod +x gradlew
