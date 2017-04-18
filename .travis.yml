@@ -39,6 +39,7 @@ android:
 before_install:
   - chmod +x gradlew
   
+ # Emulator Management: Create, Start and Wait 
 before_script:
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -47,3 +48,4 @@ before_script:
 
 script:
   - chmod +x ./gradlew
+  - ./gradlew connectedAndroidTest
