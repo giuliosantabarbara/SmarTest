@@ -17,7 +17,8 @@ public interface SimulationDAO {
     public void insert(Simulation e,SQLiteDatabase db);
     public SQLiteDatabase openWritableConnection();
     public SQLiteDatabase openReadableConnection();
-
+    public void deleteAll(SQLiteDatabase db);
+    public int numberOfRows(SQLiteDatabase db);
     public ArrayList<Simulation> deleteAllSimulation(long contestId, SQLiteDatabase dbExercise);
     public Simulation deleteSimulation(long simulationId, SQLiteDatabase dbExercise);
 

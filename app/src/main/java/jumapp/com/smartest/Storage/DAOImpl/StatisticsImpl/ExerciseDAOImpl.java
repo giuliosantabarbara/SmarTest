@@ -45,14 +45,15 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
     }
 
 
-
-    public void deleteAll() {
-        SQLiteDatabase dbN = this.getWritableDatabase();
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        //SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
-        dbN.close();
+        //dbN.close();
     }
 
+    @Override
     public int numberOfRows(SQLiteDatabase db){
         //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);

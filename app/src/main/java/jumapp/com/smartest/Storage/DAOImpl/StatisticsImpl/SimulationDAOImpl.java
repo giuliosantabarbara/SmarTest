@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationCategoryDAO;
 import jumapp.com.smartest.Storage.DAOInterface.StatisticsInterface.SimulationDAO;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
@@ -47,14 +48,15 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
     }
 
 
-
-    public void deleteAll() {
-        SQLiteDatabase dbN = this.getWritableDatabase();
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        //SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
-        dbN.close();
+        //dbN.close();
     }
 
+    @Override
     public int numberOfRows(SQLiteDatabase db){
         //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
@@ -97,7 +99,7 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
         res.moveToFirst();
         Log.i("Simualtion get sim",""+res.getCount());
         Simulation tmp = null;
-        SimulationCategoryDAOImpl sc = new SimulationCategoryDAOImpl(context);
+        SimulationCategoryDAO sc = new SimulationCategoryDAOImpl(context);
         SQLiteDatabase conn = sc.openWritableConnection();
         while(res.isAfterLast() == false) {
 

@@ -16,6 +16,8 @@ public interface ExerciseDAO {
     public void insert(Exercise e,SQLiteDatabase db);
     public SQLiteDatabase openWritableConnection();
     public SQLiteDatabase openReadableConnection();
+    public int numberOfRows(SQLiteDatabase db);
+    public void deleteAll(SQLiteDatabase dbN);
     public ArrayList<String> getAllCategoriesByContestId(long contest_id,SQLiteDatabase dbExercise);
     public ArrayList<Exercise> deleteExerciseByContestId(long contest_id, SQLiteDatabase dbExercise);
 
