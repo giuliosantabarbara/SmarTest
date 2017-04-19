@@ -12,11 +12,14 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Attachment;
 public interface AttachmentDAO  {
 
     public ArrayList<Attachment> getAllAttachmentsByLinkId(long LinkId,String Type, SQLiteDatabase db);
-    public Attachment getAttachmentById(long attachmentId);
+    public Attachment getAttachmentById(long attachmentId,SQLiteDatabase db);
     public SQLiteDatabase openWritableConnection();
+    public SQLiteDatabase openReadableConnection();
+    public void deleteAll(SQLiteDatabase dbN);
+    public int numberOfRows(SQLiteDatabase db);
     public void insert(Attachment a,SQLiteDatabase db);
-    public Attachment deleteAttachment(long attachmentId);
-    public ArrayList<Attachment> getAllAttachments();
+    public Attachment deleteAttachment(long attachmentId,SQLiteDatabase db);
+    public ArrayList<Attachment> getAllAttachments(SQLiteDatabase db);
     public SQLiteDatabase openConnection();
 
 

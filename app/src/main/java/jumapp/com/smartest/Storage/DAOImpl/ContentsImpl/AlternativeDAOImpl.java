@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -26,18 +25,14 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
 
     Context context;
 
-
-    public AlternativeDAOImpl(Context context)
-    {
+    public AlternativeDAOImpl(Context context) {
         super(context, DATABASE_NAME, null, 1);
         this.context=context;
     }
 
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
 
         db.execSQL(
                 "create table \"" + CONTACTS_TABLE_NAME + "\"" +
@@ -52,10 +47,8 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
         db.execSQL("DROP TABLE IF EXISTS" + CONTACTS_TABLE_NAME);
         onCreate(db);
-        db.close();
     }
 
 
@@ -64,9 +57,24 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         return this.getWritableDatabase();
     }
 
+    @Override
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
+
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
+        onCreate(dbN);
+    }
+
+    @Override
+    public int numberOfRows(SQLiteDatabase db){
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
+        return numRows;
+    }
 
     public void deleteAll() {
-        // TODO Auto-generated method stub
         SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
@@ -84,6 +92,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
     public void insert(Alternative a,SQLiteDatabase db) {
         ContentValues contentValues = new ContentValues();
 
+        db.beginTransaction();
         int isRight=0;
         if(a.getRight()) isRight=1;
         contentValues.put("alternative_id", a.getAlternative_id());
@@ -91,26 +100,27 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         contentValues.put("isRight", isRight);
         contentValues.put("question_id", a.getQuestion_id());
         contentValues.put("hasAttachment", a.getHasAttach());
-
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override
     public Alternative deleteAlterantive(long alternativeId, SQLiteDatabase dbAtt) {
         Alternative result= getAlternativeById(alternativeId,dbAtt);
         if(result!=null) {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(CONTACTS_TABLE_NAME, "alternative_id='" + alternativeId + "'", null);
-            db.close();
+            //SQLiteDatabase db = this.getWritableDatabase();
+            dbAtt.delete(CONTACTS_TABLE_NAME, "alternative_id='" + alternativeId + "'", null);
+            //db.close();
         }
         return result;
     }
 
 
     @Override
-    public ArrayList<Alternative> getAllAlternatives() {
+    public ArrayList<Alternative> getAllAlternatives(SQLiteDatabase db) {
         ArrayList<Alternative> array_list = new ArrayList<Alternative>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\"", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
@@ -128,7 +138,8 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
 
             AttachmentDAOImpl att= new AttachmentDAOImpl(context);
             SQLiteDatabase dbAtt=att.openConnection();
-            ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "alternative",dbAtt);
+            //ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "alternative",dbAtt);
+            ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(alternative_id, "alternative",dbAtt);
             dbAtt.close();
 
             Alternative tmp= new Alternative(alternative_id,text,isRight,question_id,attachments,hasAttachment);
@@ -136,7 +147,7 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
             res.moveToNext();
         }
         res.close();
-        db.close();
+        //db.close();
         return array_list;
     }
 
@@ -198,8 +209,8 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
 
 
     @Override
-    public Alternative getAlternativeById(long alternativeId, SQLiteDatabase dbAtt) {
-        Cursor res =  dbAtt.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where alternative_id='"+alternativeId+"'", null );
+    public Alternative getAlternativeById(long alternativeId, SQLiteDatabase db) {
+        Cursor res =  db.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where alternative_id='"+alternativeId+"'", null );
         res.moveToFirst();
 
         long alternative_id=Long.parseLong(res.getString(res.getColumnIndex("alternative_id")));
@@ -212,15 +223,16 @@ public class AlternativeDAOImpl extends SQLiteOpenHelper implements AlternativeD
         int intHasAttachment=Integer.parseInt(res.getString(res.getColumnIndex("hasAttachment")));
         if(intHasAttachment==1) hasAttachment=true;
 
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "alternative", dbAtt);
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+        SQLiteDatabase conn = att.openReadableConnection();
+        //ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "alternative", conn);
+        ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(alternative_id, "alternative",conn);
 
+        conn.close();
         Alternative tmp= new Alternative(alternative_id,text,isRight,question_id,attachments,hasAttachment);
         res.close();
         return tmp;
     }
-
-
 
 
 }
