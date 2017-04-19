@@ -63,6 +63,7 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
 
     @Override
     public void insert(Exercise e, SQLiteDatabase db) {
+        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put("contest_id",  e.getId_contest() );
         contentValues.put("category_name",  e.getCategoryName() );
@@ -70,6 +71,8 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
         contentValues.put("tot_questions", e.getTotQuestions());
         contentValues.put("percentage",e.getPercentage());
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public SQLiteDatabase openConnection(){

@@ -37,8 +37,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
     Context context;
 
 
-    public QuestionDAOImpl(Context context)
-    {
+    public QuestionDAOImpl(Context context){
         super(context, DATABASE_NAME, null, 1);
         this.context=context;
     }

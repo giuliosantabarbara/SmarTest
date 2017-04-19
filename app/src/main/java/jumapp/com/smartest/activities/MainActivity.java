@@ -66,8 +66,6 @@ import jumapp.com.smartest.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements CircleHamButtonFragment.OnSelectedButtonListener, NavigationView.OnNavigationItemSelectedListener {
 
-    /*@Bind(R.id.agenda_calendar_view)
-    AgendaCalendarView mAgendaCalendarView;*/
 
     private SharedPreferences prefs;
     SharedPreferences.Editor editor;
@@ -118,7 +116,9 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
         firebase.downloadContestMetaData();
 
         final ContestDAO conDAO= new ContestDAOImpl(this);
-        int numberOfRow= conDAO.numberOfRows();
+        SQLiteDatabase db = conDAO.openReadableConnection();
+        int numberOfRow= conDAO.numberOfRows(db);
+        db.close();
         if(numberOfRow>0){
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                 @Override
                 public void onClick(View v) {
 
-                    if (conDAO.numberOfRows() == 0) {
+                    SQLiteDatabase db = conDAO.openReadableConnection();
+                    if (conDAO.numberOfRows(db) == 0) {
                         final SweetAlertDialog pDialog = new SweetAlertDialog(context,
                                 SweetAlertDialog.PROGRESS_TYPE)
                                 .setTitleText("Downloading Banca Dati!");
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                         new MyCountDownTimer(3000, 500, pDialog, conDAO).Start();
 
                     }
+                    db.close();
                 }
             });
         }
@@ -517,20 +519,17 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                     long sec = millisInFuture/1000;
                     Log.v("status", Long.toString(sec) + " seconds remain");
                     millisInFuture -= countDownInterval;
-                    if (conDAO.numberOfRows()>0){
+                    SQLiteDatabase db = conDAO.openReadableConnection();
+                    if (conDAO.numberOfRows(db)>0){
                         pDialog.setTitleText("Download completato!")
                                 .setConfirmText("OK")
                                 .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                         handler.removeCallbacks(this);
 
-
-
-
                     }else{
                         handler.postDelayed(this, countDownInterval);
                     }
-
-
+                    db.close();
                 }
             };
 

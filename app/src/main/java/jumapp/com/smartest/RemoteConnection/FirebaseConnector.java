@@ -1,6 +1,7 @@
 package jumapp.com.smartest.RemoteConnection;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +44,9 @@ public class FirebaseConnector implements Connector {
 
         Log.i("###", "BOTTONE PREMUTO");
         ContestDAO conDao = new ContestDAOImpl(context);
-        Contest con = conDao.getContestById(id);
+        SQLiteDatabase db = conDao.openReadableConnection();
+        Contest con = conDao.getContestById(id,db);
+        db.close();
 
         Log.i("###", "CHIAMO ATTACH DOWNLOAD SERVICE");
         AttachmentDownloadService attch = new AttachmentDownloadService(context, con.getAttachmentsURL());

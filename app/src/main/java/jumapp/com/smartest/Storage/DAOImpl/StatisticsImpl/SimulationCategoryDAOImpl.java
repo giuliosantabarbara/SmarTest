@@ -67,6 +67,7 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
     @Override
     public void insert(SimulationCategory sc, SQLiteDatabase db) {
 
+        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put("simulation_id",  sc.getId_simulation() );
         contentValues.put("category_name",  sc.getCategoryName() );
@@ -74,6 +75,8 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
         contentValues.put("tot_questions", sc.getTotQuestions());
         contentValues.put("percentage",sc.getPercentage());
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override

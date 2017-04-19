@@ -125,6 +125,7 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
     @Override
     public void insert(Simulation s, SQLiteDatabase db) {
 
+        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put("contest_id",  s.getId_contest() );
         contentValues.put("day",  s.getDay());
@@ -161,7 +162,8 @@ public class SimulationDAOImpl extends SQLiteOpenHelper implements SimulationDAO
           //  db = this.openWritableConnection();
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
         //db.close();
-
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override

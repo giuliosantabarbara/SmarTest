@@ -2,6 +2,7 @@ package jumapp.com.smartest.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -131,7 +132,9 @@ public class CircleHamButtonFragment extends Fragment {
         //Initialization FIRST ham
         final BoomMenuButton bmbHam1 = (BoomMenuButton) view.findViewById(R.id.bmbHamm0);
         bmbHam1.setNormalColor(R.color.pallino);
-        ArrayList<String> scopes=conDAO.getAllContestsScopes();
+        SQLiteDatabase db = conDAO.openReadableConnection();
+        ArrayList<String> scopes=conDAO.getAllContestsScopes(db);
+        db.close();
         setEnum(bmbHam1, scopes.size());
 
         for (int j = 0; j < bmbHam1.getPiecePlaceEnum().pieceNumber(); j++) {
@@ -180,11 +183,13 @@ public class CircleHamButtonFragment extends Fragment {
                     public void onTargetClick(TapTargetView view) {
 
                         ContestDAO conDAO= new ContestDAOImpl(view.getContext());
-                        if(conDAO.numberOfRows()>0) {
+                        SQLiteDatabase db = conDAO.openReadableConnection();
+                        if(conDAO.numberOfRows(db)>0) {
 
                             bmbHam1.boomImmediately();
                             view.dismiss(true);
                         }
+                        db.close();
                     }
                 });
 
