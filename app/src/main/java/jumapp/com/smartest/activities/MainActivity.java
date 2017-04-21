@@ -194,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
 
 
             QuestionDAO quest= new QuestionDAOImpl(this);
-            if(quest.numberOfRowsByContest(1)==0){
+            SQLiteDatabase con = quest.openReadableConnection();
+            if(quest.numberOfRowsByContest(1,con)==0){
                 Connector fireConnector= new FirebaseConnector(this,"contests");
 
                 contestDialog = new SweetAlertDialog(this,
@@ -209,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements CircleHamButtonFr
                 fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());
                 fragmentTransaction.addToBackStack("back");
                 fragmentTransaction.commit();
-            }
+           }
+           con.close();
         }
         if (s.equalsIgnoreCase("studia")) {
             fragmentTransaction.replace(R.id.activity_main, new BottomNavigationFragment());

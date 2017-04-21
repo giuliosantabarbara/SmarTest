@@ -85,9 +85,6 @@ public class AlternativeTest {
         dbWritable= mDataSource.openWritableConnection();
         dbReadable = mDataSource.openReadableConnection();
 
-        SQLiteDatabase conn = attachmentDAO.openReadableConnection();
-        ArrayList<Attachment> attachments = attachmentDAO.getAllAttachments(conn);
-        conn.close();
 
         Alternative altOne = new Alternative(1,"Alt_1",false,1,null,true);
         Alternative altTwo = new Alternative(2,"Alt_2",false,1,null,true);
@@ -154,9 +151,6 @@ public class AlternativeTest {
     public void testData() {
 
         SQLiteDatabase conn = attachmentDAO.openReadableConnection();
-        ArrayList<Attachment> attachments = attachmentDAO.getAllAttachments(conn);
-
-
         ArrayList<Alternative> alternatives = mDataSource.getAllAlternatives(dbReadable);
 
         Alternative alternative = alternatives.get(0);

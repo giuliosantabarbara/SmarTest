@@ -3,25 +3,18 @@ package jumapp.com.smartest.Storage.DAOImpl.ContentsImpl;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import jumapp.com.smartest.QuestionsHashMap;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AlternativeDAO;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.AttachmentDAO;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Attachment;
-import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
-
-
 
 
 /**
@@ -34,7 +27,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
     public static final String DATABASE_NAME = "Questions.db";
     public static final String CONTACTS_TABLE_NAME = "myQuestions";
 
-    Context context;
+    private Context context;
 
 
     public QuestionDAOImpl(Context context){
@@ -46,7 +39,6 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
         db.execSQL(
                 "create table \"" + CONTACTS_TABLE_NAME + "\"" +
                         "(question_id integer primary key ,Category text,Text text, isFavorited integer,isStudied integer," +
@@ -58,16 +50,18 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
         db.execSQL("DROP TABLE IF EXISTS"+CONTACTS_TABLE_NAME);
         onCreate(db);
         db.close();
     }
 
-
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
+        onCreate(dbN);
+    }
 
     public void deleteAll() {
-        // TODO Auto-generated method stub
         SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
@@ -75,10 +69,16 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
     }
 
     @Override
+    public int numberOfRowsByContest(long contestId, SQLiteDatabase db){
+        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "'", null);
+        return res.getCount();
+    }
+
+
     public int numberOfRowsByContest(long contestId){
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contestId + "'", null);
+        db.close();
         return res.getCount();
     }
 
@@ -94,6 +94,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         if(q.getStudied()) isStudied=1;
         if(q.getHasAttach()) hasAttach=1;
 
+        db.beginTransaction();
         contentValues.put("question_id",  q.getQuestion_id() );
         contentValues.put(" Category",  q.getCategory() );
         contentValues.put("isFavorited",  isFavorited );
@@ -102,16 +103,18 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         contentValues.put("Text",q.getText());
         contentValues.put("hasAttachment", hasAttach);
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override
-    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam) {
+    public ArrayList<Question> getAllQuestionByCategoryAndContestId(long contestId,String categoryParam, SQLiteDatabase dbQuest) {
 
         long start=  System.currentTimeMillis();;
         AlternativeDAO alt= new AlternativeDAOImpl(context);
         AttachmentDAO att= new AttachmentDAOImpl(context);
         ArrayList<Question> questions = new ArrayList<Question>();
-        SQLiteDatabase dbQuest = this.getReadableDatabase();
+
         SQLiteDatabase dbAlt=alt.openConnection();
         SQLiteDatabase dbAtt=att.openConnection();
         long endInit=  System.currentTimeMillis();;
@@ -172,8 +175,6 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         res.close();
         dbAlt.close();
         dbAtt.close();
-        dbQuest.close();
-
         return questions;
     }
 
@@ -212,16 +213,22 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         return this.getWritableDatabase();
     }
 
+    @Override
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
+
 
     @Override
-    public ArrayList<Question> getAllQuestionsByContestId(long contestid, SQLiteDatabase dbAlt,
-                                                          SQLiteDatabase dbQuest,SQLiteDatabase dbAtt) {
+    public ArrayList<Question> getAllQuestionsByContestId(long contestid, SQLiteDatabase dbQuest) {
         long stQuest=System.currentTimeMillis();
         ArrayList<Question> array_list = new ArrayList<Question>();
         Cursor res =  dbQuest.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contestid+"'", null );
         res.moveToFirst();
-        AlternativeDAOImpl alt = new AlternativeDAOImpl(context);
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        AlternativeDAO alt = new AlternativeDAOImpl(context);
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+        SQLiteDatabase dbAlt=alt.openConnection();
+        SQLiteDatabase dbAtt=att.openConnection();
         long sumAlt=0;
         long sumAtt=0;
 
@@ -271,19 +278,21 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         Log.i("###", "Tempo question extra operation: "+(endQuest-stQuest-sumAlt-sumAtt));
         Log.i("###", "Tempo totale del getQuestionById: "+(endQuest-stQuest));
 
-
+        dbAlt.close();
+        dbAtt.close();
         return array_list;
     }
 
 
     @Override
-    public QuestionsHashMap getAllQuestionsByContestIdHash(long contestid, SQLiteDatabase dbAlt,
-                                                          SQLiteDatabase dbQuest,SQLiteDatabase dbAtt) {
+    public QuestionsHashMap getAllQuestionsByContestIdHash(long contestid, SQLiteDatabase dbQuest) {
         long stQuest=System.currentTimeMillis();
         Cursor res =  dbQuest.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contestid+"'", null );
         res.moveToFirst();
         AlternativeDAOImpl alt = new AlternativeDAOImpl(context);
         AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+        SQLiteDatabase dbAlt=alt.openConnection();
+        SQLiteDatabase dbAtt=att.openConnection();
         long sumAlt=0;
         long sumAtt=0;
 
@@ -337,15 +346,16 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
         Log.i("###", "Tempo totale del getQuestionById: " + (endQuest - stQuest));
         Log.i("MMM", "SIZE HASH: " + hm.getSize());
 
-
+        dbAlt.close();
+        dbAtt.close();
         return hm;
     }
 
     @Override
-    public Question getQuestionById(long questionId, SQLiteDatabase dbAtt) {
+    public Question getQuestionById(long questionId, SQLiteDatabase dbQuest) {
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where question_id='" + questionId + "'", null);
+        //SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  dbQuest.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where question_id='" + questionId + "'", null);
         res.moveToFirst();
 
         long question_id=Long.parseLong(res.getString(res.getColumnIndex("question_id")));
@@ -366,20 +376,25 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
         long contest_id=Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
 
-        AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-        SQLiteDatabase dbALT=alt.openConnection();
-        ArrayList<Alternative>alternatives= alt.getAllAlternativesByQuestionId(question_id,dbALT,dbAtt);
-        alt.closeConnection(dbALT);
+        AlternativeDAO alt= new AlternativeDAOImpl(context);
+        AttachmentDAO att= new AttachmentDAOImpl(context);
+        SQLiteDatabase dbAlt=alt.openConnection();
+        SQLiteDatabase dbAtt=alt.openConnection();
 
-        AttachmentDAOImpl att= new AttachmentDAOImpl(context);
-        ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "question",dbAtt);
-        att.closeConnection(dbAtt);
+        ArrayList<Alternative>alternatives= alt.getAllAlternativesByQuestionId(question_id,dbAlt,dbAtt);
+        
+        ArrayList<Attachment> attachments = new ArrayList<>();
+        //TEST DOESN'T PASS HERE - NEW LINE (TO VERIFY)
+        if(hasAttachment)
+            attachments = att.getAllAttachmentsByLinkId(question_id, "question",dbAtt);
 
         Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id,
                 alternatives,attachments,hasAttachment);
 
         res.close();
-        db.close();
+        dbAlt.close();
+        dbAtt.close();
+
         return tmp;
     }
 
@@ -398,9 +413,9 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
 
     @Override
-    public ArrayList<Question> getAllQuestions() {
+    public ArrayList<Question> getAllQuestions(SQLiteDatabase db) {
         ArrayList<Question> array_list = new ArrayList<Question>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\"", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
@@ -423,31 +438,31 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
             long contest_id=Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
 
-            AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
-            SQLiteDatabase dbALT=alt.openConnection();
-            AttachmentDAOImpl att= new AttachmentDAOImpl(context);
+            AlternativeDAO alt= new AlternativeDAOImpl(context);
+            SQLiteDatabase dbAlt=alt.openConnection();
+            AttachmentDAO att=new AttachmentDAOImpl(context);
             SQLiteDatabase dbAtt= att.openConnection();
 
-            ArrayList<Alternative>alternatives= alt.getAllAlternativesByQuestionId(question_id, dbALT, dbAtt);
-            alt.closeConnection(dbALT);
+            ArrayList<Alternative>alternatives= alt.getAllAlternativesByQuestionId(question_id, dbAlt, dbAtt);
             ArrayList<Attachment> attachments= att.getAllAttachmentsByLinkId(question_id, "question",dbAtt);
-            att.closeConnection(dbAtt);
 
 
             Question tmp= new Question(question_id,category,text,isFavorited,isStudied,contest_id, alternatives,
                     attachments,hasAttachment);
             array_list.add(tmp);
             res.moveToNext();
+            dbAlt.close();
+            dbAtt.close();
         }
         res.close();
-        db.close();
+        //db.close();
         return array_list;
     }
 
     @Override
-    public ArrayList<String> getAllCategoriesByContestId(long contest_id) {
+    public ArrayList<String> getAllCategoriesByContestId(long contest_id,  SQLiteDatabase db) {
         ArrayList<String> array_list = new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from \""+CONTACTS_TABLE_NAME+"\" where contest_id='"+contest_id+"' group by Category", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
@@ -455,17 +470,17 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
             res.moveToNext();
         }
         res.close();
-        db.close();
+       // db.close();
         return array_list;
     }
 
     //SELECT NAME, count(*) as NUM FROM tbl GROUP BY NAME
 
     @Override
-    public ArrayList<Integer> getPercentageStudiedByCategory(long contest_id) {
+    public ArrayList<Integer> getPercentageStudiedByCategory(long contest_id, SQLiteDatabase db) {
 
         ArrayList<Integer> array_list = new ArrayList<Integer>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select *, count(*) from \""+CONTACTS_TABLE_NAME+"\" where isStudied=1 AND contest_id='"+contest_id+"' group by Category", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
@@ -473,7 +488,7 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
             res.moveToNext();
         }
         res.close();
-        db.close();
+        //db.close();
 
         for(Integer i: array_list){
             Log.i("####","percenutale per categoria: "+i);
@@ -481,6 +496,4 @@ public class QuestionDAOImpl  extends SQLiteOpenHelper implements QuestionDAO {
 
         return array_list;
     }
-
-
 }
