@@ -144,8 +144,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         }
 
 
-
-
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
                         CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n);
                         myList.setAdapter(ad);
@@ -157,6 +155,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                                 long start=  System.currentTimeMillis();;
+
                                 questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));
                                 long end=  System.currentTimeMillis();
                                 Log.i("LLL Total time",""+(end-start));
@@ -191,6 +190,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         ExerciseProgressBarManager progressBarManager= new ExerciseProgressBarManager(view,progressBar);
                         progressBarManager.init();
 
+                        //set the height of the scroll view containing  categories' name
                         scroll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
@@ -201,6 +201,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             }
                         });
 
+                        //fill the list view with categories name
                         for(String catName: categoriesName){
                             final View viewQuest = LayoutInflater.from(container.getContext()).inflate(R.layout.exercise_category_list, container, false);
                             final TextView txt = (TextView) viewQuest.findViewById(R.id.exercise_category_textV);
@@ -209,6 +210,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             linearFrame.addView(viewQuest);
                         }
 
+                        //add the button listener to start the exercise
                         startExer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

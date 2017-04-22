@@ -58,7 +58,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         int[] insieme = new int[questions.size()];
         for (int i = 0; i < questions.size(); i++) {
             if (questions.get(i).getStudied()) insieme[i] = Color.parseColor("#009688");
-            else if(questions.get(i).getFavorited()) insieme[i] = Color.parseColor("#FFFF00");
+            else if(questions.get(i).getFavorited()) insieme[i] = Color.parseColor("#FFE118");
             else insieme[i] = Color.parseColor("#A9A9A9");
         }
 
@@ -123,7 +123,7 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        //Log.i("@@@", "bindView");
+        Log.i("%%%", "bindView");
         holder.label.setText(getItem(position));
 
         final Drawable d;
@@ -140,9 +140,8 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
         //noinspection RedundantCast
         ((FrameLayout) holder.colorSquare).setForeground(d);
         holder.colorSquare.setBackgroundColor(color()[position]);
-
-
     }
+
 
 
     @Override
@@ -186,11 +185,10 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
                 int numberOfButtonSelected = prefs.getInt("numberOfButtonSelected", 0);
 
                 if (numberOfButtonSelected == 0) {
-                    final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
-                    // Use bounce interpolator with amplitude 0.2 and frequency 20
+                   /* final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
                     MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
                     myAnim.setInterpolator(interpolator);
-                    v.startAnimation(myAnim);
+                    v.startAnimation(myAnim);*/
 
 
                     FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
@@ -219,4 +217,6 @@ public class MainAdapter extends DragSelectRecyclerViewAdapter<MainAdapter.MainV
             return true;
         }
     }
+
+
 }

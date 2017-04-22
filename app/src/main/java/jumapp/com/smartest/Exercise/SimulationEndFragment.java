@@ -1,10 +1,11 @@
-package jumapp.com.smartest.fragments;
+package jumapp.com.smartest.Exercise;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class SimulationEndFragment extends Fragment {
     private int[] mEndColors = new int[MODEL_COUNT];
     private ArcProgressStackView mArcProgressStackView;
     Context context;
-    int right,wrong,notAnswered,total;
+    int rightF,wrongF,notAnsweredF,totalF;
 
 
 
@@ -40,19 +41,19 @@ public class SimulationEndFragment extends Fragment {
         context = view.getContext();
 
         Bundle bundle = this.getArguments();
-        this.right=bundle.getInt("right");
-        this.wrong=bundle.getInt("wrong");
-        this.notAnswered=bundle.getInt("notSetted");
-        this.total=bundle.getInt("total");
+        this.rightF=bundle.getInt("right");
+        this.wrongF=bundle.getInt("wrong");
+        this.notAnsweredF=bundle.getInt("notSetted");
+        this.totalF=bundle.getInt("total");
 
-        TextView textCorrect=(TextView)view.findViewById(R.id.textViewCorrect);
-        TextView textWrong=(TextView)view.findViewById(R.id.textViewWrong);
-        TextView textNotAnswered=(TextView)view.findViewById(R.id.textNotAnswered);
+        TextView textCorrect=(TextView)view.findViewById(R.id.textCorrect_m);
+        TextView textWrong=(TextView)view.findViewById(R.id.textWrong_m);
+        TextView textNotAnswered=(TextView)view.findViewById(R.id.textNotAnswered_m);
         TextView textOutcome=(TextView)view.findViewById(R.id.outcome);
-        textCorrect.setText(""+right);
-        textWrong.setText(""+wrong);
-        textNotAnswered.setText(""+notAnswered);
-        if(right>total/2) {
+        textCorrect.setText("Corrette: "+rightF);
+        textWrong.setText("Sbagliate: "+wrongF);
+        textNotAnswered.setText("Non date: "+notAnsweredF);
+        if(rightF>totalF/2) {
             textOutcome.setText("Superato!");
             textOutcome.setTextColor(Color.GREEN);
         }
@@ -78,6 +79,12 @@ public class SimulationEndFragment extends Fragment {
         mArcProgressStackView.setModels(models);
 
         final float [] numbers= new float[3];
+
+        float right= Float.parseFloat(""+rightF);
+        float total=Float.parseFloat(""+totalF);
+        float wrong=Float.parseFloat(""+wrongF);
+        float notAnswered=Float.parseFloat(""+notAnsweredF);
+
         numbers[0]=right/total;
         numbers[1]=wrong/total;
         numbers[2]=notAnswered/total;
@@ -88,7 +95,7 @@ public class SimulationEndFragment extends Fragment {
             public void run() {
                 int i = 0;
                 for (ArcProgressStackView.Model model : mArcProgressStackView.getModels()) {
-                    model.setProgress(numbers[i]);
+                     model.setProgress(( Math.round(numbers[i] * 100)));
                     i++;
                 }
 

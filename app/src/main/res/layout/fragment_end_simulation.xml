@@ -40,8 +40,8 @@
 
                 <com.gigamole.library.ArcProgressStackView
                     android:id="@+id/apsv"
-                    android:layout_width="215dp"
-                    android:layout_height="215dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     app:apsv_rounded="true"
                     app:apsv_shadowed="false"
@@ -74,6 +74,11 @@
                 android:background="@drawable/bg_round_rect"
                 android:weightSum="100">
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="15" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -85,7 +90,7 @@
                     <Space
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="13" />
+                        android:layout_weight="8" />
 
                     <ImageView
                     android:id="@+id/colorCorrect"
@@ -102,9 +107,9 @@
                         android:layout_marginTop="1dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="25"
+                        android:layout_weight="28"
                         android:textColor="@color/white"
-                        android:id="@+id/textCorrect" />
+                        android:id="@+id/textCorrect_m" />
 
                     <ImageView
                         android:id="@+id/colorWrong"
@@ -121,9 +126,9 @@
                         android:layout_marginTop="1dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="25"
+                        android:layout_weight="28"
                         android:textColor="@color/white"
-                        android:id="@+id/textWong" />
+                        android:id="@+id/textWrong_m" />
                     <ImageView
                         android:id="@+id/colorNotAnswered"
                         android:layout_width="10dp"
@@ -139,64 +144,16 @@
                         android:layout_marginTop="1dp"
                         android:layout_marginLeft="5dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="25"
+                        android:layout_weight="28"
                         android:textColor="@color/white"
-                        android:id="@+id/textNotAnswered" />
+                        android:id="@+id/textNotAnswered_m" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="horizontal"
+                <Space
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="30">
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="7" />
-
-                    <TextView
-                        android:text="000"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textViewCorrect"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:layout_weight="10" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="5" />
-
-                    <TextView
-                        android:text="000"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textViewWrong"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:layout_weight="10" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4" />
-
-                    <TextView
-                        android:text="000"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:id="@+id/textViewNotAnswered"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:layout_weight="10" />
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="6" />
-                </LinearLayout>
+                    android:layout_weight="10" />
 
                 <TextView
                     android:id="@+id/outcome"
@@ -217,30 +174,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="3" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="14.38">
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.79" />
-
-                <Button
-                    android:text="@string/continua"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/buttonStatistics"
-                    android:layout_weight="0.79" />
-
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.79" />
-            </LinearLayout>
         </LinearLayout>
 
 

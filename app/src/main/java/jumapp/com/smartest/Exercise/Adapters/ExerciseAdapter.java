@@ -161,6 +161,7 @@ public class ExerciseAdapter extends PagerAdapter {
     }
 
     public void initItems() {
+        mItems = new ArrayList<>();
         for (int i=0; i< questions.size(); i++) mItems.add(new ColorItem(""+(i+1),Color.GRAY));
     }
 

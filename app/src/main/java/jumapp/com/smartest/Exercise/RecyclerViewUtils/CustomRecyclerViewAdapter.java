@@ -39,7 +39,7 @@ public class CustomRecyclerViewAdapter extends RecyclerTabLayout.Adapter<CustomR
 
             @Override
             public void onBindViewHolder(ViewHolder holder, int position) {
-                Log.i("###", "on Bind View");
+
                 ColorItem colorItem = mAdapater.getColorItem(position);
                 holder.title.setText(colorItem.name);
                 holder.color.setBackgroundColor(colorItem.color);

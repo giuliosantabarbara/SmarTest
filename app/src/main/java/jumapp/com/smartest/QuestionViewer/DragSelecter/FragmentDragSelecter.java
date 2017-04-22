@@ -151,7 +151,7 @@ public class FragmentDragSelecter  extends Fragment implements
                         .setCloseDrawableRes(R.drawable.ic_close)
                         .start(this);
             }
-            mCab.setTitleRes(R.string.question_viewer_cab_title_x, count);
+            //mCab.setTitleRes(R.string.question_viewer_cab_title_x, count);
         } else if (mCab != null && mCab.isActive()) {
             mCab.reset().finish();
             mCab = null;
@@ -168,14 +168,15 @@ public class FragmentDragSelecter  extends Fragment implements
     @Override
     public boolean onCabItemClicked(MenuItem item) {
         Log.i("LISTENER", "onCabItemClicked");
-        if (item.getItemId() == R.id.done) {
+        if (item.getItemId() == R.id.done_white) {
               int traverse = 0;
             ArrayList<Question> questions= new ArrayList<Question>();
             QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
-                //if (traverse > 0) sb.append(", ");
                 questions.add(sing.getQuestionByIndex(index));
             }
+
+
             mAdapter.clearSelected();
 
 
@@ -191,6 +192,27 @@ public class FragmentDragSelecter  extends Fragment implements
             fragmentTransaction.addToBackStack("back");
             fragmentTransaction.commit();
 
+        }
+        else if(item.getItemId() == R.id.studied){
+            QuestionsSingleton sing= QuestionsSingleton.getInstance();
+            for (Integer index : mAdapter.getSelectedIndices()) {
+                sing.setQuestionsStudied(context, index, true);
+                mAdapter.clearSelected();
+            }
+        }
+        else if(item.getItemId() == R.id.pref){
+            QuestionsSingleton sing= QuestionsSingleton.getInstance();
+            for (Integer index : mAdapter.getSelectedIndices()) {
+                sing.setQuestionsFavorited(context, index, true);
+                mAdapter.clearSelected();
+            }
+        }else if(item.getItemId() == R.id.broom){
+            QuestionsSingleton sing= QuestionsSingleton.getInstance();
+            for (Integer index : mAdapter.getSelectedIndices()) {
+                sing.setQuestionsFavorited(context, index, false);
+                sing.setQuestionsStudied(context, index, false);
+                mAdapter.clearSelected();
+            }
         }
         return true;
     }

@@ -34,12 +34,15 @@ import java.util.List;
 import jumapp.com.smartest.ContestSingleton;
 import jumapp.com.smartest.Exercise.Adapters.ExerciseAdapter;
 import jumapp.com.smartest.Exercise.Singleton.DictionaryCategoryNumberSingleton;
+import jumapp.com.smartest.Exercise.Util.QuestionProofreaderManager;
+import jumapp.com.smartest.Exercise.Util.WhatsappManager;
 import jumapp.com.smartest.Exercise.ViewManager.AlertContestSingleton;
 import jumapp.com.smartest.Exercise.ViewManager.FinishViewPagerHandler;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Exercise.RecyclerViewUtils.CustomRecyclerViewAdapter;
 import jumapp.com.smartest.Storage.DAOImpl.ContentsImpl.QuestionDAOImpl;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.QuestionDAO;
+import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
 
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
@@ -49,7 +52,7 @@ import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
  * Created by giuli on 08/03/2017.
  */
 
-public class ExerciseFragment extends Fragment implements View.OnClickListener, OnMenuItemClickListener, OnMenuItemLongClickListener {
+public class ExerciseFragment extends Fragment implements OnMenuItemClickListener, OnMenuItemLongClickListener {
 
     public ExerciseFragment() {
 
@@ -84,6 +87,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         ExerciseAdapter adapter = new ExerciseAdapter();
         pairs = DictionaryCategoryNumberSingleton.getInstance().getPairs();
 
+        //handle question rendering
         int last_contest_singoleton_id = prefs.getInt("contest_singleton_id", 0);
         if (last_contest_singoleton_id == 0)
             new AlertContestSingleton(getActivity(), view, viewPager, 500, adapter, pairs).Start();
@@ -97,10 +101,7 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
 
-    }
 
 
     //all code below should be copy to init toolbar
@@ -135,47 +136,50 @@ public class ExerciseFragment extends Fragment implements View.OnClickListener, 
     }
 
     private List<MenuObject> getMenuObjects() {
+
         List<MenuObject> menuObjects = new ArrayList<>();
 
         MenuObject close = new MenuObject();
         close.setResource(R.drawable.icn_close);
 
-        MenuObject addFav = new MenuObject("Add to favorites");
+        MenuObject addFav = new MenuObject("Aggiungi a Favorita");
         addFav.setResource(R.drawable.favorites);
 
-        MenuObject send = new MenuObject("Send message");
+        MenuObject send = new MenuObject("Invia ad un amico");
         send.setResource(R.drawable.icn_1);
 
-        MenuObject like = new MenuObject("Like profile");
+        MenuObject studied = new MenuObject("Aggiungi a Studiata");
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.icn_2);
-        like.setBitmap(b);
-
-        MenuObject addFr = new MenuObject("Add to friends");
-        BitmapDrawable bd = new BitmapDrawable(getResources(),
-                BitmapFactory.decodeResource(getResources(), R.drawable.icn_3));
-        addFr.setDrawable(bd);
+        studied.setBitmap(b);
 
 
-        MenuObject block = new MenuObject("Block user");
+        MenuObject block = new MenuObject("Termina simulazione");
         block.setResource(R.drawable.icn_5);
 
         menuObjects.add(close);
-        menuObjects.add(send);
-        menuObjects.add(like);
-        menuObjects.add(addFr);
         menuObjects.add(addFav);
+        menuObjects.add(studied);
+        menuObjects.add(send);
         menuObjects.add(block);
+
         return menuObjects;
     }
 
     @Override
     public void onMenuItemClick(View clickedView, int position) {
-        if(position==1){
-            QuestionDAO quest= new QuestionDAOImpl(context);
-            Question q=ExerciseAdapter.getQuestions().get(viewPager.getCurrentItem());
-            quest.setQuestionFavorited(q.getQuestion_id(),true,quest.openWritableConnection());
-          // ExerciseAdapter.getQuestions().get(viewPager.getCurrentItem()).setFavorited(true);
+        QuestionDAO quest= new QuestionDAOImpl(context);
+        Question q=ExerciseAdapter.getQuestions().get(viewPager.getCurrentItem());
+
+        if(position==1)quest.setQuestionFavorited(q.getQuestion_id(),true,quest.openWritableConnection());
+        else if(position==2)quest.setQuestionStudied(q.getQuestion_id(), true, quest.openWritableConnection());
+        else if(position==3){
+            String message=q.getText()+"\n";
+            ArrayList<Alternative> alt=q.getAlternatives();
+            for(int pos=0; pos<alt.size(); pos++) message=message.concat(""+(pos+1)+") "+alt.get(pos).getText()+"\n");
+            message=message.concat("\nwww.jumapp.com");
+            WhatsappManager.sendMessage(getActivity(),message);
         }
+        else if(position==4) QuestionProofreaderManager.correctQuestion(getActivity());
 
     }
 

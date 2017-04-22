@@ -41,25 +41,21 @@ public class DragExerAdapter extends DragSelectRecyclerViewAdapter<DragExerAdapt
     }
 
 
-    public int[] color(){
-        int [] insieme= new int[5];
-        for(int i=0; i<5; i++){
-            insieme[i]= Color.parseColor("#009688");
-
+    public int[] color() {
+        int[] insieme = new int[5];
+        for (int i = 0; i < 5; i++) {
+            insieme[i] = Color.parseColor("#009688");
         }
-
-
         return insieme;
     }
 
-    public static String[] textInitialization(){
+    public static String[] textInitialization() {
 
         //ArrayList<Question> questions = ((QuestionsByCategory) parent.getContext()getApplication()).getSomeVariable();
-        String [] insieme= new String[5];
+        String[] insieme = new String[5];
 
-        for( int i=0; i<5; i++){
-            insieme[i]=""+(i+1);
-
+        for (int i = 0; i < 5; i++) {
+            insieme[i] = "" + (i + 1);
         }
 
         return insieme;
@@ -121,29 +117,27 @@ public class DragExerAdapter extends DragSelectRecyclerViewAdapter<DragExerAdapt
         private int previousButtonSelected;
 
 
-
         public MainViewHolder(View itemView, ClickListener callback) {
-        super(itemView);
-        mCallback = callback;
+            super(itemView);
+            mCallback = callback;
 
-        this.label = (TextView) itemView.findViewById(R.id.label);
-        this.colorSquare = (RectangleView) itemView.findViewById(R.id.colorSquare);
-        this.itemView.setOnClickListener(this);
-        this.itemView.setOnLongClickListener(this);
+            this.label = (TextView) itemView.findViewById(R.id.label);
+            this.colorSquare = (RectangleView) itemView.findViewById(R.id.colorSquare);
+            this.itemView.setOnClickListener(this);
+            this.itemView.setOnLongClickListener(this);
 
-    }
+        }
 
 
+        @Override
+        public void onClick(View v) {
+            if (mCallback != null) {
+                mCallback.onClick(getAdapterPosition());
 
-    @Override
-    public void onClick(View v) {
-        if (mCallback != null) {
-            mCallback.onClick(getAdapterPosition());
+                Log.i("###", "POSITION " + getAdapterPosition());
 
-            Log.i("###", "POSITION " + getAdapterPosition());
-
-            prefs = itemView.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
-            int numberOfButtonSelected=prefs.getInt("numberOfButtonSelected",0);
+                prefs = itemView.getContext().getSharedPreferences("jumapp", Context.MODE_PRIVATE);
+                int numberOfButtonSelected = prefs.getInt("numberOfButtonSelected", 0);
 
            /* if(  numberOfButtonSelected==0 ) {
                 final Animation myAnim = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.bounce);
@@ -151,20 +145,17 @@ public class DragExerAdapter extends DragSelectRecyclerViewAdapter<DragExerAdapt
                 MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
                 myAnim.setInterpolator(interpolator);
                 v.startAnimation(myAnim);
-
-
-
             }*/
+            }
+
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            if (mCallback != null)
+                mCallback.onLongClick(getAdapterPosition());
+            return true;
+        }
     }
-
-    @Override
-    public boolean onLongClick(View v) {
-        if (mCallback != null)
-            mCallback.onLongClick(getAdapterPosition());
-        return true;
-    }
-}
 
 }
