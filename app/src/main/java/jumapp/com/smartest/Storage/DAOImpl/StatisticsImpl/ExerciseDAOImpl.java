@@ -45,14 +45,15 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
     }
 
 
-
-    public void deleteAll() {
-        SQLiteDatabase dbN = this.getWritableDatabase();
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        //SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
-        dbN.close();
+        //dbN.close();
     }
 
+    @Override
     public int numberOfRows(SQLiteDatabase db){
         //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
@@ -62,6 +63,7 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
 
     @Override
     public void insert(Exercise e, SQLiteDatabase db) {
+        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put("contest_id",  e.getId_contest() );
         contentValues.put("category_name",  e.getCategoryName() );
@@ -69,6 +71,8 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
         contentValues.put("tot_questions", e.getTotQuestions());
         contentValues.put("percentage",e.getPercentage());
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public SQLiteDatabase openConnection(){

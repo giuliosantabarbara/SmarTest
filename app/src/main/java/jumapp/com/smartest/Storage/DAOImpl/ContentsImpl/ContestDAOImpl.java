@@ -30,18 +30,14 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
     Context context;
 
 
-    public ContestDAOImpl(Context context)
-    {
+    public ContestDAOImpl(Context context) {
         super(context, DATABASE_NAME, null, 1);
         this.context=context;
     }
 
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
         db.execSQL(
                 "create table \"" + CONTACTS_TABLE_NAME + "\"" +
                         "(contest_id integer primary key ,Type text,Scope text, Position text,Year integer, QuestionsURL text," +
@@ -51,15 +47,17 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
         db.execSQL("DROP TABLE IF EXISTS" + CONTACTS_TABLE_NAME);
         onCreate(db);
     }
 
-
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        dbN.execSQL("DROP TABLE IF EXISTS \"" + CONTACTS_TABLE_NAME + "\"");
+        onCreate(dbN);
+    }
 
     public void deleteAll() {
-        // TODO Auto-generated method stub
         SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \"" + CONTACTS_TABLE_NAME + "\"");
         onCreate(dbN);
@@ -67,6 +65,12 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
     }
 
     @Override
+    public int numberOfRows(SQLiteDatabase dbN){
+        int numRows = (int) DatabaseUtils.queryNumEntries(dbN, CONTACTS_TABLE_NAME);
+        return numRows;
+    }
+
+
     public int numberOfRows(){
         SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
@@ -80,9 +84,15 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
     }
 
     @Override
-    public void insert(Contest c,SQLiteDatabase db ){
-        ContentValues contentValues = new ContentValues();
+    public SQLiteDatabase openReadableConnection(){
+        return this.getReadableDatabase();
+    }
 
+    @Override
+    public void insert(Contest c,SQLiteDatabase db ){
+
+        db.beginTransaction();
+        ContentValues contentValues = new ContentValues();
         contentValues.put("contest_id", c.getId_contest());
         contentValues.put(" Type",  c.getType() );
         contentValues.put("Scope",  c.getScope() );
@@ -94,6 +104,8 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         contentValues.put("AnnouncementsURL", c.getAnnouncementURL());
         contentValues.put("ShortDescription", c.getShortDescription());
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
 
     }
 
@@ -108,8 +120,8 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         AlternativeDAOImpl alt= new AlternativeDAOImpl(context);
         AttachmentDAOImpl att= new AttachmentDAOImpl(context);
         SQLiteDatabase dbQuest=quest.openConnection();
-        SQLiteDatabase dbAlt=alt.openConnection();
-        SQLiteDatabase dbAtt=att.openConnection();
+        //QLiteDatabase dbAlt=alt.openConnection();
+        //SQLiteDatabase dbAtt=att.openConnection();
 
         while(res.isAfterLast() == false){
             long contest_id=Long.parseLong(res.getString(res.getColumnIndex("contest_id")));
@@ -123,7 +135,7 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
             String announcmentsURL=res.getString(res.getColumnIndex("AnnouncementsURL"));
             String shortDescription= res.getString(res.getColumnIndex("ShortDescription"));
 
-            QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id, dbAlt, dbQuest, dbAtt);
+            QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id,dbQuest);
             // ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
 
             Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,
@@ -133,8 +145,8 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         }
 
         quest.closeConnection(dbQuest);
-        alt.closeConnection(dbAlt);
-        att.closeConnection(dbAtt);
+        //alt.closeConnection(dbAlt);
+        //att.closeConnection(dbAtt);
         long end=System.currentTimeMillis();
         Log.i("###", "time to get all Questions + extra operation della classe contestDAO " + (end - st));
 
@@ -145,9 +157,9 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
 
 
     @Override
-    public Contest getContestById(long contest_id) {
+    public Contest getContestById(long contest_id,SQLiteDatabase db) {
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where contest_id='" + contest_id + "'", null);
         res.moveToFirst();
 
@@ -167,34 +179,33 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         AttachmentDAOImpl att= new AttachmentDAOImpl(context);
 
         SQLiteDatabase dbQuest=quest.openConnection();
-        SQLiteDatabase dbAlt=alt.openConnection();
-        SQLiteDatabase dbAtt=att.openConnection();
+        //SQLiteDatabase dbAlt=alt.openConnection();
+        //SQLiteDatabase dbAtt=att.openConnection();
 
-        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id, dbAlt, dbQuest, dbAtt);
+        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id,dbQuest);
         quest.closeConnection(dbQuest);
-        alt.closeConnection(dbAlt);
-        att.closeConnection(dbAtt);
+        //alt.closeConnection(dbAlt);
+        //att.closeConnection(dbAtt);
         //ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
 
         Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,attachmentsURL,
                 alternativesURL,announcmentsURL,year, shortDescription,questions,null);
 
         res.close();
-        db.close();
+        //db.close();
         return tmp;
     }
 
-
-
+    /*
     @Override
-    public Contest deleteContest(long contestId){
+    public Contest deleteContest(long contestId,SQLiteDatabase dbN){
         return null;
-    }
+    }*/
 
     @Override
-    public ArrayList<String> getAllContestsScopes() {
+    public ArrayList<String> getAllContestsScopes(SQLiteDatabase db) {
         ArrayList<String> array_list = new ArrayList<String>();
-        SQLiteDatabase db = this.getReadableDatabase();
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\"", null);
         res.moveToFirst();
         while(res.isAfterLast() == false){
@@ -203,13 +214,13 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
             res.moveToNext();
         }
         res.close();
-        db.close();
+        //db.close();
         return array_list;
     }
 
     @Override
-    public ArrayList<String> getAllContestsPositionByScope(String scope) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public ArrayList<String> getAllContestsPositionByScope(String scope,SQLiteDatabase db) {
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where Scope='" + scope+ "'", null);
         res.moveToFirst();
 
@@ -220,14 +231,14 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
             res.moveToNext();
         }
         res.close();
-        db.close();
+        //db.close();
         return array_list;
 
     }
 
     @Override
-    public ArrayList<String> getAllContestsYearsByScopeAndPosition(String scope, String position) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public ArrayList<String> getAllContestsYearsByScopeAndPosition(String scope, String position,SQLiteDatabase db) {
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where Scope='" + scope+ "' AND Position='"+position+"'", null);
         res.moveToFirst();
 
@@ -238,13 +249,13 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
             res.moveToNext();
         }
         res.close();
-        db.close();
+        //db.close();
         return array_list;
     }
 
     @Override
-    public Contest getContestByScopePositionYear(String scope, String position, int year) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public Contest getContestByScopePositionYear(String scope, String position, int year,SQLiteDatabase db) {
+        //SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from \"" + CONTACTS_TABLE_NAME + "\" where Scope='" + scope + "' AND " +
                 "Position='"+position+"' AND Year='"+year+"'", null);
         res.moveToFirst();
@@ -263,22 +274,22 @@ public class ContestDAOImpl  extends SQLiteOpenHelper implements ContestDAO {
         AttachmentDAOImpl att= new AttachmentDAOImpl(context);
 
         SQLiteDatabase dbQuest=quest.openConnection();
-        SQLiteDatabase dbAlt=alt.openConnection();
-        SQLiteDatabase dbAtt=att.openConnection();
+        //SQLiteDatabase dbAlt=alt.openConnection();
+        //SQLiteDatabase dbAtt=att.openConnection();
 
-        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id,dbAlt, dbQuest,dbAtt);
+        QuestionsHashMap questions=quest.getAllQuestionsByContestIdHash(contest_id,dbQuest);
+
+        //alt.closeConnection(dbAlt);
+        //att.closeConnection(dbAtt);
+        ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id,dbQuest);
         quest.closeConnection(dbQuest);
-        alt.closeConnection(dbAlt);
-        att.closeConnection(dbAtt);
-        ArrayList<String> categories=quest.getAllCategoriesByContestId(contest_id);
-
 
 
         Contest tmp= new Contest(contest_id, type, scope, position,questionsURL,attachmentsURL,
                 alternativesURL,announcmentsURL,year, shortDescription,questions,categories);
 
         res.close();
-        db.close();
+        //db.close();
         return tmp;
     }
 

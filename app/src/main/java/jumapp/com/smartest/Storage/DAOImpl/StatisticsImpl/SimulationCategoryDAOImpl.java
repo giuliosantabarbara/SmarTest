@@ -47,14 +47,15 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
     }
 
 
-
-    public void deleteAll() {
-        SQLiteDatabase dbN = this.getWritableDatabase();
+    @Override
+    public void deleteAll(SQLiteDatabase dbN) {
+        //SQLiteDatabase dbN = this.getWritableDatabase();
         dbN.execSQL("DROP TABLE IF EXISTS \""+CONTACTS_TABLE_NAME+"\"");
         onCreate(dbN);
-        dbN.close();
+        //dbN.close();
     }
 
+    @Override
     public int numberOfRows(SQLiteDatabase db){
         //SQLiteDatabase db = this.getReadableDatabase();
         int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
@@ -66,6 +67,7 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
     @Override
     public void insert(SimulationCategory sc, SQLiteDatabase db) {
 
+        db.beginTransaction();
         ContentValues contentValues = new ContentValues();
         contentValues.put("simulation_id",  sc.getId_simulation() );
         contentValues.put("category_name",  sc.getCategoryName() );
@@ -73,6 +75,8 @@ public class SimulationCategoryDAOImpl extends SQLiteOpenHelper implements Simul
         contentValues.put("tot_questions", sc.getTotQuestions());
         contentValues.put("percentage",sc.getPercentage());
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override

@@ -44,6 +44,28 @@ public class Question  implements Parcelable {
     }
 
 
+    protected Question(Parcel in) {
+        question_id = in.readLong();
+        contest_id = in.readLong();
+        category = in.readString();
+        text = in.readString();
+        studied = in.readByte() != 0;
+        favorited = in.readByte() != 0;
+        hasAttach = in.readByte() != 0;
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
     public void printLog(String TAG){
         Log.i(TAG, "" + this.getQuestion_id());
         Log.i(TAG, "" + this.getCategory());

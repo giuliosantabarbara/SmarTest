@@ -6,6 +6,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -93,7 +94,9 @@ public class ContestSingleton extends Application {
         protected void onHandleIntent(Intent intent) {
             Log.i("###","start contest retrieve");
             ContestDAO con= new ContestDAOImpl(this);
-            contest=con.getContestById(1);
+            SQLiteDatabase db = con.openReadableConnection();
+            contest=con.getContestById(1, db);
+            db.close();
             editor.putInt("contest_singleton_id",1);
             editor.commit();
             Log.i("###", "stop contest retrieve: "+contest.getQuestions().getSize());

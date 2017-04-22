@@ -11,16 +11,20 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
  */
 public interface ContestDAO {
 
-    public Contest getContestById(long constestId);
+    public Contest getContestById(long constestId, SQLiteDatabase db);
     public void insert(Contest c,SQLiteDatabase db );
     public SQLiteDatabase openWritableConnection();
-    public Contest deleteContest(long contestId);
-    public ArrayList<String> getAllContestsScopes();
+    public SQLiteDatabase openReadableConnection();
+    public ArrayList<String> getAllContestsScopes(SQLiteDatabase db);
     public ArrayList<Contest> getAllContests(SQLiteDatabase db);
+    public void deleteAll(SQLiteDatabase dbN);
+    public int numberOfRows(SQLiteDatabase dbN);
 
-    public ArrayList<String> getAllContestsPositionByScope(String scope);
-    public ArrayList<String> getAllContestsYearsByScopeAndPosition(String scope,String position);
-    public Contest getContestByScopePositionYear(String scope, String position, int year);
-    public int numberOfRows();
+    //public Contest deleteContest(long contestId,SQLiteDatabase dbN);
+
+    public ArrayList<String> getAllContestsPositionByScope(String scope,SQLiteDatabase db);
+    public ArrayList<String> getAllContestsYearsByScopeAndPosition(String scope,String position,SQLiteDatabase db);
+    public Contest getContestByScopePositionYear(String scope, String position, int year,SQLiteDatabase db);
+
 
 }

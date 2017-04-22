@@ -12,8 +12,11 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;
 public interface AlternativeDAO {
 
     public ArrayList<Alternative> getAllAlternativesByQuestionId(long questionId, SQLiteDatabase db,SQLiteDatabase dbAtt);
-    public ArrayList<Alternative> getAllAlternatives();
+    public ArrayList<Alternative> getAllAlternatives(SQLiteDatabase db);
     public SQLiteDatabase openWritableConnection();
+    public SQLiteDatabase openReadableConnection();
+    public void deleteAll(SQLiteDatabase dbN);
+    public int numberOfRows(SQLiteDatabase db);
     public Alternative getAlternativeById(long alternativeId,SQLiteDatabase dbAtt);
     public void insert(Alternative a,SQLiteDatabase db);
     public Alternative deleteAlterantive(long alternativeId,SQLiteDatabase dbAtt);
