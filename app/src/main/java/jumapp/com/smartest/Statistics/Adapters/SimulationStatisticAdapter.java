@@ -19,9 +19,14 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory
 /**
  * Created by giuli on 08/03/2017.
  */
-
 public class SimulationStatisticAdapter extends StatisticsAdapter {
 
+    /**
+     * Instantiates a new Simulation statistic adapter.
+     *
+     * @param context     the context
+     * @param simulations the simulations
+     */
     public SimulationStatisticAdapter(Context context, ArrayList<Simulation> simulations) {
         super(context, simulations);
     }

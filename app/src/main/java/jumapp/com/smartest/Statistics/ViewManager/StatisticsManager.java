@@ -33,7 +33,6 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 /**
  * Created by giulio on 08/04/17.
  */
-
 public class StatisticsManager {
 
     private Context context;
@@ -43,6 +42,12 @@ public class StatisticsManager {
     private SimulationDAO simulationDao;
     private ExerciseDAO exerciseDao;
 
+    /**
+     * Instantiates a new Statistics manager.
+     *
+     * @param context   the context
+     * @param contestId the contest id
+     */
     public StatisticsManager(Context context, long contestId){
         this.context=context;
         this.contestId=contestId;
@@ -52,6 +57,13 @@ public class StatisticsManager {
         this.exercisesSingleton = ExerciseStatisticsSingleton.getInstance(this.exerciseDao,contestId);
     }
 
+    /**
+     * Init.
+     *
+     * @param viewPagerTab        the view pager tab
+     * @param view                the view
+     * @param viewPagerStatistics the view pager statistics
+     */
     public void init(SmartTabLayout viewPagerTab, final View view, final ViewPager viewPagerStatistics){
 
         viewPagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

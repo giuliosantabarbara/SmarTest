@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -107,6 +108,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
+
                 View view = null;
                 switch (position) {
                     case 0:
@@ -122,8 +124,9 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         container.addView(view);
 
                         //get the names and studying percentage of each category to fill the statistic view
+                        final SQLiteDatabase conn = quest.openReadableConnection();
+                        ArrayList<Integer> array_list = quest.getPercentageStudiedByCategory(1,conn);
 
-                        ArrayList<Integer> array_list = quest.getPercentageStudiedByCategory(1);
                         int[] result = new int[array_list.size()];
                         int m = 0;
                         for (Integer in : array_list) {
@@ -132,7 +135,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             m++;
                         }
 
-                        final ArrayList<String> names = quest.getAllCategoriesByContestId(contest_id);
+                        final ArrayList<String> names = quest.getAllCategoriesByContestId(contest_id,conn);
                         int[] n = new int[names.size()];
                         String[] nam = new String[names.size()];
                         int k = 0;
@@ -142,7 +145,7 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             k++;
 
                         }
-
+                        conn.close();
 
                         final ListView myList = (ListView) getActivity().findViewById(R.id.listViewCategorie);
                         CategoriesStatisticAdapter ad = new CategoriesStatisticAdapter(context,nam ,n);
@@ -155,8 +158,9 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                                 long start=  System.currentTimeMillis();;
-
-                                questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position));
+                                final SQLiteDatabase co = quest.openReadableConnection();
+                                questionsByCategory = quest.getAllQuestionByCategoryAndContestId(contest_id, names.get(position),co);
+                                co.close();
                                 long end=  System.currentTimeMillis();
                                 Log.i("LLL Total time",""+(end-start));
 
@@ -179,8 +183,9 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                         view = LayoutInflater.from(getActivity().getBaseContext()).inflate(R.layout.slider_content_simulazione_esercitazione, null, false);
                         container.addView(view);
 
-                        ArrayList<String> categoriesName = quest.getAllCategoriesByContestId(contest_id);
-
+                        final SQLiteDatabase c = quest.openReadableConnection();
+                        ArrayList<String> categoriesName = quest.getAllCategoriesByContestId(contest_id,c);
+                        c.close();
                         final LinearLayout linearExer = (LinearLayout) view.findViewById(R.id.slider_simulation_exer_layout);
                         final LinearLayout linearFrame= (LinearLayout) view.findViewById(R.id.category_exercise_frame_linear_layout);
                         final ScrollView scroll= (ScrollView) view.findViewById(R.id.scroll_view_categorie_exercise);
@@ -275,8 +280,6 @@ public class BottomNavigationFragment extends Fragment implements View.OnClickLi
                 //   txtPage.setText(String.format("Page #%d", position));
                 //      JustifiedTextView myMsg = (JustifiedTextView) view.findViewById(R.id.t1);
                 //    myMsg.setText(getActivity().getResources().getString(R.string.descrizione_concorso));
-
-
                 return view;
             }
         });

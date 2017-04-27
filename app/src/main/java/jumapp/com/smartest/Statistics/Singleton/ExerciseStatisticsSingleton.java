@@ -11,7 +11,6 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
 /**
  * Created by giulio on 08/04/17.
  */
-
 public class ExerciseStatisticsSingleton {
 
 
@@ -21,6 +20,12 @@ public class ExerciseStatisticsSingleton {
 
     private static ArrayList<Exercise> exercises= new ArrayList<Exercise>();
 
+    /**
+     * Instantiates a new Exercise statistics singleton.
+     *
+     * @param exerciseDao the exercise dao
+     * @param contestId   the contest id
+     */
     protected ExerciseStatisticsSingleton(ExerciseDAO exerciseDao, long contestId){
 
         this.exerciseDao = exerciseDao;
@@ -31,6 +36,13 @@ public class ExerciseStatisticsSingleton {
 
     }
 
+    /**
+     * Get instance exercise statistics singleton.
+     *
+     * @param exerciseDao the exercise dao
+     * @param contestId   the contest id
+     * @return the exercise statistics singleton
+     */
     public static ExerciseStatisticsSingleton getInstance(ExerciseDAO exerciseDao, long contestId){
         if(null == mInstance){
             mInstance = new ExerciseStatisticsSingleton(exerciseDao, contestId);
@@ -38,18 +50,39 @@ public class ExerciseStatisticsSingleton {
         return mInstance;
     }
 
+    /**
+     * Gets exercises.
+     *
+     * @return the exercises
+     */
     public ArrayList<Exercise> getExercises() {
         return exercises;
     }
 
+    /**
+     * Get exercise by index exercise.
+     *
+     * @param index the index
+     * @return the exercise
+     */
     public Exercise getExerciseByIndex(int index){
         return exercises.get(index);
     }
 
+    /**
+     * Sets exercises.
+     *
+     * @param exercises the exercises
+     */
     public void setExercises(ArrayList<Exercise> exercises) {
         this.exercises = exercises;
     }
 
+    /**
+     * Sets exercise.
+     *
+     * @param exercise the exercise
+     */
     public static void setExercise(Exercise exercise) {
         exercises.add(exercise);
         SQLiteDatabase conn = exerciseDao.openWritableConnection();

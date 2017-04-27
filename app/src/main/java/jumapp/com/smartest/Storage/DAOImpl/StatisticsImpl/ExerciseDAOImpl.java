@@ -15,7 +15,6 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
 /**
  * Created by giulio on 04/04/17.
  */
-
 public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
 
     public static final String DATABASE_NAME = "Exercises.db";
@@ -23,6 +22,11 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
 
     Context context;
 
+    /**
+     * Instantiates a new Exercise dao.
+     *
+     * @param context the context
+     */
     public ExerciseDAOImpl(Context context) {
         super(context, DATABASE_NAME, null, 1);
         this.context = context;
@@ -75,11 +79,21 @@ public class ExerciseDAOImpl extends SQLiteOpenHelper implements ExerciseDAO{
         db.endTransaction();
     }
 
+    /**
+     * Open connection sq lite database.
+     *
+     * @return the sq lite database
+     */
     public SQLiteDatabase openConnection(){
         return this.getReadableDatabase();
 
     }
 
+    /**
+     * Close connection.
+     *
+     * @param db the db
+     */
     public void closeConnection(SQLiteDatabase db){
         db.close();
     }

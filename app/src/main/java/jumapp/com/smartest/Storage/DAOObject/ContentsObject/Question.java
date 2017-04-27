@@ -18,8 +18,24 @@ public class Question  implements Parcelable {
     private ArrayList<Attachment> attachments;
 
 
+    /**
+     * Instantiates a new Question.
+     */
     public Question(){}
 
+    /**
+     * Instantiates a new Question.
+     *
+     * @param question_id  the question id
+     * @param category     the category
+     * @param text         the text
+     * @param isFavorited  the is favorited
+     * @param isStudied    the is studied
+     * @param contest_id   the contest id
+     * @param alternatives the alternatives
+     * @param attachments  the attachments
+     * @param hasAttach    the has attach
+     */
     public Question(long question_id, String category, String text, boolean isFavorited, boolean isStudied,long contest_id,
                     ArrayList<Alternative> alternatives, ArrayList<Attachment> attachments, boolean hasAttach) {
         this.question_id = question_id;
@@ -33,6 +49,17 @@ public class Question  implements Parcelable {
         this.hasAttach=hasAttach;
     }
 
+    /**
+     * Instantiates a new Question.
+     *
+     * @param question_id the question id
+     * @param category    the category
+     * @param text        the text
+     * @param isFavorited the is favorited
+     * @param isStudied   the is studied
+     * @param contest_id  the contest id
+     * @param hasAttach   the has attach
+     */
     public Question(long question_id, String category, String text, boolean isFavorited, boolean isStudied,long contest_id, boolean hasAttach) {
         this.question_id = question_id;
         this.contest_id = contest_id;
@@ -44,6 +71,11 @@ public class Question  implements Parcelable {
     }
 
 
+    /**
+     * Instantiates a new Question.
+     *
+     * @param in the in
+     */
     protected Question(Parcel in) {
         question_id = in.readLong();
         contest_id = in.readLong();
@@ -54,6 +86,9 @@ public class Question  implements Parcelable {
         hasAttach = in.readByte() != 0;
     }
 
+    /**
+     * The constant CREATOR.
+     */
     public static final Creator<Question> CREATOR = new Creator<Question>() {
         @Override
         public Question createFromParcel(Parcel in) {
@@ -66,6 +101,11 @@ public class Question  implements Parcelable {
         }
     };
 
+    /**
+     * Print log.
+     *
+     * @param TAG the tag
+     */
     public void printLog(String TAG){
         Log.i(TAG, "" + this.getQuestion_id());
         Log.i(TAG, "" + this.getCategory());
@@ -86,76 +126,171 @@ public class Question  implements Parcelable {
     }
 
 
+    /**
+     * Gets attach.
+     *
+     * @return the attach
+     */
     public boolean getAttach() {
         return hasAttach;
     }
 
+    /**
+     * Sets has attach.
+     *
+     * @param attach the attach
+     */
     public void setHasAttach(boolean attach) {
         this.hasAttach = attach;
     }
 
+    /**
+     * Get has attach boolean.
+     *
+     * @return the boolean
+     */
     public boolean getHasAttach(){return this.hasAttach;}
 
+    /**
+     * Gets contest id.
+     *
+     * @return the contest id
+     */
     public long getContest_id() {
         return contest_id;
     }
 
+    /**
+     * Sets contest id.
+     *
+     * @param contest_id the contest id
+     */
     public void setContest_id(long contest_id) {
         this.contest_id = contest_id;
     }
 
+    /**
+     * Gets category.
+     *
+     * @return the category
+     */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Sets category.
+     *
+     * @param category the category
+     */
     public void setCategory(String category) {
         this.category = category;
     }
 
+    /**
+     * Gets text.
+     *
+     * @return the text
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     * Sets text.
+     *
+     * @param text the text
+     */
     public void setText(String text) {
         this.text = text;
     }
 
+    /**
+     * Gets studied.
+     *
+     * @return the studied
+     */
     public boolean getStudied() {
         return studied;
     }
 
+    /**
+     * Sets studied.
+     *
+     * @param isStudied the is studied
+     */
     public void setStudied(boolean isStudied) {
         this.studied = isStudied;
     }
 
+    /**
+     * Gets favorited.
+     *
+     * @return the favorited
+     */
     public boolean getFavorited() {
         return favorited;
     }
 
+    /**
+     * Sets favorited.
+     *
+     * @param isFavorited the is favorited
+     */
     public void setFavorited(boolean isFavorited) {
         this.favorited = isFavorited;
     }
 
+    /**
+     * Gets alternatives.
+     *
+     * @return the alternatives
+     */
     public ArrayList<Alternative> getAlternatives() {
         return alternatives;
     }
 
+    /**
+     * Sets alternatives.
+     *
+     * @param alternatives the alternatives
+     */
     public void setAlternatives(ArrayList<Alternative> alternatives) {
         this.alternatives = alternatives;
     }
 
+    /**
+     * Gets attachments.
+     *
+     * @return the attachments
+     */
     public ArrayList<Attachment> getAttachments() {
         return attachments;
     }
 
+    /**
+     * Sets attachments.
+     *
+     * @param attachments the attachments
+     */
     public void setAttachments(ArrayList<Attachment> attachments) {
         this.attachments = attachments;
     }
 
+    /**
+     * Gets question id.
+     *
+     * @return the question id
+     */
     public long getQuestion_id() {
         return question_id;
     }
 
+    /**
+     * Sets question id.
+     *
+     * @param question_id the question id
+     */
     public void setQuestion_id(long question_id) {
         this.question_id = question_id;
     }
@@ -177,6 +312,4 @@ public class Question  implements Parcelable {
         dest.writeList(alternatives);
         dest.writeList(attachments);
     }
-
-
 }

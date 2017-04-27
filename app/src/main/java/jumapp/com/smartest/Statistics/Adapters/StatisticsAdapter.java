@@ -9,11 +9,22 @@ import java.util.ArrayList;
 /**
  * Created by giuli on 08/03/2017.
  */
-
 public class StatisticsAdapter extends BaseAdapter {
+    /**
+     * The Con.
+     */
     Context con;
+    /**
+     * The Array list.
+     */
     ArrayList<?> arrayList;
 
+    /**
+     * Instantiates a new Statistics adapter.
+     *
+     * @param context   the context
+     * @param arrayList the array list
+     */
     public StatisticsAdapter(Context context, ArrayList<?> arrayList)
     {
         this.con = context;

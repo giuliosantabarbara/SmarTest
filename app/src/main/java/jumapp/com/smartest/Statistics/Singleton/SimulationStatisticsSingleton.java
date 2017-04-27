@@ -10,7 +10,6 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 /**
  * Created by giulio on 08/04/17.
  */
-
 public class SimulationStatisticsSingleton {
 
 
@@ -20,6 +19,12 @@ public class SimulationStatisticsSingleton {
 
     private static ArrayList<Simulation> simulations= new ArrayList<Simulation>();
 
+    /**
+     * Instantiates a new Simulation statistics singleton.
+     *
+     * @param simulationDao the simulation dao
+     * @param contestId     the contest id
+     */
     protected SimulationStatisticsSingleton(SimulationDAO simulationDao, long contestId){
 
         this.simulationDao = simulationDao;
@@ -30,6 +35,13 @@ public class SimulationStatisticsSingleton {
 
     }
 
+    /**
+     * Get instance simulation statistics singleton.
+     *
+     * @param simulationDao the simulation dao
+     * @param contestId     the contest id
+     * @return the simulation statistics singleton
+     */
     public static SimulationStatisticsSingleton getInstance(SimulationDAO simulationDao, long contestId){
         if(null == mInstance){
             mInstance = new SimulationStatisticsSingleton(simulationDao, contestId);
@@ -37,20 +49,41 @@ public class SimulationStatisticsSingleton {
         return mInstance;
     }
 
+    /**
+     * Gets simulations.
+     *
+     * @return the simulations
+     */
     public ArrayList<Simulation> getSimulations() {
         return simulations;
     }
 
+    /**
+     * Get simulation by index simulation.
+     *
+     * @param index the index
+     * @return the simulation
+     */
     public Simulation getSimulationByIndex(int index){
         return simulations.get(index);
     }
 
+    /**
+     * Sets simulations.
+     *
+     * @param simulations the simulations
+     */
     public void setSimulations(ArrayList<Simulation> simulations) {
 
         this.simulations = simulations;
 
     }
 
+    /**
+     * Sets simulation.
+     *
+     * @param simulation the simulation
+     */
     public static void setSimulation(Simulation simulation) {
         simulations.add(simulation);
         SQLiteDatabase conn = simulationDao.openWritableConnection();

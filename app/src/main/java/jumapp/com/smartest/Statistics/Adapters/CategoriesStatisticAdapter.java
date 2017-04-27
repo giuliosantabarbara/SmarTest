@@ -16,12 +16,28 @@ import jumapp.com.smartest.R;
 /**
  * Created by giuli on 07/03/2017.
  */
-
 public class CategoriesStatisticAdapter extends BaseAdapter {
 
+    /**
+     * The Context.
+     */
     Context context;
+    /**
+     * The Text.
+     */
     String[] text;
+    /**
+     * The Progress.
+     */
     int [] progress;
+
+    /**
+     * Instantiates a new Categories statistic adapter.
+     *
+     * @param context  the context
+     * @param text     the text
+     * @param progress the progress
+     */
     public CategoriesStatisticAdapter(Context context,String text[], int[] progress) {
 
         this.text=text;

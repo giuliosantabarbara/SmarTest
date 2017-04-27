@@ -27,6 +27,13 @@ public class GridAdapter extends ArrayAdapter<GridType> {
     private ArrayList<GridType> arrayList = new ArrayList<GridType>();
 
 
+    /**
+     * Instantiates a new Grid adapter.
+     *
+     * @param context          the context
+     * @param layoutResourceId the layout resource id
+     * @param arrayList        the array list
+     */
     public GridAdapter(Context context, int layoutResourceId, ArrayList<GridType> arrayList) {
         super(context, layoutResourceId,arrayList);
         this.layoutResourceId = layoutResourceId;
@@ -70,8 +77,17 @@ public class GridAdapter extends ArrayAdapter<GridType> {
     }
 
 
+    /**
+     * The type View holder.
+     */
     static class ViewHolder {
+        /**
+         * The Title.
+         */
         TextView title;
+        /**
+         * The Pie view.
+         */
         PieView pieView;
     }
 }

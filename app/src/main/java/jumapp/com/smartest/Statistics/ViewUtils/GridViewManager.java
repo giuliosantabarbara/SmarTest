@@ -8,10 +8,15 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory
 /**
  * Created by giulio on 09/04/17.
  */
-
 public class GridViewManager {
 
 
+    /**
+     * Get grid type array list.
+     *
+     * @param arrayList the array list
+     * @return the array list
+     */
     public static ArrayList<GridType> getGridType (ArrayList<?> arrayList){
 
         ArrayList<GridType> g = new ArrayList<GridType>();

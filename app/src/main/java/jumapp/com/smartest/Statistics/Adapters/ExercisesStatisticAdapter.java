@@ -16,9 +16,14 @@ import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
 /**
  * Created by giuli on 07/03/2017.
  */
-
 public class ExercisesStatisticAdapter extends StatisticsAdapter {
 
+    /**
+     * Instantiates a new Exercises statistic adapter.
+     *
+     * @param context   the context
+     * @param exercices the exercices
+     */
     public ExercisesStatisticAdapter(Context context, ArrayList<Exercise> exercices) {
         super(context, exercices);
     }
