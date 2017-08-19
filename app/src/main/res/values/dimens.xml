@@ -15,4 +15,9 @@
     <dimen name="text_top_padding">25dp</dimen>
     <dimen name="title_text_size">26sp</dimen>
     <dimen name="tool_bar_height">56dp</dimen>
+
+    <dimen name="sliding_menu_width">80dp</dimen>
+    <dimen name="alert_width">290dp</dimen>
+    <dimen name="common_circle_width">3dp</dimen>
+    <dimen name="progress_circle_radius">34dp</dimen>
 </resources>

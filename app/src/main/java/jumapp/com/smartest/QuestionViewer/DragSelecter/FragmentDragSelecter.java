@@ -31,11 +31,17 @@ import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 
+import jumapp.com.smartest.Exercise.ExerciseFragment;
+import jumapp.com.smartest.Exercise.Util.QuestionProofreaderManager;
 import jumapp.com.smartest.QuestionViewer.FragmentGif;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Question;
+import jumapp.com.smartest.Util.LibrarySweetDialog.SweetAlertDialog;
+import jumapp.com.smartest.Util.PrefManager;
+
+import static jumapp.com.smartest.Util.PrefManager.DRAG_GIF;
 
 /**
  * Created by marco on 31/03/2017.
@@ -64,12 +70,15 @@ public class FragmentDragSelecter  extends Fragment implements
         numberOfButtonSelected=0;
         String category_selected=null;
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        FragmentGif fr = new FragmentGif();
-        fragmentTransaction.add(R.id.activity_main, fr);
-        fragmentTransaction.addToBackStack("back");
-        fragmentTransaction.commit();
+        //if user unchecked box show gif
+        if(!PrefManager.getBooleanPref(getActivity(),DRAG_GIF)) {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentGif fr = new FragmentGif();
+            fragmentTransaction.add(R.id.activity_main, fr);
+            fragmentTransaction.addToBackStack("back");
+            fragmentTransaction.commit();
+        }
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -189,31 +198,69 @@ public class FragmentDragSelecter  extends Fragment implements
     @Override
     public boolean onCabItemClicked(MenuItem item) {
         Log.i("LISTENER", "onCabItemClicked");
+        //done listener
         if (item.getItemId() == R.id.done_white) {
               int traverse = 0;
-            ArrayList<Question> questions= new ArrayList<Question>();
+            final ArrayList<Question> questions= new ArrayList<Question>();
             QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
                 questions.add(sing.getQuestionByIndex(index));
             }
 
-
             mAdapter.clearSelected();
 
 
-            FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            StudyFragment stdFrg= new StudyFragment();
-            Bundle b= new Bundle();
-            b.putParcelableArrayList("questions_parceable",questions);
-            stdFrg.setArguments(b);
 
-            fragmentTransaction.add(R.id.activity_main, stdFrg);
-            fragmentTransaction.addToBackStack("back");
-            fragmentTransaction.commit();
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Scegli quale modalità avviare!")
+                    .setContentText("Vuoi avviare la modalità studio o l'esercitazione?")
+                    .setCancelText("STUDIO")
+                    .setConfirmText("ESERCITAZIONE")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            // reuse previous dialog instance, keep widget user state, reset them if you need
+                            FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            StudyFragment stdFrg= new StudyFragment();
+                            Bundle b= new Bundle();
+                            b.putParcelableArrayList("questions_parceable",questions);
+                            stdFrg.setArguments(b);
+                            fragmentTransaction.add(R.id.activity_main, stdFrg);
+                            fragmentTransaction.addToBackStack("back");
+                            fragmentTransaction.commit();
+                            sDialog.dismiss();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            ExerciseFragment fr = new ExerciseFragment();
+                            Bundle b= new Bundle();
+                            b.putParcelableArrayList("questions_parceable",questions);
+                            fr.setArguments(b);
+                            fragmentTransaction.add(R.id.activity_main, fr);
+                            fragmentTransaction.addToBackStack("back");
+                            fragmentTransaction.commit();
+                            sDialog.dismiss();
+
+                        }
+                    })
+                    .show();
+
+
+
+
+
+
+
 
         }
+        // study toolbar icon listener
         else if(item.getItemId() == R.id.studied){
             QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
@@ -221,13 +268,16 @@ public class FragmentDragSelecter  extends Fragment implements
                 mAdapter.clearSelected();
             }
         }
+        // favourite toolbar icon listener
         else if(item.getItemId() == R.id.pref){
             QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
                 sing.setQuestionsFavorited(context, index, true);
                 mAdapter.clearSelected();
             }
-        }else if(item.getItemId() == R.id.broom){
+        }
+        //clean toolbar icon listener
+        else if(item.getItemId() == R.id.broom){
             QuestionsSingleton sing= QuestionsSingleton.getInstance();
             for (Integer index : mAdapter.getSelectedIndices()) {
                 sing.setQuestionsFavorited(context, index, false);

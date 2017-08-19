@@ -31,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.RemoteConnection.Connector;
@@ -59,6 +58,7 @@ import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Contest;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Exercise;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.Simulation;
 import jumapp.com.smartest.Storage.DAOObject.StatisticsObject.SimulationCategory;
+import jumapp.com.smartest.Util.LibrarySweetDialog.SweetAlertDialog;
 import jumapp.com.smartest.fragments.BottomNavigationFragment;
 import jumapp.com.smartest.fragments.CircleHamButtonFragment;
 import jumapp.com.smartest.fragments.SettingsFragment;

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.QuestionViewer.DragSelecter.MyBounceInterpolator;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOObject.ContentsObject.Alternative;

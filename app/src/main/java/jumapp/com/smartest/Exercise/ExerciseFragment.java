@@ -92,7 +92,12 @@ public class ExerciseFragment extends Fragment implements OnMenuItemClickListene
         if (last_contest_singoleton_id == 0)
             new AlertContestSingleton(getActivity(), view, viewPager, 500, adapter, pairs).Start();
         else {
-            adapter.addAllQuestion(ContestSingleton.getInstance(context).getRandomQuestions(pairs));
+
+            Bundle extras = getArguments();
+            ArrayList<Question> arraylist  = extras.getParcelableArrayList("questions_parceable");
+
+            adapter.addAllQuestion(arraylist);
+            //adapter.addAllQuestion(ContestSingleton.getInstance(context).getRandomQuestions(pairs));
             viewPager.setAdapter(adapter);
             viewPager.setOnPageChangeListener(new FinishViewPagerHandler(viewPager, getActivity()));
             RecyclerTabLayout recyclerTabLayout = (RecyclerTabLayout) view.findViewById(R.id.recycler_tab_layout_exercise);

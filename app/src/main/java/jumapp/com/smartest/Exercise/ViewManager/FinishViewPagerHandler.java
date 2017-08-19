@@ -3,8 +3,8 @@ package jumapp.com.smartest.Exercise.ViewManager;
 import android.app.Activity;
 import android.support.v4.view.ViewPager;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.Exercise.Util.QuestionProofreaderManager;
+import jumapp.com.smartest.Util.LibrarySweetDialog.SweetAlertDialog;
 
 /**
  * Created by marco on 13/04/2017.

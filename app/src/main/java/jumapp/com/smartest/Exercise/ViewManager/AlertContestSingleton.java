@@ -12,13 +12,13 @@ import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.ArrayList;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import jumapp.com.smartest.ContestSingleton;
 import jumapp.com.smartest.Exercise.Adapters.ExerciseAdapter;
 import jumapp.com.smartest.Exercise.Pair;
 import jumapp.com.smartest.Exercise.RecyclerViewUtils.CustomRecyclerViewAdapter;
 import jumapp.com.smartest.R;
 import jumapp.com.smartest.Storage.DAOInterface.ContentsInterface.ContestDAO;
+import jumapp.com.smartest.Util.LibrarySweetDialog.SweetAlertDialog;
 
 /**
  * Created by marco on 13/04/2017.
