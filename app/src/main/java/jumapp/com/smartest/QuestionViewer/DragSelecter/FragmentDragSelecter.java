@@ -19,13 +19,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerView;
 import com.afollestad.dragselectrecyclerview.DragSelectRecyclerViewAdapter;
 import com.afollestad.materialcab.MaterialCab;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 
 import java.util.ArrayList;
 
+import jumapp.com.smartest.QuestionViewer.FragmentGif;
 import jumapp.com.smartest.QuestionViewer.QuestionsSingleton;
 import jumapp.com.smartest.QuestionViewer.StudyFragment;
 import jumapp.com.smartest.R;
@@ -44,7 +50,7 @@ public class FragmentDragSelecter  extends Fragment implements
     private static int numberOfButtonSelected;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
-    private  Toolbar toolbar;
+    private  TextView toolbar;
     private Context context;
 
     @Nullable
@@ -57,6 +63,13 @@ public class FragmentDragSelecter  extends Fragment implements
         editor = prefs.edit();
         numberOfButtonSelected=0;
         String category_selected=null;
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentGif fr = new FragmentGif();
+        fragmentTransaction.add(R.id.activity_main, fr);
+        fragmentTransaction.addToBackStack("back");
+        fragmentTransaction.commit();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -82,8 +95,16 @@ public class FragmentDragSelecter  extends Fragment implements
 
         mCab = MaterialCab.restoreState(savedInstanceState, (AppCompatActivity) getActivity(), this);
 
-        toolbar = (Toolbar) view.findViewById(R.id.main_toolbar_question_viewer);
-        toolbar.setTitle("Tenere premuto per selezionare");
+        toolbar = (TextView) view.findViewById(R.id.main_toolbar_question_viewer);
+        toolbar.setText("Attualità");
+
+
+
+
+       /* YoYo.with(Techniques.Shake)
+                .duration(700)
+                //.repeat(5)
+                .playOn(toolbar);*/
 
 
         //to override on back pressed from a fragment
